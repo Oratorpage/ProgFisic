@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/g042/FISICA/Progetto/ProgFisic/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/ProgFisic.dir/main.cpp.o -c /home/g042/FISICA/Progetto/ProgFisic/main.cpp",
+  "file": "/home/g042/FISICA/Progetto/ProgFisic/main.cpp",
+  "output": "CMakeFiles/ProgFisic.dir/main.cpp.o"
+}
+]
