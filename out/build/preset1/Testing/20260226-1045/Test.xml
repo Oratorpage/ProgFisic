@@ -2,7 +2,7 @@
 <Site BuildName="Linux-g++"
 	BuildStamp="20260226-1045-Experimental"
 	Name="LAPTOP-I1CF393A"
-	Generator="ctest-4.2.3"
+	Generator="ctest-3.28.3"
 	CompilerName="/usr/bin/g++"
 	CompilerVersion="13.3.0"
 	OSName="Linux"
@@ -15,7 +15,6 @@
 	VendorID="Intel Corporation"
 	FamilyID="6"
 	ModelID="154"
-	ModelName="12th Gen Intel(R) Core(TM) i7-1255U"
 	ProcessorCacheSize="12288"
 	NumberOfLogicalCPU="12"
 	NumberOfPhysicalCPU="6"
@@ -25,11 +24,11 @@
 	ProcessorClockFrequency="2611.21"
 	>
 	<Testing>
-		<StartDateTime>Feb 26 11:58 CET</StartDateTime>
-		<StartTestTime>1772103539</StartTestTime>
+		<StartDateTime>Feb 26 23:17 CET</StartDateTime>
+		<StartTestTime>1772144254</StartTestTime>
 		<TestList/>
-		<EndDateTime>Feb 26 11:58 CET</EndDateTime>
-		<EndTestTime>1772103539</EndTestTime>
+		<EndDateTime>Feb 26 23:17 CET</EndDateTime>
+		<EndTestTime>1772144254</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>

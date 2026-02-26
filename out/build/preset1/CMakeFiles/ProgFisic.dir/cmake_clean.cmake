@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/ProgFisic.dir/link.d"
   "CMakeFiles/ProgFisic.dir/main.cpp.o"
   "CMakeFiles/ProgFisic.dir/main.cpp.o.d"
   "ProgFisic"

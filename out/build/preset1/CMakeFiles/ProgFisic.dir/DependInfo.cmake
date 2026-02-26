@@ -9,7 +9,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/g042/FISICA/Progetto/ProgFisic/main.cpp" "CMakeFiles/ProgFisic.dir/main.cpp.o" "gcc" "CMakeFiles/ProgFisic.dir/main.cpp.o.d"
-  "" "ProgFisic" "gcc" "CMakeFiles/ProgFisic.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
