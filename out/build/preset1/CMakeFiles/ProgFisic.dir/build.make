@@ -92,6 +92,10 @@ ProgFisic_EXTERNAL_OBJECTS =
 
 ProgFisic: CMakeFiles/ProgFisic.dir/main.cpp.o
 ProgFisic: CMakeFiles/ProgFisic.dir/build.make
+ProgFisic: /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.6.1
+ProgFisic: /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.6.1
+ProgFisic: /usr/lib/x86_64-linux-gnu/libsfml-audio.so.2.6.1
+ProgFisic: /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.6.1
 ProgFisic: CMakeFiles/ProgFisic.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/g042/FISICA/Progetto/ProgFisic/out/build/preset1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ProgFisic"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ProgFisic.dir/link.txt --verbose=$(VERBOSE)
