@@ -126,8 +126,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
   /usr/include/c++/13/bits/postypes.h \
   /usr/include/c++/13/bits/predefined_ops.h \
   /usr/include/c++/13/bits/ptr_traits.h \
-  /usr/include/c++/13/bits/random.h \
-  /usr/include/c++/13/bits/random.tcc \
   /usr/include/c++/13/bits/range_access.h \
   /usr/include/c++/13/bits/refwrap.h \
   /usr/include/c++/13/bits/requires_hosted.h \
@@ -144,7 +142,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
   /usr/include/c++/13/bits/stl_iterator_base_types.h \
   /usr/include/c++/13/bits/stl_map.h \
   /usr/include/c++/13/bits/stl_multimap.h \
-  /usr/include/c++/13/bits/stl_numeric.h \
   /usr/include/c++/13/bits/stl_pair.h \
   /usr/include/c++/13/bits/stl_tempbuf.h \
   /usr/include/c++/13/bits/stl_tree.h \
@@ -165,7 +162,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
   /usr/include/c++/13/clocale \
   /usr/include/c++/13/cmath \
   /usr/include/c++/13/cstddef \
-  /usr/include/c++/13/cstdint \
   /usr/include/c++/13/cstdio \
   /usr/include/c++/13/cstdlib \
   /usr/include/c++/13/ctime \
@@ -188,13 +184,10 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
   /usr/include/c++/13/locale \
   /usr/include/c++/13/map \
   /usr/include/c++/13/new \
-  /usr/include/c++/13/numeric \
   /usr/include/c++/13/ostream \
   /usr/include/c++/13/pstl/execution_defs.h \
   /usr/include/c++/13/pstl/glue_algorithm_defs.h \
-  /usr/include/c++/13/pstl/glue_numeric_defs.h \
   /usr/include/c++/13/pstl/pstl_config.h \
-  /usr/include/c++/13/random \
   /usr/include/c++/13/stdexcept \
   /usr/include/c++/13/streambuf \
   /usr/include/c++/13/string \
@@ -316,7 +309,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
   /usr/include/x86_64-linux-gnu/c++/13/bits/gthr-default.h \
   /usr/include/x86_64-linux-gnu/c++/13/bits/gthr.h \
   /usr/include/x86_64-linux-gnu/c++/13/bits/messages_members.h \
-  /usr/include/x86_64-linux-gnu/c++/13/bits/opt_random.h \
   /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
   /usr/include/x86_64-linux-gnu/c++/13/bits/time_members.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
@@ -333,6 +325,8 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h:
 
 /usr/include/x86_64-linux-gnu/sys/cdefs.h:
 
@@ -404,17 +398,7 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
-/usr/include/x86_64-linux-gnu/bits/timex.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-least.h:
-
-/usr/include/x86_64-linux-gnu/bits/time.h:
-
-/usr/include/x86_64-linux-gnu/bits/select.h:
-
-/usr/include/x86_64-linux-gnu/bits/sched.h:
+/usr/include/c++/13/bits/refwrap.h:
 
 /usr/include/c++/13/bits/predefined_ops.h:
 
@@ -490,8 +474,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/c++/13/bits/alloc_traits.h:
 
-/usr/include/c++/13/bits/random.h:
-
 /usr/include/c++/13/bits/basic_string.h:
 
 /usr/include/SFML/System/Vector3.inl:
@@ -524,10 +506,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/c++/13/bits/memoryfwd.h:
 
-/usr/include/x86_64-linux-gnu/bits/setjmp.h:
-
-/usr/include/time.h:
-
 /usr/include/SFML/Window/WindowStyle.hpp:
 
 /usr/include/SFML/Window/WindowHandle.hpp:
@@ -557,6 +535,8 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/include/c++/13/bits/ios_base.h:
 
 /usr/include/c++/13/iterator:
+
+/usr/include/SFML/Window/Joystick.hpp:
 
 /usr/include/c++/13/bits/stl_vector.h:
 
@@ -606,10 +586,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/c++/13/ctime:
 
-/usr/include/SFML/Graphics/View.hpp:
-
-/usr/include/SFML/Graphics/Transformable.hpp:
-
 /usr/include/c++/13/bits/vector.tcc:
 
 /usr/include/SFML/Graphics/Drawable.hpp:
@@ -642,14 +618,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/SFML/Window/Vulkan.hpp:
 
-/usr/include/x86_64-linux-gnu/c++/13/bits/gthr-default.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
-
-/usr/include/SFML/Graphics/RectangleShape.hpp:
-
 /usr/include/c++/13/tr1/poly_hermite.tcc:
 
 /usr/include/SFML/Graphics/Rect.hpp:
@@ -657,6 +625,8 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/include/SFML/Window/ContextSettings.hpp:
 
 /usr/include/c++/13/cerrno:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-least.h:
 
 /usr/include/SFML/Graphics/CircleShape.hpp:
 
@@ -714,6 +684,8 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/SFML/Graphics/BlendMode.hpp:
 
+/usr/include/SFML/Graphics/Vertex.hpp:
+
 /usr/include/c++/13/bits/stl_map.h:
 
 /usr/include/c++/13/bits/new_allocator.h:
@@ -726,6 +698,10 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/SFML/System/Utf.inl:
 
+/usr/include/SFML/Graphics/Transformable.hpp:
+
+/usr/include/SFML/Graphics/View.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/asm-generic/errno.h:
@@ -737,8 +713,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/include/SFML/Graphics/Color.hpp:
 
 /usr/include/SFML/System.hpp:
-
-/usr/include/x86_64-linux-gnu/c++/13/bits/opt_random.h:
 
 /usr/include/c++/13/ostream:
 
@@ -790,8 +764,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/SFML/System/Vector2.hpp:
 
-/usr/include/c++/13/bits/refwrap.h:
-
 /usr/include/c++/13/bits/streambuf.tcc:
 
 /usr/include/c++/13/bits/specfun.h:
@@ -813,10 +785,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/include/c++/13/tr1/beta_function.tcc:
 
 /usr/include/c++/13/bits/stl_heap.h:
-
-/usr/include/SFML/Window/Joystick.hpp:
-
-/usr/include/c++/13/bits/stl_numeric.h:
 
 /usr/include/c++/13/bits/stl_tempbuf.h:
 
@@ -843,8 +811,6 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/include/c++/13/ext/atomicity.h:
 
 /usr/include/c++/13/tr1/gamma.tcc:
-
-/usr/include/c++/13/cstdint:
 
 /usr/include/c++/13/cstdlib:
 
@@ -886,21 +852,9 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 
 /usr/include/c++/13/ios:
 
-/usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h:
-
-/usr/include/c++/13/numeric:
-
 /usr/include/SFML/System/Err.hpp:
 
 /usr/include/c++/13/pstl/glue_algorithm_defs.h:
-
-/usr/include/c++/13/pstl/glue_numeric_defs.h:
-
-/usr/include/c++/13/bits/random.tcc:
-
-/usr/include/SFML/Graphics/Vertex.hpp:
-
-/usr/include/c++/13/random:
 
 /usr/include/c++/13/pstl/pstl_config.h:
 
@@ -983,3 +937,25 @@ CMakeFiles/ProgFisic.dir/main.cpp.o: /home/g042/FISICA/Progetto/ProgFisic/main.c
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
+
+/usr/include/x86_64-linux-gnu/bits/sched.h:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/include/x86_64-linux-gnu/bits/select.h:
+
+/usr/include/time.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/gthr-default.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
+
+/usr/include/SFML/Graphics/RectangleShape.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
+
+/usr/include/x86_64-linux-gnu/bits/timex.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
