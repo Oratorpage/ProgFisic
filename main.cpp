@@ -19,6 +19,11 @@ V2 operator+(V2 const& a, V2 const& b) { return V2{a.x + b.x, a.y + b.y}; }
 V2 operator-(V2 const& a, V2 const& b) { return V2{a.x - b.x, a.y - b.y}; }
 V2 operator*(double const& g, V2 const& v) { return V2{v.x * g, v.y * g}; }
 V2 operator*(V2 const& v, double const& g) { return V2{v.x * g, v.y * g}; }
+V2& operator+=(V2& v, V2 const& r) {
+  v.x += r.x;
+  v.y += r.y;
+  return v;
+}
 // Probably not gonna use these but maybe useful, remove before handing in
 //  V2 operator/(double const& g, V2 const& v) { return V2{v.x / g, v.y / g}; }
 //  double operator*(V2 const& a, V2 const& b) {
@@ -47,8 +52,6 @@ class Boid {
   // Inizializzazione del singolo boid con i valori immessi dall'utente
 
   // Updating is necessary to change it through time
-  // Maybe I should implement in the update function che window toroidal
-  // constraints
   void update(double const& dt, V2 const& tsize) {
     position_ = position_ + velocity_ * dt;
     if (position_.x < 0) {
@@ -64,8 +67,10 @@ class Boid {
       position_.y = 0.;
     };
   }
-  // Should render boid on the screen
-  // void render() {}
+
+  // Uso il metodo solamente per cambiare il valore, il calcolo di vup me lo
+  // faccio con una funzione prima che non cambia i valori della classe
+  void vchange(V2 const& vup) { velocity_ += vup; }
 };
 
 // Generare una posizione iniziale randomica aiuta nell'ottenere risultati
@@ -100,6 +105,9 @@ int main() {
   // implementazione, alla fine proprio, andrà fatto con vettore, magari
   // aggiungo una classe flock che prenda come variabile i boid ed i parametri
 
+  // Should create a struct for the values or a function to imput all of these
+  // values, it's a bit ugly and inefficient like this, if I'd like to change
+  // the values I'd have no way to do it
   std::cout << "Input the values for the desired simulation: N:";
   int N;
   if (!(std::cin >> N) || N <= 0) {
@@ -107,21 +115,45 @@ int main() {
         << "Negative, zero or not integer number of boids, terminating... ";
     return 1;
   }
-  // std::cout << "s: \n";
-  // double s;
-  // std::cin >> s;
-  // std::cout << "a: \n";
-  // double a;
-  // std::cin >> a;
-  // std::cout << "c: \n";
-  // double c;
-  // std::cin >> c;
-  // std::cout << " d: \n";
-  // double d;
-  // std::cin >> d;
-  // std::cout << "ds; \n";
-  // double ds;
-  // std::cin >> ds;
+  std::cout << "s: ";
+  double s;
+  if (!(std::cin >> s) || s <= 0) {
+    std::cout << "Negative, zero or not integer value for the separation "
+                 "coefficient, terminating... ";
+    return 1;
+  }
+  std::cout << "a: ";
+  double a;
+  if (!(std::cin >> a) || a <= 0) {
+    std::cout << "Negative, zero or not integer value for the alignment "
+                 "coefficient, terminating... ";
+    return 1;
+  }
+  std::cout << "c: ";
+  double c;
+  if (!(std::cin >> c) || c <= 0) {
+    std::cout << "Negative, zero or not integer value for the cohesion "
+                 "coefficient, terminating... ";
+    return 1;
+  }
+  // This is just the awareness radius
+  //  std::cout << " d: \n";
+  //  double d;
+  //  if (!(std::cin >> d) || d <= 0) {
+  //    std::cout << "Negative, zero or not integer value for the distance "
+  //                 "coefficient, terminating... ";
+  //    return 1;
+  //  }
+  // ds è la distanza di influenza della regola per i vicini, per i boid  la cui
+  // distanza è minore di ds allora dico che
+  std::cout << "ds: ";
+  double ds;
+  if (!(std::cin >> ds) || ds <= 0) {
+    std::cout
+        << "Negative, zero or not integer value for the influence distance "
+           "coefficient, terminating... ";
+    return 1;
+  }
 
   std::vector<Boid> boids;
   boids.reserve(N);  // Devo guardare la documentazione su .reserve
@@ -131,7 +163,7 @@ int main() {
     boids.emplace_back(rvel(), rpos(tsize));
   }
 
-  // Caratteristiche del boid
+  // Caratteristiche grafiche del boid
   sf::ConvexShape tri;
   tri.setPointCount(3);
   tri.setPoint(0, {20.f, 0.f});    // nose
@@ -143,7 +175,7 @@ int main() {
   tri.setPosition(400, 300);
 
   sf::Clock clock;
-  const double PI = 3.14159265358979323846264338327950288;
+  const double PI{3.14159265358979323846264338327950288};
 
   while (window.isOpen()) {
     sf::Event event;
@@ -162,6 +194,39 @@ int main() {
     }
 
     double dt = clock.restart().asSeconds();
+    // Bisogna implementarlo in modo tale che non faccia il check boids[i]
+    // boids[j], tipo mettere j!=i
+
+    V2 vup;
+    // Dovrei renderlo condizionale in maniera che entri solo se è più piccolo
+    // dell'awareness?
+    for (int i{0}; i < N; ++i) {
+      V2 vsep;
+      V2 vali;
+      V2 vcoes;
+      V2 xt;
+      V2 xc;
+      for (int j{0}; j < N; ++j) {
+        if (i == j) {
+          continue;
+        }
+        double disti = std::sqrt((boids[i].Pos().x - boids[j].Pos().x) *
+                                     (boids[i].Pos().x - boids[j].Pos().x) +
+                                 (boids[i].Pos().y - boids[j].Pos().y) *
+                                     (boids[i].Pos().y - boids[j].Pos().y));
+        if (disti <= ds && i != j) {
+          vsep += boids[j].Pos() - boids[i].Pos();
+        }
+        vali += boids[j].Vel() - boids[i].Vel();
+        xt += boids[j].Pos();
+      }
+      xc = 1. / boids.size() * xt;
+      vcoes = c * (xc - boids[i].Pos());
+      vali = a / (boids.size() - 1) * vali;
+      vsep = -s * vsep;
+      vup = vsep + vali + vcoes;
+      boids[i].vchange(vup);
+    }
     // Qua devo essere pronto a spiegare perchè non è con gli indici: è meglio,
     // no errori indici, per ogni elemento b di boids mi esegue la variazione
     // della posizione
