@@ -26,9 +26,9 @@ V2& operator+=(V2& v, V2 const& r) {
 }
 // Probably not gonna use these but maybe useful, remove before handing in
 //  V2 operator/(double const& g, V2 const& v) { return V2{v.x / g, v.y / g}; }
-//  double operator*(V2 const& a, V2 const& b) {
-//    return double{a.x * b.x + a.y * b.y};
-//  }
+double operator*(V2 const& a, V2 const& b) {
+  return double{a.x * b.x + a.y * b.y};
+}
 //  double operatorx(V2 const& a, V2 const& b) {
 //    return double{a.x * b.y - a.y * b.y};
 //  }
@@ -52,6 +52,8 @@ class Boid {
   // Inizializzazione del singolo boid con i valori immessi dall'utente
 
   // Updating is necessary to change it through time
+  // Qua l'update lo devo cambiare, se riesco con un parametro true false per
+  // attivare o non lo spazio toroidale in maniera da gestirmelo meglio
   void update(double const& dt, V2 const& tsize) {
     position_ = position_ + velocity_ * dt;
     if (position_.x < 0) {
@@ -101,10 +103,6 @@ int main() {
   // molto, molto grandi
   V2 tsize{static_cast<double>(size.x), static_cast<double>(size.y)};
 
-  // Mancano i valori s,a,c e se voglio mettere constraints su cose, quella è
-  // implementazione, alla fine proprio, andrà fatto con vettore, magari
-  // aggiungo una classe flock che prenda come variabile i boid ed i parametri
-
   // Should create a struct for the values or a function to imput all of these
   // values, it's a bit ugly and inefficient like this, if I'd like to change
   // the values I'd have no way to do it
@@ -145,7 +143,7 @@ int main() {
   //    return 1;
   //  }
   // ds è la distanza di influenza della regola per i vicini, per i boid  la cui
-  // distanza è minore di ds allora dico che
+  // distanza è minore di ds allora compio il calcolo per vsep
   std::cout << "ds: ";
   double ds;
   if (!(std::cin >> ds) || ds <= 0) {
@@ -176,6 +174,7 @@ int main() {
 
   sf::Clock clock;
   const double PI{3.14159265358979323846264338327950288};
+  const double awareness{15.};
 
   while (window.isOpen()) {
     sf::Event event;
@@ -194,12 +193,11 @@ int main() {
     }
 
     double dt = clock.restart().asSeconds();
-    // Bisogna implementarlo in modo tale che non faccia il check boids[i]
-    // boids[j], tipo mettere j!=i
-
     V2 vup;
-    // Dovrei renderlo condizionale in maniera che entri solo se è più piccolo
-    // dell'awareness?
+    // Questo lo devo mettere dentro una funzione update in maniera da gestirlo
+    // meglio
+    // Soprattutto c'è qualcosa che ancora non va con l'algoritmo di separazione
+    // in quanto si sovrappongono ancora
     for (int i{0}; i < N; ++i) {
       V2 vsep;
       V2 vali;
@@ -210,22 +208,22 @@ int main() {
         if (i == j) {
           continue;
         }
-        double disti = std::sqrt((boids[i].Pos().x - boids[j].Pos().x) *
-                                     (boids[i].Pos().x - boids[j].Pos().x) +
-                                 (boids[i].Pos().y - boids[j].Pos().y) *
-                                     (boids[i].Pos().y - boids[j].Pos().y));
-        if (disti <= ds && i != j) {
+        double distisq = (boids[j].Pos() - boids[i].Pos()) *
+                         (boids[j].Pos() - boids[i].Pos());
+        if (distisq <= ds * ds) {
           vsep += boids[j].Pos() - boids[i].Pos();
         }
-        vali += boids[j].Vel() - boids[i].Vel();
-        xt += boids[j].Pos();
+        if (distisq <= awareness * awareness) {
+          vali += boids[j].Vel() - boids[i].Vel();
+          xt += boids[j].Pos();
+        }
       }
       xc = 1. / boids.size() * xt;
       vcoes = c * (xc - boids[i].Pos());
       vali = a / (boids.size() - 1) * vali;
       vsep = -s * vsep;
       vup = vsep + vali + vcoes;
-      boids[i].vchange(vup);
+      boids[i].vchange(vup * dt);
     }
     // Qua devo essere pronto a spiegare perchè non è con gli indici: è meglio,
     // no errori indici, per ogni elemento b di boids mi esegue la variazione
@@ -237,17 +235,13 @@ int main() {
     }
 
     window.clear(sf::Color(150, 150, 150));
-    // Bisogna risolvere il problema che quando i boid vengono portati
-    // dall'altro lato, la loro velocità nella direzione del teletrasporto si
-    // annulla, il che mi stranisce perchè la velocità per ora non è variabile
-    // in base alla differenza di posizione ma dovrebbe essere costante
-    // Come questo loop lo potrei racchiudere nella funzione render
     for (auto const& b : boids) {
       V2 p = b.Pos();
       V2 v = b.Vel();
-      tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
       double ang = std::atan2(v.y, v.x) * 180.0 / PI;
       tri.setRotation(static_cast<float>(ang));
+      tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+
       window.draw(tri);
     }
     window.display();
