@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/g042/FISICA/Progetto/ProgFisic
+CMAKE_SOURCE_DIR = /home/g042/FISICA/Progetti/ProgFisic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/g042/FISICA/Progetto/ProgFisic/out/build/preset1
+CMAKE_BINARY_DIR = /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1
 
 # Utility rule file for NightlyMemoryCheck.
 
@@ -82,6 +82,6 @@ CMakeFiles/NightlyMemoryCheck.dir/clean:
 .PHONY : CMakeFiles/NightlyMemoryCheck.dir/clean
 
 CMakeFiles/NightlyMemoryCheck.dir/depend:
-	cd /home/g042/FISICA/Progetto/ProgFisic/out/build/preset1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/g042/FISICA/Progetto/ProgFisic /home/g042/FISICA/Progetto/ProgFisic /home/g042/FISICA/Progetto/ProgFisic/out/build/preset1 /home/g042/FISICA/Progetto/ProgFisic/out/build/preset1 /home/g042/FISICA/Progetto/ProgFisic/out/build/preset1/CMakeFiles/NightlyMemoryCheck.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/g042/FISICA/Progetti/ProgFisic /home/g042/FISICA/Progetti/ProgFisic /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1 /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1 /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles/NightlyMemoryCheck.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/NightlyMemoryCheck.dir/depend
 

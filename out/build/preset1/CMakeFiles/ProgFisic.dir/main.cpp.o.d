@@ -1,5 +1,5 @@
 CMakeFiles/ProgFisic.dir/main.cpp.o: \
- /home/g042/FISICA/Progetto/ProgFisic/main.cpp /usr/include/stdc-predef.h \
+ /home/g042/FISICA/Progetti/ProgFisic/main.cpp /usr/include/stdc-predef.h \
  /usr/include/SFML/Graphics.hpp /usr/include/SFML/Window.hpp \
  /usr/include/SFML/System.hpp /usr/include/SFML/Config.hpp \
  /usr/include/SFML/System/Clock.hpp /usr/include/SFML/System/Export.hpp \

@@ -24,15 +24,16 @@ V2& operator+=(V2& v, V2 const& r) {
   v.y += r.y;
   return v;
 }
-// Probably not gonna use these but maybe useful, remove before handing in
-//  V2 operator/(double const& g, V2 const& v) { return V2{v.x / g, v.y / g}; }
 double operator*(V2 const& a, V2 const& b) {
   return double{a.x * b.x + a.y * b.y};
 }
+double norm2(V2 const& a, V2 const& b) { return double{std::sqrt(a * b)}; }
+// Probably not gonna use these but maybe useful, remove before handing in
+//  V2 operator/(double const& g, V2 const& v) { return V2{v.x / g, v.y / g}; }
+
 //  double operatorx(V2 const& a, V2 const& b) {
 //    return double{a.x * b.y - a.y * b.y};
 //  }
-//  double norm2(V2 const& a, V2 const& b) { return double{std::sqrt(a * b)}; }
 
 // Specialized variable defining a singular element of the flock
 class Boid {
@@ -51,7 +52,6 @@ class Boid {
   // funzioni inerenti alla classe
   // Inizializzazione del singolo boid con i valori immessi dall'utente
 
-  // Updating is necessary to change it through time
   // Qua l'update lo devo cambiare, se riesco con un parametro true false per
   // attivare o non lo spazio toroidale in maniera da gestirmelo meglio
   void update(double const& dt, V2 const& tsize) {
@@ -134,19 +134,11 @@ int main() {
                  "coefficient, terminating... ";
     return 1;
   }
-  // This is just the awareness radius
-  //  std::cout << " d: \n";
-  //  double d;
-  //  if (!(std::cin >> d) || d <= 0) {
-  //    std::cout << "Negative, zero or not integer value for the distance "
-  //                 "coefficient, terminating... ";
-  //    return 1;
-  //  }
   // ds è la distanza di influenza della regola per i vicini, per i boid  la cui
   // distanza è minore di ds allora compio il calcolo per vsep
-  std::cout << "ds: ";
-  double ds;
-  if (!(std::cin >> ds) || ds <= 0) {
+  std::cout << "dangerrad: ";
+  double dangerrad;
+  if (!(std::cin >> dangerrad) || dangerrad <= 0) {
     std::cout
         << "Negative, zero or not integer value for the influence distance "
            "coefficient, terminating... ";
@@ -174,7 +166,7 @@ int main() {
 
   sf::Clock clock;
   const double PI{3.14159265358979323846264338327950288};
-  const double awareness{15.};
+  const double detectrad{15.};
 
   while (window.isOpen()) {
     sf::Event event;
@@ -196,34 +188,34 @@ int main() {
     V2 vup;
     // Questo lo devo mettere dentro una funzione update in maniera da gestirlo
     // meglio
-    // Soprattutto c'è qualcosa che ancora non va con l'algoritmo di separazione
-    // in quanto si sovrappongono ancora
-    for (int i{0}; i < N; ++i) {
+    for (auto& b1 : boids) {
       V2 vsep;
       V2 vali;
       V2 vcoes;
       V2 xt;
       V2 xc;
-      for (int j{0}; j < N; ++j) {
-        if (i == j) {
+      for (auto& b2 : boids) {
+        //Verifico che i boid su cui sto operando siano diversi
+        if (&b1 == &b2) {
           continue;
         }
-        double distisq = (boids[j].Pos() - boids[i].Pos()) *
-                         (boids[j].Pos() - boids[i].Pos());
-        if (distisq <= ds * ds) {
-          vsep += boids[j].Pos() - boids[i].Pos();
+        //Questo check non va bene, inoltre il loop non va bene perchè non mi controlla bene le distanze per poi eseguire il codice
+        double distsq = (b1.Pos().x - b2.Pos().x) * (b1.Pos().x - b2.Pos().x) +
+                         (b1.Pos().y - b2.Pos().y) + (b1.Pos().y - b2.Pos().y);
+        if (distsq <= dangerrad * dangerrad) {
+          vsep += b1.Pos() - b2.Pos();
         }
-        if (distisq <= awareness * awareness) {
-          vali += boids[j].Vel() - boids[i].Vel();
-          xt += boids[j].Pos();
+        if (distsq <= detectrad * detectrad) {
+          vali += b1.Vel() - b2.Vel();
+          xt += b1.Pos();
         }
       }
       xc = 1. / boids.size() * xt;
-      vcoes = c * (xc - boids[i].Pos());
+      vcoes = c * (xc - b1.Pos());
       vali = a / (boids.size() - 1) * vali;
       vsep = -s * vsep;
       vup = vsep + vali + vcoes;
-      boids[i].vchange(vup * dt);
+      b1.vchange(vup * dt);
     }
     // Qua devo essere pronto a spiegare perchè non è con gli indici: è meglio,
     // no errori indici, per ogni elemento b di boids mi esegue la variazione

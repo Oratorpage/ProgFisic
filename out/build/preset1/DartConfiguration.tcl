@@ -4,8 +4,8 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/g042/FISICA/Progetto/ProgFisic
-BuildDirectory: /home/g042/FISICA/Progetto/ProgFisic/out/build/preset1
+SourceDirectory: /home/g042/FISICA/Progetti/ProgFisic
+BuildDirectory: /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1
 
 # Where to place the cost data store
 CostDataFile: 
@@ -27,7 +27,7 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/g042/FISICA/Progetto/ProgFisic"
+ConfigureCommand: "/usr/bin/cmake" "/home/g042/FISICA/Progetti/ProgFisic"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 

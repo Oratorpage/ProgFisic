@@ -301,8 +301,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/g042/FISICA/Progetto/ProgFisic/out/build/preset1",
-		"source" : "/home/g042/FISICA/Progetto/ProgFisic"
+		"build" : "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+		"source" : "/home/g042/FISICA/Progetti/ProgFisic"
 	},
 	"version" : 
 	{
