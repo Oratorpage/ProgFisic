@@ -45,7 +45,8 @@ class Boid {
   // Costructors
   Boid(V2 v, V2 p) : velocity_{v.x, v.y}, position_{p.x, p.y} {}
   Boid(V2 v) : velocity_{v.x, v.y} {}
-  // Boid(V2 p) : position_{p.x,p.y} {} Da risolvere prima di consegnare
+  // Boid(V2 p) : position_{p.x,p.y} {} Fa overload strano, non va bene, non sa
+  // se posizione o velocità, trova un trick per farlo funzionare
   V2 Vel() const { return velocity_; }
   V2 Pos() const { return position_; }
 
@@ -54,8 +55,8 @@ class Boid {
 
   // Qua l'update lo devo cambiare, se riesco con un parametro true false per
   // attivare o non lo spazio toroidale in maniera da gestirmelo meglio
-  void update(double const& dt, V2 const& tsize) {
-    position_ = position_ + velocity_ * dt;
+  void update(double const& dt, V2 const& tsize, V2 const& vup) {
+    position_ = position_ + (velocity_ + vup) * dt;
     if (position_.x < 0) {
       position_.x = tsize.x;
     };
@@ -69,6 +70,7 @@ class Boid {
       position_.y = 0.;
     };
   }
+
 
   // Uso il metodo solamente per cambiare il valore, il calcolo di vup me lo
   // faccio con una funzione prima che non cambia i valori della classe
@@ -185,45 +187,44 @@ int main() {
     }
 
     double dt = clock.restart().asSeconds();
-    V2 vup;
-    // Questo lo devo mettere dentro una funzione update in maniera da gestirlo
-    // meglio
-    for (auto& b1 : boids) {
+
+    for (auto& bi : boids) {
+      std::vector<Boid*> nearboids;
       V2 vsep;
-      V2 vali;
+      V2 vallig;
+      V2 xcm;
       V2 vcoes;
-      V2 xt;
-      V2 xc;
-      for (auto& b2 : boids) {
-        //Verifico che i boid su cui sto operando siano diversi
-        if (&b1 == &b2) {
-          continue;
-        }
-        //Questo check non va bene, inoltre il loop non va bene perchè non mi controlla bene le distanze per poi eseguire il codice
-        double distsq = (b1.Pos().x - b2.Pos().x) * (b1.Pos().x - b2.Pos().x) +
-                         (b1.Pos().y - b2.Pos().y) + (b1.Pos().y - b2.Pos().y);
-        if (distsq <= dangerrad * dangerrad) {
-          vsep += b1.Pos() - b2.Pos();
-        }
-        if (distsq <= detectrad * detectrad) {
-          vali += b1.Vel() - b2.Vel();
-          xt += b1.Pos();
+      // aggiunta per ogni iterazione su boids del Boid bj al vettore dei puntatori dei Boid vicini a
+      // bi
+      for (auto& bj : boids) {
+        if (&bi != &bj) {
+          double distsq =
+              (bi.Pos().x - bj.Pos().x) * (bi.Pos().x - bj.Pos().x) +
+              (bi.Pos().y - bj.Pos().y) + (bi.Pos().y - bj.Pos().y);
+          if (distsq < detectrad * detectrad) {
+            nearboids.push_back(&bj);
+          }
         }
       }
-      xc = 1. / boids.size() * xt;
-      vcoes = c * (xc - b1.Pos());
-      vali = a / (boids.size() - 1) * vali;
+      // calcolo delle componenti della velocità dalle regole
+      for (auto& bj : nearboids) {
+        if (&bi != bj) {
+          double distsq =
+              (bi.Pos().x - (*bj).Pos().x) * (bi.Pos().x - (*bj).Pos().x) +
+              (bi.Pos().y - (*bj).Pos().y) + (bi.Pos().y - (*bj).Pos().y);
+          if (distsq < dangerrad) {
+            vsep += (*bj).Pos() - bi.Pos();
+          }
+          vallig += (*bj).Vel();
+          xcm += (*bj).Pos();
+        }
+      }
       vsep = -s * vsep;
-      vup = vsep + vali + vcoes;
-      b1.vchange(vup * dt);
-    }
-    // Qua devo essere pronto a spiegare perchè non è con gli indici: è meglio,
-    // no errori indici, per ogni elemento b di boids mi esegue la variazione
-    // della posizione
-    // Questo loop direi che lo posso racchiudere direttamente nella funzione
-    // update
-    for (auto& b : boids) {
-      b.update(dt, tsize);
+      vallig = a * ((1 / (nearboids.size() - 1)) * vallig - bi.Vel());
+      xcm = (1 / (nearboids.size() - 1)) * xcm;
+      vcoes = c * (xcm - bi.Pos());
+      V2 vup = vsep + vallig + vcoes;
+      bi.update(dt, tsize, vup);
     }
 
     window.clear(sf::Color(150, 150, 150));
