@@ -56,7 +56,8 @@ class Boid {
   // Qua l'update lo devo cambiare, se riesco con un parametro true false per
   // attivare o non lo spazio toroidale in maniera da gestirmelo meglio
   void update(double const& dt, V2 const& tsize, V2 const& vup) {
-    position_ = position_ + (velocity_ + vup) * dt;
+    velocity_ += vup * dt;
+    position_ += velocity_ * dt;
     if (position_.x < 0) {
       position_.x = tsize.x;
     };
@@ -69,8 +70,22 @@ class Boid {
     if (position_.y > tsize.y) {
       position_.y = 0.;
     };
+    // La limitazione della velocità bisognerebbe porla quando lo spazio è
+    // toroidale e non ha un limitatore posto dai constraints spaziali,
+    // altrimenti diventano velocissimi e non ha più senso
+    if (velocity_.x > 100) {
+      velocity_.x = 100;
+    }
+    if (velocity_.x < -100) {
+      velocity_.x = -100;
+    }
+    if (velocity_.y > 100) {
+      velocity_.y = 100;
+    }
+    if (velocity_.y < -100) {
+      velocity_.y = -100;
+    }
   }
-
 
   // Uso il metodo solamente per cambiare il valore, il calcolo di vup me lo
   // faccio con una funzione prima che non cambia i valori della classe
@@ -164,11 +179,28 @@ int main() {
   tri.setFillColor(sf::Color::Cyan);
   tri.setOutlineThickness(0.5f);
   tri.setOutlineColor(sf::Color::Black);
-  tri.setPosition(400, 300);
+  tri.setPosition(0, 0);
 
   sf::Clock clock;
   const double PI{3.14159265358979323846264338327950288};
-  const double detectrad{15.};
+  const double detectrad{70.};
+  //Con 40 non è male
+
+  //Devo realizzarlo opzionale, altrimenti ogni volta è molto pesante
+  //Per visualizzare l'interazione, raggio di rilevazione
+  // sf::CircleShape circdetr;
+  // circdetr.setRadius(static_cast<float>(detectrad));
+  // circdetr.setOrigin(static_cast<float>(detectrad), static_cast<float>(detectrad));
+  // circdetr.setOutlineColor(sf::Color::Green);
+  // circdetr.setFillColor(sf::Color::Transparent);
+  // circdetr.setOutlineThickness(5);
+  // //Raggio di pericolo
+  // sf::CircleShape circdanr;
+  // circdanr.setRadius(static_cast<float>(dangerrad));
+  // circdanr.setOrigin(static_cast<float>(dangerrad), static_cast<float>(dangerrad));
+  // circdanr.setOutlineColor(sf::Color::Red);
+  // circdanr.setFillColor(sf::Color::Transparent);
+  // circdanr.setOutlineThickness(5);
 
   while (window.isOpen()) {
     sf::Event event;
@@ -194,35 +226,39 @@ int main() {
       V2 vallig;
       V2 xcm;
       V2 vcoes;
-      // aggiunta per ogni iterazione su boids del Boid bj al vettore dei puntatori dei Boid vicini a
-      // bi
+      // aggiunta per ogni iterazione su boids del Boid bj al vettore dei
+      // puntatori dei Boid vicini a bi
       for (auto& bj : boids) {
         if (&bi != &bj) {
           double distsq =
               (bi.Pos().x - bj.Pos().x) * (bi.Pos().x - bj.Pos().x) +
-              (bi.Pos().y - bj.Pos().y) + (bi.Pos().y - bj.Pos().y);
+              (bi.Pos().y - bj.Pos().y) * (bi.Pos().y - bj.Pos().y);
           if (distsq < detectrad * detectrad) {
             nearboids.push_back(&bj);
           }
         }
       }
-      // calcolo delle componenti della velocità dalle regole
-      for (auto& bj : nearboids) {
-        if (&bi != bj) {
-          double distsq =
-              (bi.Pos().x - (*bj).Pos().x) * (bi.Pos().x - (*bj).Pos().x) +
-              (bi.Pos().y - (*bj).Pos().y) + (bi.Pos().y - (*bj).Pos().y);
-          if (distsq < dangerrad) {
-            vsep += (*bj).Pos() - bi.Pos();
+      // calcolo delle componenti della velocità dalle regole, solo se ha dei
+      // vicini
+      if (!nearboids.empty()) {
+        double invNear = 1. / nearboids.size();
+        for (auto& bj : nearboids) {
+          if (&bi != bj) {
+            double distsq =
+                (bi.Pos().x - (*bj).Pos().x) * (bi.Pos().x - (*bj).Pos().x) +
+                (bi.Pos().y - (*bj).Pos().y) * (bi.Pos().y - (*bj).Pos().y);
+            if (distsq < dangerrad * dangerrad) {
+              vsep += (*bj).Pos() - bi.Pos();
+            }
+            vallig += (*bj).Vel();
+            xcm += (*bj).Pos();
           }
-          vallig += (*bj).Vel();
-          xcm += (*bj).Pos();
         }
+        vsep = -s * vsep;
+        vallig = a * (invNear * vallig - bi.Vel());
+        xcm = invNear * xcm;
+        vcoes = c * (xcm - bi.Pos());
       }
-      vsep = -s * vsep;
-      vallig = a * ((1 / (nearboids.size() - 1)) * vallig - bi.Vel());
-      xcm = (1 / (nearboids.size() - 1)) * xcm;
-      vcoes = c * (xcm - bi.Pos());
       V2 vup = vsep + vallig + vcoes;
       bi.update(dt, tsize, vup);
     }
@@ -235,7 +271,14 @@ int main() {
       tri.setRotation(static_cast<float>(ang));
       tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
 
+      // circdetr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+      // circdanr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+
       window.draw(tri);
+
+      // window.draw(circdetr);
+
+      // window.draw(circdanr);
     }
     window.display();
   }
