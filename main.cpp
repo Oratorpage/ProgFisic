@@ -58,7 +58,7 @@ class Boid {
   // funzioni inerenti alla classe
   // Inizializzazione del singolo boid con i valori immessi dall'utente
 
-  //update basato sul parametro di cambio velocità e sul tipo di spazio deciso
+  // update basato sul parametro di cambio velocità e sul tipo di spazio deciso
   void update(double const& dt, V2 const& tsize, V2& vup,
               bool const& toroidal) {
     velocity_ += vup * dt;
@@ -93,6 +93,7 @@ class Boid {
         velocity_.y = -100;
       }
     }
+    // A non-toroidal space doesn't need a velocity limiter, it is built in
     if (position_.x < 20) {
       velocity_.x += 10.;
     };
@@ -143,6 +144,7 @@ int main() {
   // Should create a struct for the values or a function to imput all of these
   // values, it's a bit ugly and inefficient like this, if I'd like to change
   // the values I'd have no way to do it
+  // Almeno incapsularle in una funzione ensomma
   std::cout << "Input the values for the desired simulation: N:";
   int N;
   if (!(std::cin >> N) || N <= 0) {
@@ -187,12 +189,12 @@ int main() {
     std::cout << "Not a valid value, terminating... ";
     return 1;
   }
-  // std::cout << "Operational Radiuses active (1 for yes, 0 for no): ";
-  // bool visrad;
-  // if (!(std::cin >> visrad)) {
-  //   std::cout << "Not a valid value, terminating... ";
-  //   return 1;
-  // }
+  std::cout << "Operational Radiuses active (1 for yes, 0 for no): ";
+  bool oprad;
+  if (!(std::cin >> oprad)) {
+    std::cout << "Not a valid value, terminating... ";
+    return 1;
+  }
 
   std::vector<Boid> boids;
   boids.reserve(N);  // Devo guardare la documentazione su .reserve
@@ -218,22 +220,24 @@ int main() {
   const double detectrad{45.};
   // Con 40 non è male
 
-  // if (visrad == true) {
-  //   sf::CircleShape circdetr;
-  //   circdetr.setRadius(static_cast<float>(detectrad));
-  //   circdetr.setOrigin(static_cast<float>(detectrad),
-  //                      static_cast<float>(detectrad));
-  //   circdetr.setOutlineColor(sf::Color::Green);
-  //   circdetr.setFillColor(sf::Color::Transparent);
-  //   circdetr.setOutlineThickness(5);
-  //   //  //Raggio di pericolo
-  //   sf::CircleShape circdanr;
-  //   circdanr.setRadius(static_cast<float>(dangerrad));
-  //   circdanr.setOrigin(static_cast<float>(dangerrad),
-  //                      static_cast<float>(dangerrad));
-  //   circdanr.setOutlineColor(sf::Color::Red);
-  //   circdanr.setFillColor(sf::Color::Transparent);
-  //   circdanr.setOutlineThickness(5);
+  // Questo devo capire se posso incapsularlo in un qualche modo perchè
+  // altrimenti definire tutta sta roba ogni volta è inutile
+  //  if (oprad == true) {
+  sf::CircleShape circdetr;
+  circdetr.setRadius(static_cast<float>(detectrad));
+  circdetr.setOrigin(static_cast<float>(detectrad),
+                     static_cast<float>(detectrad));
+  circdetr.setOutlineColor(sf::Color::Green);
+  circdetr.setFillColor(sf::Color::Transparent);
+  circdetr.setOutlineThickness(5);
+   //Raggio di pericolo
+  sf::CircleShape circdanr;
+  circdanr.setRadius(static_cast<float>(dangerrad));
+  circdanr.setOrigin(static_cast<float>(dangerrad),
+                     static_cast<float>(dangerrad));
+  circdanr.setOutlineColor(sf::Color::Red);
+  circdanr.setFillColor(sf::Color::Transparent);
+  circdanr.setOutlineThickness(5);
   // }
 
   while (window.isOpen()) {
@@ -306,15 +310,14 @@ int main() {
       double ang = std::atan2(v.y, v.x) * 180.0 / PI;
       tri.setRotation(static_cast<float>(ang));
       tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-
-      // circdetr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-      // circdanr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-
+      //Possible bug/weird behaviour for non toroidal space but oprad on
+      if (oprad == true) {
+        circdetr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+        circdanr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+        window.draw(circdetr);
+        window.draw(circdanr);
+      }
       window.draw(tri);
-
-      // window.draw(circdetr);
-
-      // window.draw(circdanr);
     }
     window.display();
   }

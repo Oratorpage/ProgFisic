@@ -2,3 +2,4 @@
 - [ ] Create different behaviours and make them optional
 - [ ] Create an interface to input variables and output statistics + optional radiuses + behaviours e tutto il resto delle cose opzionali
 - [ ] Resize according to window
+- [ ] Add another window that display stats for the boid flock, cm position, average velocity, highest, lowest, number of boids on screen, 
