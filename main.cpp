@@ -61,8 +61,6 @@ class Boid {
   // update basato sul parametro di cambio velocità e sul tipo di spazio deciso
   void update(double const& dt, V2 const& tsize, V2& vup,
               bool const& toroidal) {
-    velocity_ += vup * dt;
-    position_ += velocity_ * dt;
     if (toroidal == true) {
       velocity_ += vup * dt;
       position_ += velocity_ * dt;
@@ -80,37 +78,36 @@ class Boid {
       };
       // Velocity constraint for the toroidal space, avoids particle
       // accellerator behaviour
-      if (velocity_.x > 100) {
-        velocity_.x = 100;
+      if (velocity_.x > 150) {
+        velocity_.x = 150;
       }
-      if (velocity_.x < -100) {
-        velocity_.x = -100;
+      if (velocity_.x < -150) {
+        velocity_.x = -150;
       }
-      if (velocity_.y > 100) {
-        velocity_.y = 100;
+      if (velocity_.y > 150) {
+        velocity_.y = 150;
       }
-      if (velocity_.y < -100) {
-        velocity_.y = -100;
+      if (velocity_.y < -150) {
+        velocity_.y = -150;
       }
+    } else if (toroidal == false) {
+      velocity_ += vup * dt;
+      position_ += velocity_ * dt;
+      // A non-toroidal space doesn't need a velocity limiter, it is built in
+      if (position_.x < 20) {
+        velocity_.x += 10.;
+      };
+      if (position_.y < 20) {
+        velocity_.y += 10.;
+      };
+      if (position_.x > tsize.x - 20) {
+        velocity_.x -= 10.;
+      };
+      if (position_.y > tsize.y - 20) {
+        velocity_.y -= 10.;
+      };
     }
-    // A non-toroidal space doesn't need a velocity limiter, it is built in
-    if (position_.x < 20) {
-      velocity_.x += 10.;
-    };
-    if (position_.y < 20) {
-      velocity_.y += 10.;
-    };
-    if (position_.x > tsize.x - 20) {
-      velocity_.x -= 10.;
-    };
-    if (position_.y > tsize.y - 20) {
-      velocity_.y -= 10.;
-    };
   }
-
-  // Uso il metodo solamente per cambiare il valore, il calcolo di vup me lo
-  // faccio con una funzione prima che non cambia i valori della classe
-  void vchange(V2 const& vup) { velocity_ += vup; }
 };
 
 // Generare una posizione iniziale randomica aiuta nell'ottenere risultati
@@ -173,8 +170,6 @@ int main() {
                  "coefficient, terminating... ";
     return 1;
   }
-  // ds è la distanza di influenza della regola per i vicini, per i boid  la cui
-  // distanza è minore di ds allora compio il calcolo per vsep
   std::cout << "dangerrad: ";
   double dangerrad;
   if (!(std::cin >> dangerrad) || dangerrad <= 0) {
@@ -230,7 +225,7 @@ int main() {
   circdetr.setOutlineColor(sf::Color::Green);
   circdetr.setFillColor(sf::Color::Transparent);
   circdetr.setOutlineThickness(5);
-   //Raggio di pericolo
+  // Raggio di pericolo
   sf::CircleShape circdanr;
   circdanr.setRadius(static_cast<float>(dangerrad));
   circdanr.setOrigin(static_cast<float>(dangerrad),
@@ -310,7 +305,7 @@ int main() {
       double ang = std::atan2(v.y, v.x) * 180.0 / PI;
       tri.setRotation(static_cast<float>(ang));
       tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-      //Possible bug/weird behaviour for non toroidal space but oprad on
+      // Possible bug/weird behaviour for non toroidal space but oprad on
       if (oprad == true) {
         circdetr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
         circdanr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
