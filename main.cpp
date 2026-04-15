@@ -24,6 +24,11 @@ V2& operator+=(V2& v, V2 const& r) {
   v.y += r.y;
   return v;
 }
+// V2& operator*=(V2& v, double d) {
+//   v.x *= d;
+//   v.y *= d;
+// }
+
 double operator*(V2 const& a, V2 const& b) {
   return double{a.x * b.x + a.y * b.y};
 }
@@ -53,38 +58,53 @@ class Boid {
   // funzioni inerenti alla classe
   // Inizializzazione del singolo boid con i valori immessi dall'utente
 
-  // Qua l'update lo devo cambiare, se riesco con un parametro true false per
-  // attivare o non lo spazio toroidale in maniera da gestirmelo meglio
-  void update(double const& dt, V2 const& tsize, V2 const& vup) {
+  //update basato sul parametro di cambio velocità e sul tipo di spazio deciso
+  void update(double const& dt, V2 const& tsize, V2& vup,
+              bool const& toroidal) {
     velocity_ += vup * dt;
     position_ += velocity_ * dt;
-    if (position_.x < 0) {
-      position_.x = tsize.x;
-    };
-    if (position_.y < 0) {
-      position_.y = tsize.y;
-    };
-    if (position_.x > tsize.x) {
-      position_.x = 0.;
-    };
-    if (position_.y > tsize.y) {
-      position_.y = 0.;
-    };
-    // La limitazione della velocità bisognerebbe porla quando lo spazio è
-    // toroidale e non ha un limitatore posto dai constraints spaziali,
-    // altrimenti diventano velocissimi e non ha più senso
-    if (velocity_.x > 100) {
-      velocity_.x = 100;
+    if (toroidal == true) {
+      velocity_ += vup * dt;
+      position_ += velocity_ * dt;
+      if (position_.x < 0) {
+        position_.x = tsize.x;
+      };
+      if (position_.y < 0) {
+        position_.y = tsize.y;
+      };
+      if (position_.x > tsize.x) {
+        position_.x = 0.;
+      };
+      if (position_.y > tsize.y) {
+        position_.y = 0.;
+      };
+      // Velocity constraint for the toroidal space, avoids particle
+      // accellerator behaviour
+      if (velocity_.x > 100) {
+        velocity_.x = 100;
+      }
+      if (velocity_.x < -100) {
+        velocity_.x = -100;
+      }
+      if (velocity_.y > 100) {
+        velocity_.y = 100;
+      }
+      if (velocity_.y < -100) {
+        velocity_.y = -100;
+      }
     }
-    if (velocity_.x < -100) {
-      velocity_.x = -100;
-    }
-    if (velocity_.y > 100) {
-      velocity_.y = 100;
-    }
-    if (velocity_.y < -100) {
-      velocity_.y = -100;
-    }
+    if (position_.x < 20) {
+      velocity_.x += 10.;
+    };
+    if (position_.y < 20) {
+      velocity_.y += 10.;
+    };
+    if (position_.x > tsize.x - 20) {
+      velocity_.x -= 10.;
+    };
+    if (position_.y > tsize.y - 20) {
+      velocity_.y -= 10.;
+    };
   }
 
   // Uso il metodo solamente per cambiare il valore, il calcolo di vup me lo
@@ -161,6 +181,18 @@ int main() {
            "coefficient, terminating... ";
     return 1;
   }
+  std::cout << "Toroidal space active (1 for yes, 0 for no): ";
+  bool toroidal;
+  if (!(std::cin >> toroidal)) {
+    std::cout << "Not a valid value, terminating... ";
+    return 1;
+  }
+  // std::cout << "Operational Radiuses active (1 for yes, 0 for no): ";
+  // bool visrad;
+  // if (!(std::cin >> visrad)) {
+  //   std::cout << "Not a valid value, terminating... ";
+  //   return 1;
+  // }
 
   std::vector<Boid> boids;
   boids.reserve(N);  // Devo guardare la documentazione su .reserve
@@ -183,24 +215,26 @@ int main() {
 
   sf::Clock clock;
   const double PI{3.14159265358979323846264338327950288};
-  const double detectrad{70.};
-  //Con 40 non è male
+  const double detectrad{45.};
+  // Con 40 non è male
 
-  //Devo realizzarlo opzionale, altrimenti ogni volta è molto pesante
-  //Per visualizzare l'interazione, raggio di rilevazione
-  // sf::CircleShape circdetr;
-  // circdetr.setRadius(static_cast<float>(detectrad));
-  // circdetr.setOrigin(static_cast<float>(detectrad), static_cast<float>(detectrad));
-  // circdetr.setOutlineColor(sf::Color::Green);
-  // circdetr.setFillColor(sf::Color::Transparent);
-  // circdetr.setOutlineThickness(5);
-  // //Raggio di pericolo
-  // sf::CircleShape circdanr;
-  // circdanr.setRadius(static_cast<float>(dangerrad));
-  // circdanr.setOrigin(static_cast<float>(dangerrad), static_cast<float>(dangerrad));
-  // circdanr.setOutlineColor(sf::Color::Red);
-  // circdanr.setFillColor(sf::Color::Transparent);
-  // circdanr.setOutlineThickness(5);
+  // if (visrad == true) {
+  //   sf::CircleShape circdetr;
+  //   circdetr.setRadius(static_cast<float>(detectrad));
+  //   circdetr.setOrigin(static_cast<float>(detectrad),
+  //                      static_cast<float>(detectrad));
+  //   circdetr.setOutlineColor(sf::Color::Green);
+  //   circdetr.setFillColor(sf::Color::Transparent);
+  //   circdetr.setOutlineThickness(5);
+  //   //  //Raggio di pericolo
+  //   sf::CircleShape circdanr;
+  //   circdanr.setRadius(static_cast<float>(dangerrad));
+  //   circdanr.setOrigin(static_cast<float>(dangerrad),
+  //                      static_cast<float>(dangerrad));
+  //   circdanr.setOutlineColor(sf::Color::Red);
+  //   circdanr.setFillColor(sf::Color::Transparent);
+  //   circdanr.setOutlineThickness(5);
+  // }
 
   while (window.isOpen()) {
     sf::Event event;
@@ -220,6 +254,7 @@ int main() {
 
     double dt = clock.restart().asSeconds();
 
+    // Questo invece lo potrei racchiudere all'interno di una funzione move
     for (auto& bi : boids) {
       std::vector<Boid*> nearboids;
       V2 vsep;
@@ -260,9 +295,10 @@ int main() {
         vcoes = c * (xcm - bi.Pos());
       }
       V2 vup = vsep + vallig + vcoes;
-      bi.update(dt, tsize, vup);
+      bi.update(dt, tsize, vup, toroidal);
     }
 
+    // Questo lo potrei racchiudere all'interno di una funzione render
     window.clear(sf::Color(150, 150, 150));
     for (auto const& b : boids) {
       V2 p = b.Pos();
