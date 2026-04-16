@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 // g++ -std=c++17 boids.cpp -lsfml-graphics -lsfml-window -lsfml-system
 
@@ -19,6 +20,7 @@ V2 operator+(V2 const& a, V2 const& b) { return V2{a.x + b.x, a.y + b.y}; }
 V2 operator-(V2 const& a, V2 const& b) { return V2{a.x - b.x, a.y - b.y}; }
 V2 operator*(double const& g, V2 const& v) { return V2{v.x * g, v.y * g}; }
 V2 operator*(V2 const& v, double const& g) { return V2{v.x * g, v.y * g}; }
+V2 operator/(V2 const& v, double const& g) { return V2{v.x / g, v.y / g}; }
 V2& operator+=(V2& v, V2 const& r) {
   v.x += r.x;
   v.y += r.y;
@@ -28,11 +30,10 @@ V2& operator+=(V2& v, V2 const& r) {
 //   v.x *= d;
 //   v.y *= d;
 // }
-
 double operator*(V2 const& a, V2 const& b) {
   return double{a.x * b.x + a.y * b.y};
 }
-double norm2(V2 const& a, V2 const& b) { return double{std::sqrt(a * b)}; }
+
 // Probably not gonna use these but maybe useful, remove before handing in
 //  V2 operator/(double const& g, V2 const& v) { return V2{v.x / g, v.y / g}; }
 
@@ -61,9 +62,11 @@ class Boid {
   // update basato sul parametro di cambio velocità e sul tipo di spazio deciso
   void update(double const& dt, V2 const& tsize, V2& vup,
               bool const& toroidal) {
-    if (toroidal == true) {
-      velocity_ += vup * dt;
-      position_ += velocity_ * dt;
+    velocity_ += vup * dt;
+    position_ += velocity_ * dt;
+    // Qua posso anche non mettere  == true a quanto pare per cui lo lascerei
+    // così
+    if (toroidal) {
       if (position_.x < 0) {
         position_.x = tsize.x;
       };
@@ -90,9 +93,7 @@ class Boid {
       if (velocity_.y < -150) {
         velocity_.y = -150;
       }
-    } else if (toroidal == false) {
-      velocity_ += vup * dt;
-      position_ += velocity_ * dt;
+    } else {
       // A non-toroidal space doesn't need a velocity limiter, it is built in
       if (position_.x < 20) {
         velocity_.x += 10.;
@@ -129,15 +130,19 @@ V2 rpos(V2 const& tsize) {
 
 // Should maybe implement the try catch architecture
 int main() {
-  sf::RenderWindow window(sf::VideoMode(800, 600), "Flock Test",
-                          sf::Style::Default);
-  window.setPosition(sf::Vector2i(750, 200));
-  sf::Vector2u size = window.getSize();
+  sf::RenderWindow flockwindow(sf::VideoMode(800, 600), "Flock View",
+                               sf::Style::Default);
+  flockwindow.setPosition(sf::Vector2i(750, 200));
+  sf::Vector2u fwsize = flockwindow.getSize();
   // Non ci dovrebbe essere problema con questo static cast in quanto passo da
   // un unsigned int ad un double, porterà a problemi forse con schermi/finestre
-  // molto, molto grandi
-  V2 tsize{static_cast<double>(size.x), static_cast<double>(size.y)};
+  // molto, molto grandi, vedi se problemi già noti
+  V2 fwstsize{static_cast<double>(fwsize.x), static_cast<double>(fwsize.y)};
 
+  sf::RenderWindow iowindow(sf::VideoMode(600, 400), "I/O View",
+                            sf::Style::Default);
+  sf::Vector2u iosize = iowindow.getSize();
+  V2 iostsize{static_cast<double>(iosize.x), static_cast<double>(iosize.y)};
   // Should create a struct for the values or a function to imput all of these
   // values, it's a bit ugly and inefficient like this, if I'd like to change
   // the values I'd have no way to do it
@@ -196,7 +201,7 @@ int main() {
   // Qua non è un loop sugli elementi di boids perchè ovviamente è vuoto, ho
   // solo aumentato la capacità del vettore per non dover reallocare
   for (int i{0}; i < N; ++i) {
-    boids.emplace_back(rvel(), rpos(tsize));
+    boids.emplace_back(rvel(), rpos(fwstsize));
   }
 
   // Caratteristiche grafiche del boid
@@ -235,17 +240,43 @@ int main() {
   circdanr.setOutlineThickness(5);
   // }
 
-  while (window.isOpen()) {
+  sf::CircleShape cmpos;
+  cmpos.setRadius(5);
+  cmpos.setOutlineColor(sf::Color::Black);
+  cmpos.setFillColor(sf::Color::Black);
+
+  sf::Font tnrfont;
+  if (tnrfont.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
+    std::cout << "Font file was  loaded correctly \n";
+  }
+  sf::Text text;
+  text.setFont(tnrfont);
+  text.setCharacterSize(15);
+  // Loop inerente alle finestre e ciò che succede per ogni frame
+  while (flockwindow.isOpen()) {
     sf::Event event;
-    while (window.pollEvent(event)) {
+    while (flockwindow.pollEvent(event)) {
       switch (event.type) {
         case sf::Event::Closed:
-          window.close();
+          flockwindow.close();
           break;
 
         case sf::Event::KeyPressed:
           if (event.key.code == sf::Keyboard::Escape) {
-            window.close();
+            flockwindow.close();
+          }
+          break;
+      }
+    }
+    while (iowindow.isOpen() && iowindow.pollEvent(event)) {
+      switch (event.type) {
+        case sf::Event::Closed:
+          iowindow.close();
+          break;
+
+        case sf::Event::KeyPressed:
+          if (event.key.code == sf::Keyboard::Escape) {
+            iowindow.close();
           }
           break;
       }
@@ -294,11 +325,13 @@ int main() {
         vcoes = c * (xcm - bi.Pos());
       }
       V2 vup = vsep + vallig + vcoes;
-      bi.update(dt, tsize, vup, toroidal);
+      bi.update(dt, fwstsize, vup, toroidal);
     }
 
     // Questo lo potrei racchiudere all'interno di una funzione render
-    window.clear(sf::Color(150, 150, 150));
+    flockwindow.clear(sf::Color(150, 150, 150));
+    V2 cm;
+    V2 avgv;
     for (auto const& b : boids) {
       V2 p = b.Pos();
       V2 v = b.Vel();
@@ -309,12 +342,32 @@ int main() {
       if (oprad == true) {
         circdetr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
         circdanr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-        window.draw(circdetr);
-        window.draw(circdanr);
+        flockwindow.draw(circdetr);
+        flockwindow.draw(circdanr);
       }
-      window.draw(tri);
+      flockwindow.draw(tri);
+
+      cm += p;
+      avgv += v;
     }
-    window.display();
+    cm = cm / N;
+    avgv = avgv / N;
+
+    std::string strxcm = "Position of the cm: x :" + std::to_string(cm.x) +
+                         " , y: " + std::to_string(cm.y) + "\n";
+    std::string stravgv =
+        "Velocity of the total flock: x :" + std::to_string(avgv.x) +
+        " , y: " + std::to_string(avgv.y) + "\n";
+    text.setString(strxcm + stravgv);
+
+    cmpos.setPosition(static_cast<float>(cm.x), static_cast<float>(cm.y));
+    flockwindow.draw(cmpos);
+
+    iowindow.clear(sf::Color(150, 150, 150));
+    iowindow.draw(text);
+
+    iowindow.display();
+    flockwindow.display();
   }
 
   return 0;
