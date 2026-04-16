@@ -332,6 +332,7 @@ int main() {
     flockwindow.clear(sf::Color(150, 150, 150));
     V2 cm;
     V2 avgv;
+    int inwcount;
     for (auto const& b : boids) {
       V2 p = b.Pos();
       V2 v = b.Vel();
@@ -344,6 +345,11 @@ int main() {
         circdanr.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
         flockwindow.draw(circdetr);
         flockwindow.draw(circdanr);
+      }
+
+      if (b.Pos().x < fwstsize.x && b.Pos().y < fwstsize.y && b.Pos().x > 0 &&
+          b.Pos().y > 0) {
+        inwcount += 1;
       }
       flockwindow.draw(tri);
 
@@ -358,7 +364,9 @@ int main() {
     std::string stravgv =
         "Velocity of the total flock: x :" + std::to_string(avgv.x) +
         " , y: " + std::to_string(avgv.y) + "\n";
-    text.setString(strxcm + stravgv);
+    std::string strinwc =
+        "Boids present in window view: " + std::to_string(inwcount) + "\n";
+    text.setString(strxcm + stravgv + strinwc);
 
     cmpos.setPosition(static_cast<float>(cm.x), static_cast<float>(cm.y));
     flockwindow.draw(cmpos);
@@ -368,6 +376,7 @@ int main() {
 
     iowindow.display();
     flockwindow.display();
+    inwcount = 0;
   }
 
   return 0;
