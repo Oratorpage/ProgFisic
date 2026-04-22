@@ -11,41 +11,45 @@
 // A quanto pare dovrò mettere tutto quanto all'interno del namespace quindi sì
 // conviene direttamente riscrivere tutto da capo
 
-// Bidimensional vectors and operations
+// Bidimensional vector and pertinent operations
 struct V2 {
   double x{0};
   double y{0};
 };
 V2 operator+(V2 const& a, V2 const& b) { return V2{a.x + b.x, a.y + b.y}; }
-V2 operator-(V2 const& a, V2 const& b) { return V2{a.x - b.x, a.y - b.y}; }
-V2 operator*(double const& g, V2 const& v) { return V2{v.x * g, v.y * g}; }
-V2 operator*(V2 const& v, double const& g) { return V2{v.x * g, v.y * g}; }
-V2 operator/(V2 const& v, double const& g) { return V2{v.x / g, v.y / g}; }
 V2& operator+=(V2& v, V2 const& r) {
   v.x += r.x;
   v.y += r.y;
   return v;
 }
-// V2& operator*=(V2& v, double d) {
-//   v.x *= d;
-//   v.y *= d;
-// }
-double operator*(V2 const& a, V2 const& b) {
+V2 operator-(V2 const& a, V2 const& b) { return V2{a.x - b.x, a.y - b.y}; }
+V2& operator-=(V2& v, V2 const& r) {
+  v.x -= r.x;
+  v.y -= r.y;
+  return v;
+}
+V2 operator*(double g, V2 const& v) { return V2{v.x * g, v.y * g}; }
+V2 operator*(V2 const& v, double g) { return V2{v.x * g, v.y * g}; }
+V2& operator*=(V2& v, double d) {
+  v.x *= d;
+  v.y *= d;
+  return v;
+}
+V2 operator/(V2 const& v, double g) { return V2{v.x / g, v.y / g}; }
+
+double operatordot(V2 const& a, V2 const& b) {
   return double{a.x * b.x + a.y * b.y};
 }
-
-// Probably not gonna use these but maybe useful, remove before handing in
-//  V2 operator/(double const& g, V2 const& v) { return V2{v.x / g, v.y / g}; }
-
-//  double operatorx(V2 const& a, V2 const& b) {
-//    return double{a.x * b.y - a.y * b.y};
-//  }
+double operatorx(V2 const& a, V2 const& b) {
+  return double{a.x * b.y - a.y * b.y};
+}
 
 // Specialized variable defining a singular element of the flock
 class Boid {
  private:
   V2 velocity_{0, 0};
   V2 position_{0, 0};
+  static constexpr double maxspeed{150};
 
  public:
   // Costructors
@@ -56,12 +60,9 @@ class Boid {
   V2 Vel() const { return velocity_; }
   V2 Pos() const { return position_; }
 
-  // funzioni inerenti alla classe
-  // Inizializzazione del singolo boid con i valori immessi dall'utente
-
+  
   // update basato sul parametro di cambio velocità e sul tipo di spazio deciso
-  void update(double const& dt, V2 const& tsize, V2& vup,
-              bool const& toroidal) {
+  void update(double dt, V2 const& tsize, V2& vup, bool const& toroidal) {
     velocity_ += vup * dt;
     position_ += velocity_ * dt;
     // Qua posso anche non mettere  == true a quanto pare per cui lo lascerei
@@ -69,44 +70,57 @@ class Boid {
     if (toroidal) {
       if (position_.x < 0) {
         position_.x = tsize.x;
-      };
+      }
       if (position_.y < 0) {
         position_.y = tsize.y;
-      };
+      }
       if (position_.x > tsize.x) {
         position_.x = 0.;
-      };
+      }
       if (position_.y > tsize.y) {
         position_.y = 0.;
-      };
+      }
       // Velocity constraint for the toroidal space, avoids particle
       // accellerator behaviour
-      if (velocity_.x > 150) {
-        velocity_.x = 150;
+      if (velocity_.x > maxspeed) {
+        velocity_.x = maxspeed;
       }
-      if (velocity_.x < -150) {
-        velocity_.x = -150;
+      if (velocity_.x < -maxspeed) {
+        velocity_.x = -maxspeed;
       }
-      if (velocity_.y > 150) {
-        velocity_.y = 150;
+      if (velocity_.y > maxspeed) {
+        velocity_.y = maxspeed;
       }
-      if (velocity_.y < -150) {
-        velocity_.y = -150;
+      if (velocity_.y < -maxspeed) {
+        velocity_.y = -maxspeed;
       }
     } else {
-      // A non-toroidal space doesn't need a velocity limiter, it is built in
+      // A non-toroidal space shouldn't need a velocity limiter, it is built in
       if (position_.x < 20) {
         velocity_.x += 10.;
-      };
+      }
       if (position_.y < 20) {
         velocity_.y += 10.;
-      };
+      }
       if (position_.x > tsize.x - 20) {
         velocity_.x -= 10.;
-      };
+      }
       if (position_.y > tsize.y - 20) {
         velocity_.y -= 10.;
-      };
+      }
+      //unfortunately for extreme parameters it needs an additional constraint
+      if (velocity_.x > maxspeed) {
+        velocity_.x = maxspeed;
+      }
+      if (velocity_.x < -maxspeed) {
+        velocity_.x = -maxspeed;
+      }
+      if (velocity_.y > maxspeed) {
+        velocity_.y = maxspeed;
+      }
+      if (velocity_.y < -maxspeed) {
+        velocity_.y = -maxspeed;
+      }
     }
   }
 };
@@ -268,6 +282,7 @@ int main() {
           break;
       }
     }
+    // chiamare close su finestra già chiusa
     while (iowindow.isOpen() && iowindow.pollEvent(event)) {
       switch (event.type) {
         case sf::Event::Closed:
@@ -378,6 +393,8 @@ int main() {
     flockwindow.display();
     inwcount = 0;
   }
+  // Controlla se è il distruttore che elimina iowindow oppure se è la logica
+  // del programma
 
   return 0;
 }

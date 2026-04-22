@@ -1,5 +1,19 @@
+# Functional
+
 - [x] Create the border non toroidal/toroidal option:  toroidal space in tandem with velocity limit
-- [ ] Create different behaviours and make them optional
+- [ ] Guarda la cosa che diceva giacomini della gestione della finestra iowindow e del polling degli eventi
 - [ ] Create an interface to input variables and ~output statistics~ + ~optional radiuses~ + behaviours e tutto il resto delle cose opzionali
+- [ ] Fix Class invariance with the constexpression, look up theory before
+- [ ] ALGOTRITHM THE WORLD, IF NOT THERE YOU CAN THINK OF MAKING YOUR OWN
+- [ ] Create different behaviours and make them optional
 - [ ] Resize according to window
-- [ ] Add another window that display stats for the boid flock, ~cm position, average velocity,~ highest, lowest, number of boids on screen, 
+- [ ] Add another window that display stats for the boid flock, ~cm position, average velocity,~ highest, lowest, ~number of boids on screen~
+- [ ] MIRROR MIRROR OF MY WILL ARE YOU READY TO BE PARALLELIZED
+- [ ] Check performance and usability of algorithms
+
+---
+
+# Assignment
+- [ ] Put everything into the namespace
+- [ ] Implement the try catch in general 
+- [ ] Divide into multiple translation units + file with tests
