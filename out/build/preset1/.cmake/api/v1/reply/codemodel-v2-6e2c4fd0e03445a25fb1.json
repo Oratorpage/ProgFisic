@@ -55,7 +55,7 @@
 					[
 						0
 					],
-					"name" : "ProgFisic",
+					"name" : "flocksim",
 					"targetIndexes" : 
 					[
 						0,
@@ -290,9 +290,9 @@
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "ProgFisic::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ProgFisic-Debug-9dcf3bc1f5364ee16b45.json",
-					"name" : "ProgFisic",
+					"id" : "flocksim::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-flocksim-Debug-230fe65804bf8bbc5660.json",
+					"name" : "flocksim",
 					"projectIndex" : 0
 				}
 			]

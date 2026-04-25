@@ -30,8 +30,8 @@ CMAKE_BUILD_TYPE:STRING=Debug
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
-//CXX compiler
-CMAKE_CXX_COMPILER:STRING=/usr/bin/g++
+//No help, variable specified on the command line.
+CMAKE_CXX_COMPILER:UNINITIALIZED=/usr/bin/g++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -56,8 +56,8 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
-//C compiler
-CMAKE_C_COMPILER:STRING=/usr/bin/gcc
+//No help, variable specified on the command line.
+CMAKE_C_COMPILER:UNINITIALIZED=/usr/bin/gcc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -151,7 +151,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=ProgFisic
+CMAKE_PROJECT_NAME:STATIC=flocksim
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=0.1.0
@@ -297,6 +297,15 @@ CTEST_SUBMIT_RETRY_DELAY:STRING=5
 //Maximum time allowed before CTest will kill the test.
 DART_TESTING_TIMEOUT:STRING=1500
 
+//Value Computed by CMake
+Flock_BINARY_DIR:STATIC=/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1
+
+//Value Computed by CMake
+Flock_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+Flock_SOURCE_DIR:STATIC=/home/g042/FISICA/Progetti/ProgFisic
+
 //Path to a program.
 GITCOMMAND:FILEPATH=/usr/bin/git
 
@@ -323,6 +332,15 @@ SFML_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SFML
 
 //Name of the computer/site where compile is being run
 SITE:STRING=LAPTOP-I1CF393A
+
+//Value Computed by CMake
+flocksim_BINARY_DIR:STATIC=/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1
+
+//Value Computed by CMake
+flocksim_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+flocksim_SOURCE_DIR:STATIC=/home/g042/FISICA/Progetti/ProgFisic
 
 
 ########################

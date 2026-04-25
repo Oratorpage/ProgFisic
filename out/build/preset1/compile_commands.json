@@ -1,8 +1,44 @@
 [
 {
   "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
-  "command": "/usr/bin/g++   -g -std=c++17 -o CMakeFiles/ProgFisic.dir/main.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/main.cpp",
-  "file": "/home/g042/FISICA/Progetti/ProgFisic/main.cpp",
-  "output": "CMakeFiles/ProgFisic.dir/main.cpp.o"
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/main.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/main.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/main.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/V2D.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/V2D.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/Boid.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/Boid.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/Input.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Input.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Input.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/Input.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/Rand.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Rand.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Rand.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/Rand.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/Render.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Render.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Render.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/Render.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1",
+  "command": "/usr/bin/g++  -I/home/g042/FISICA/Progetti/ProgFisic/include -g -std=c++17 -o CMakeFiles/flocksim.dir/src/VChange.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/VChange.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/VChange.cpp",
+  "output": "CMakeFiles/flocksim.dir/src/VChange.cpp.o"
 }
 ]
