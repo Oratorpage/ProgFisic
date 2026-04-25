@@ -11,58 +11,72 @@
 // A quanto pare dovrò mettere tutto quanto all'interno del namespace quindi sì
 // conviene direttamente riscrivere tutto da capo
 
-// Bidimensional vector and pertinent operations
-struct V2 {
+// Bidimensional vector of double components and pertinent operations
+struct V2D {
   double x{0};
   double y{0};
-};
-V2 operator+(V2 const& a, V2 const& b) { return V2{a.x + b.x, a.y + b.y}; }
-V2& operator+=(V2& v, V2 const& r) {
-  v.x += r.x;
-  v.y += r.y;
-  return v;
-}
-V2 operator-(V2 const& a, V2 const& b) { return V2{a.x - b.x, a.y - b.y}; }
-V2& operator-=(V2& v, V2 const& r) {
-  v.x -= r.x;
-  v.y -= r.y;
-  return v;
-}
-V2 operator*(double g, V2 const& v) { return V2{v.x * g, v.y * g}; }
-V2 operator*(V2 const& v, double g) { return V2{v.x * g, v.y * g}; }
-V2& operator*=(V2& v, double d) {
-  v.x *= d;
-  v.y *= d;
-  return v;
-}
-V2 operator/(V2 const& v, double g) { return V2{v.x / g, v.y / g}; }
 
-double operatordot(V2 const& a, V2 const& b) {
-  return double{a.x * b.x + a.y * b.y};
+  V2D& operator+=(V2D const& r) {
+    x += r.x;
+    y += r.y;
+    return *this;
+  }
+
+  V2D& operator-=(V2D const& r) {
+    x -= r.x;
+    y -= r.y;
+    return *this;
+  }
+
+  V2D& operator*=(double m) {
+    x *= m;
+    y *= m;
+    return *this;
+  }
+
+  V2D& operator/=(double d) {
+    x /= d;
+    y /= d;
+    return *this;
+  }
+};
+inline V2D operator+(V2D lhs, V2D const& rhs) { return lhs += rhs; }
+
+inline V2D operator-(V2D lhs, V2D const& rhs) { return lhs -= rhs; }
+
+inline V2D operator*(double m, V2D lhs) { return lhs *= m; }
+inline V2D operator*(V2D lhs, double m) { return lhs *= m; }
+
+inline V2D operator/(V2D lhs, double d) { return lhs /= d; }
+
+inline double dotprod(V2D const& a, V2D const& b) {
+  return a.x * b.x + a.y * b.y;
 }
-double operatorx(V2 const& a, V2 const& b) {
-  return double{a.x * b.y - a.y * b.y};
+inline double xprod(V2D const& a, V2D const& b) {
+  return a.x * b.y - a.y * b.x;
 }
 
 // Specialized variable defining a singular element of the flock
 class Boid {
  private:
-  V2 velocity_{0, 0};
-  V2 position_{0, 0};
-  static constexpr double maxspeed{150};
+  V2D velocity_{0., 0.};
+  V2D position_{0., 0.};
+  static constexpr double maxspeedtor{150};
+  static constexpr double maxspeed{300};
 
  public:
   // Costructors
-  Boid(V2 v, V2 p) : velocity_{v.x, v.y}, position_{p.x, p.y} {}
-  Boid(V2 v) : velocity_{v.x, v.y} {}
-  // Boid(V2 p) : position_{p.x,p.y} {} Fa overload strano, non va bene, non sa
-  // se posizione o velocità, trova un trick per farlo funzionare
-  V2 Vel() const { return velocity_; }
-  V2 Pos() const { return position_; }
+  Boid(V2D v, V2D p) : velocity_{v}, position_{p} {}
+  // Il costruttore per singola v o p non è per ora necessario, se lo diventerà
+  // andrà deciso come implementarlo
+  V2D Vel() const { return velocity_; }
+  V2D Pos() const { return position_; }
 
-  
   // update basato sul parametro di cambio velocità e sul tipo di spazio deciso
-  void update(double dt, V2 const& tsize, V2& vup, bool const& toroidal) {
+  // Questo update basato su dt così però crea un feedback loop, più tempo passa
+  // a causa dei calcoli e più sarà l'aggiornamento, più sarà la velocità;
+  // pessima cosa per un rendering stabile e scientifico, -> cambialo
+  void update(double dt, V2D const& tsize, V2D const& vup, bool const& toroidal) {
     velocity_ += vup * dt;
     position_ += velocity_ * dt;
     // Qua posso anche non mettere  == true a quanto pare per cui lo lascerei
@@ -82,17 +96,17 @@ class Boid {
       }
       // Velocity constraint for the toroidal space, avoids particle
       // accellerator behaviour
-      if (velocity_.x > maxspeed) {
-        velocity_.x = maxspeed;
+      if (velocity_.x > maxspeedtor) {
+        velocity_.x = maxspeedtor;
       }
-      if (velocity_.x < -maxspeed) {
-        velocity_.x = -maxspeed;
+      if (velocity_.x < -maxspeedtor) {
+        velocity_.x = -maxspeedtor;
       }
-      if (velocity_.y > maxspeed) {
-        velocity_.y = maxspeed;
+      if (velocity_.y > maxspeedtor) {
+        velocity_.y = maxspeedtor;
       }
-      if (velocity_.y < -maxspeed) {
-        velocity_.y = -maxspeed;
+      if (velocity_.y < -maxspeedtor) {
+        velocity_.y = -maxspeedtor;
       }
     } else {
       // A non-toroidal space shouldn't need a velocity limiter, it is built in
@@ -108,7 +122,7 @@ class Boid {
       if (position_.y > tsize.y - 20) {
         velocity_.y -= 10.;
       }
-      //unfortunately for extreme parameters it needs an additional constraint
+      // unfortunately for extreme parameters it needs an additional constraint
       if (velocity_.x > maxspeed) {
         velocity_.x = maxspeed;
       }
@@ -127,19 +141,19 @@ class Boid {
 
 // Generare una posizione iniziale randomica aiuta nell'ottenere risultati
 // diversi
-V2 rvel() {
+V2D rvel() {
   std::random_device r;
   std::mt19937 gen(r());
   std::uniform_real_distribution<> distrx(-25, 25);
   std::uniform_real_distribution<> distry(-25, 25);
-  return V2{distrx(gen), distry(gen)};
+  return V2D{distrx(gen), distry(gen)};
 }
-V2 rpos(V2 const& tsize) {
+V2D rpos(V2D const& tsize) {
   std::random_device r;
   std::mt19937 gen(r());
   std::uniform_real_distribution<> distrx(0, tsize.x);
   std::uniform_real_distribution<> distry(0, tsize.y);
-  return V2{distrx(gen), distry(gen)};
+  return V2D{distrx(gen), distry(gen)};
 }
 
 // Should maybe implement the try catch architecture
@@ -151,12 +165,12 @@ int main() {
   // Non ci dovrebbe essere problema con questo static cast in quanto passo da
   // un unsigned int ad un double, porterà a problemi forse con schermi/finestre
   // molto, molto grandi, vedi se problemi già noti
-  V2 fwstsize{static_cast<double>(fwsize.x), static_cast<double>(fwsize.y)};
+  V2D fwstsize{static_cast<double>(fwsize.x), static_cast<double>(fwsize.y)};
 
   sf::RenderWindow iowindow(sf::VideoMode(600, 400), "I/O View",
                             sf::Style::Default);
   sf::Vector2u iosize = iowindow.getSize();
-  V2 iostsize{static_cast<double>(iosize.x), static_cast<double>(iosize.y)};
+  V2D iostsize{static_cast<double>(iosize.x), static_cast<double>(iosize.y)};
   // Should create a struct for the values or a function to imput all of these
   // values, it's a bit ugly and inefficient like this, if I'd like to change
   // the values I'd have no way to do it
@@ -296,16 +310,16 @@ int main() {
           break;
       }
     }
-
+    // Sistema il clock in modo che il dt sia costante
     double dt = clock.restart().asSeconds();
 
     // Questo invece lo potrei racchiudere all'interno di una funzione move
     for (auto& bi : boids) {
       std::vector<Boid*> nearboids;
-      V2 vsep;
-      V2 vallig;
-      V2 xcm;
-      V2 vcoes;
+      V2D vsep;
+      V2D vallig;
+      V2D xcm;
+      V2D vcoes;
       // aggiunta per ogni iterazione su boids del Boid bj al vettore dei
       // puntatori dei Boid vicini a bi
       for (auto& bj : boids) {
@@ -325,13 +339,13 @@ int main() {
         for (auto& bj : nearboids) {
           if (&bi != bj) {
             double distsq =
-                (bi.Pos().x - (*bj).Pos().x) * (bi.Pos().x - (*bj).Pos().x) +
-                (bi.Pos().y - (*bj).Pos().y) * (bi.Pos().y - (*bj).Pos().y);
+                (bi.Pos().x - bj->Pos().x) * (bi.Pos().x - bj->Pos().x) +
+                (bi.Pos().y - bj->Pos().y) * (bi.Pos().y - bj->Pos().y);
             if (distsq < dangerrad * dangerrad) {
-              vsep += (*bj).Pos() - bi.Pos();
+              vsep += bj->Pos() - bi.Pos();
             }
-            vallig += (*bj).Vel();
-            xcm += (*bj).Pos();
+            vallig += bj->Vel();
+            xcm += bj->Pos();
           }
         }
         vsep = -s * vsep;
@@ -339,18 +353,18 @@ int main() {
         xcm = invNear * xcm;
         vcoes = c * (xcm - bi.Pos());
       }
-      V2 vup = vsep + vallig + vcoes;
+      V2D vup = vsep + vallig + vcoes;
       bi.update(dt, fwstsize, vup, toroidal);
     }
 
     // Questo lo potrei racchiudere all'interno di una funzione render
     flockwindow.clear(sf::Color(150, 150, 150));
-    V2 cm;
-    V2 avgv;
-    int inwcount;
+    V2D cm;
+    V2D avgv;
+    int inwcount{0};
     for (auto const& b : boids) {
-      V2 p = b.Pos();
-      V2 v = b.Vel();
+      V2D p = b.Pos();
+      V2D v = b.Vel();
       double ang = std::atan2(v.y, v.x) * 180.0 / PI;
       tri.setRotation(static_cast<float>(ang));
       tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
@@ -395,6 +409,4 @@ int main() {
   }
   // Controlla se è il distruttore che elimina iowindow oppure se è la logica
   // del programma
-
-  return 0;
 }
