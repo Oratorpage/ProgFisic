@@ -5,7 +5,7 @@
 namespace flock {
 
 struct SimParams {
-  int BoidNum{0};
+  long unsigned int BoidNum{0};
   double s{0.};
   double a{0.};
   double c{0.};

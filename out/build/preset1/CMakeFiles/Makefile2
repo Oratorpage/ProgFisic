@@ -64,6 +64,7 @@ CMAKE_BINARY_DIR = /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1
 
 # The main recursive "all" target.
 all: CMakeFiles/flocksim.dir/all
+all: CMakeFiles/progetto.t.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,7 +72,6 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/flocksim.dir/clean
 clean: CMakeFiles/Experimental.dir/clean
 clean: CMakeFiles/Nightly.dir/clean
 clean: CMakeFiles/Continuous.dir/clean
@@ -100,33 +100,9 @@ clean: CMakeFiles/ContinuousTest.dir/clean
 clean: CMakeFiles/ContinuousCoverage.dir/clean
 clean: CMakeFiles/ContinuousMemCheck.dir/clean
 clean: CMakeFiles/ContinuousSubmit.dir/clean
+clean: CMakeFiles/flocksim.dir/clean
+clean: CMakeFiles/progetto.t.dir/clean
 .PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/flocksim.dir
-
-# All Build rule for target.
-CMakeFiles/flocksim.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target flocksim"
-.PHONY : CMakeFiles/flocksim.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/flocksim.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles 8
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/flocksim.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles 0
-.PHONY : CMakeFiles/flocksim.dir/rule
-
-# Convenience name for target.
-flocksim: CMakeFiles/flocksim.dir/rule
-.PHONY : flocksim
-
-# clean rule for target.
-CMakeFiles/flocksim.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/clean
-.PHONY : CMakeFiles/flocksim.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/Experimental.dir
@@ -855,6 +831,58 @@ ContinuousSubmit: CMakeFiles/ContinuousSubmit.dir/rule
 CMakeFiles/ContinuousSubmit.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ContinuousSubmit.dir/build.make CMakeFiles/ContinuousSubmit.dir/clean
 .PHONY : CMakeFiles/ContinuousSubmit.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/flocksim.dir
+
+# All Build rule for target.
+CMakeFiles/flocksim.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target flocksim"
+.PHONY : CMakeFiles/flocksim.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/flocksim.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles 8
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/flocksim.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles 0
+.PHONY : CMakeFiles/flocksim.dir/rule
+
+# Convenience name for target.
+flocksim: CMakeFiles/flocksim.dir/rule
+.PHONY : flocksim
+
+# clean rule for target.
+CMakeFiles/flocksim.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/clean
+.PHONY : CMakeFiles/flocksim.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/progetto.t.dir
+
+# All Build rule for target.
+CMakeFiles/progetto.t.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles --progress-num=9,10 "Built target progetto.t"
+.PHONY : CMakeFiles/progetto.t.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/progetto.t.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/progetto.t.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/g042/FISICA/Progetti/ProgFisic/out/build/preset1/CMakeFiles 0
+.PHONY : CMakeFiles/progetto.t.dir/rule
+
+# Convenience name for target.
+progetto.t: CMakeFiles/progetto.t.dir/rule
+.PHONY : progetto.t
+
+# clean rule for target.
+CMakeFiles/progetto.t.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/clean
+.PHONY : CMakeFiles/progetto.t.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

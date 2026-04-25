@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/g042/FISICA/Progetti/ProgFisic/include
 
-CXX_FLAGS = -g -std=c++17
+CXX_FLAGS =  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -g -fsanitize=address,undefined -std=c++17
 

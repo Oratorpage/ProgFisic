@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/ProgFisic.dir/link.d CMakeFiles/ProgFisic.dir/main.cpp.o -o ProgFisic

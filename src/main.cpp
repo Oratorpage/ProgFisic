@@ -27,7 +27,7 @@ int main() {
     std::vector<flock::Boid> boids;
     boids.reserve(parameters.BoidNum);
 
-    for (int i{0}; i < parameters.BoidNum; ++i) {
+    for (long unsigned int i{0}; i < parameters.BoidNum; ++i) {
       boids.emplace_back(flock::randvel(), flock::randpos(fwstsize));
     }
 

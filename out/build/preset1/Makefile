@@ -147,19 +147,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named flocksim
-
-# Build rule for target.
-flocksim: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 flocksim
-.PHONY : flocksim
-
-# fast build rule for target.
-flocksim/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/build
-.PHONY : flocksim/fast
-
-#=============================================================================
 # Target rules for targets named Experimental
 
 # Build rule for target.
@@ -523,6 +510,32 @@ ContinuousSubmit/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ContinuousSubmit.dir/build.make CMakeFiles/ContinuousSubmit.dir/build
 .PHONY : ContinuousSubmit/fast
 
+#=============================================================================
+# Target rules for targets named flocksim
+
+# Build rule for target.
+flocksim: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 flocksim
+.PHONY : flocksim
+
+# fast build rule for target.
+flocksim/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/build
+.PHONY : flocksim/fast
+
+#=============================================================================
+# Target rules for targets named progetto.t
+
+# Build rule for target.
+progetto.t: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 progetto.t
+.PHONY : progetto.t
+
+# fast build rule for target.
+progetto.t/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/build
+.PHONY : progetto.t/fast
+
 src/Boid.o: src/Boid.cpp.o
 .PHONY : src/Boid.o
 
@@ -691,6 +704,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/flocksim.dir/build.make CMakeFiles/flocksim.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+tentativo.t.o: tentativo.t.cpp.o
+.PHONY : tentativo.t.o
+
+# target to build an object file
+tentativo.t.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/tentativo.t.cpp.o
+.PHONY : tentativo.t.cpp.o
+
+tentativo.t.i: tentativo.t.cpp.i
+.PHONY : tentativo.t.i
+
+# target to preprocess a source file
+tentativo.t.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/tentativo.t.cpp.i
+.PHONY : tentativo.t.cpp.i
+
+tentativo.t.s: tentativo.t.cpp.s
+.PHONY : tentativo.t.s
+
+# target to generate assembly for a file
+tentativo.t.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/progetto.t.dir/build.make CMakeFiles/progetto.t.dir/tentativo.t.cpp.s
+.PHONY : tentativo.t.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -731,6 +768,7 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... flocksim"
+	@echo "... progetto.t"
 	@echo "... src/Boid.o"
 	@echo "... src/Boid.i"
 	@echo "... src/Boid.s"
@@ -752,6 +790,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... tentativo.t.o"
+	@echo "... tentativo.t.i"
+	@echo "... tentativo.t.s"
 .PHONY : help
 
 
