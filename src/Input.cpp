@@ -7,30 +7,37 @@ namespace flock {
 SimParams readparams() {
   SimParams p;
 
-  std::cout << "Input the values for the desired simulation: N: ";
-  if (!(std::cin >> p.BoidNum) || p.BoidNum <= 0) {
-    throw std::runtime_error("Negative, zero or not integer number of boids");
+  std::cout << "Input the values for the desired simulation: \n"
+            << "Number of non predator boids: ";
+  if (!(std::cin >> p.non_pred_boidnum) || p.non_pred_boidnum <= 0) {
+    throw std::runtime_error(
+        "Negative, zero or not integer number of non predator boids");
   }
-  std::cout << "s: ";
+  std::cout << "Number of predator boids: ";
+  if (!(std::cin >> p.pred_boidnum) || p.pred_boidnum <= 0) {
+    throw std::runtime_error(
+        "Negative, zero or not integer number of predator boids");
+  }
+  std::cout << "separation coefficient: ";
   if (!(std::cin >> p.s) || p.s <= 0) {
     throw std::runtime_error(
         "Negative or zero value for the separation coefficient");
   }
-  std::cout << "a: ";
+  std::cout << "alignment coefficient: ";
   if (!(std::cin >> p.a) || p.a <= 0) {
     throw std::runtime_error(
         "Negative or zero value for the alignment coefficient");
   }
-  std::cout << "c: ";
+  std::cout << "cohesion coefficient: ";
   if (!(std::cin >> p.c) || p.c <= 0) {
     throw std::runtime_error(
         "Negative or zero value for the cohesion coefficient");
   }
-  std::cout << "detectrad: ";
+  std::cout << "radius of detection: ";
   if (!(std::cin >> p.detectrad) || p.detectrad <= 0) {
     throw std::runtime_error("Negative or zero value for the detectrad value");
   }
-  std::cout << "dangerrad: ";
+  std::cout << "radius of danger: ";
   if (!(std::cin >> p.dangerrad) || p.dangerrad <= 0) {
     throw std::runtime_error("Negative or zero value for the dangerrad value");
   }
@@ -40,7 +47,8 @@ SimParams readparams() {
   }
   std::cout << "Operational Radiuses active (1 for yes, 0 for no): ";
   if (!(std::cin >> p.oprad)) {
-    throw std::runtime_error("Unvalid value for the Operational Radiuses decision");
+    throw std::runtime_error(
+        "Unvalid value for the Operational Radiuses decision");
   }
 
   return p;

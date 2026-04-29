@@ -31,6 +31,13 @@ void VChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& fwstsize,
     if (!nearboids.empty()) {
       double invNear = 1. / static_cast<double>(nearboids.size());
       for (auto& bj : nearboids) {
+        if ((bi.IsPred() && !(bj->IsPred()))) {
+          vsep = params.s * vsep;
+          params.a*(invNear * vallig - bi.Vel());
+          xcm = invNear * xcm;
+          vcoes = params.c * (xcm - bi.Pos());
+          break;
+        }
         if (&bi != bj) {
           if (distSq(bi.Pos(), bj->Pos()) < dangerradsq) {
             vsep += bj->Pos() - bi.Pos();

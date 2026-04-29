@@ -25,13 +25,19 @@ int main() {
 
     flock::SimParams parameters{flock::readparams()};
     std::vector<flock::Boid> boids;
-    boids.reserve(parameters.BoidNum);
+    long unsigned int tot_boids{parameters.pred_boidnum + parameters.non_pred_boidnum};
+    boids.reserve(tot_boids);
 
-    for (long unsigned int i{0}; i < parameters.BoidNum; ++i) {
+    for (long unsigned int i{0}; i < parameters.non_pred_boidnum; ++i) {
       boids.emplace_back(flock::randvel(), flock::randpos(fwstsize));
     }
+    for (long unsigned int i{0}; i < parameters.pred_boidnum; ++i) {
+      boids.emplace_back(flock::randvel(), flock::randpos(fwstsize), true);
+    }
 
-    sf::ConvexShape tri{flock::MakeBoidShape()};
+
+    sf::ConvexShape non_pred_boid{flock::MakeBoidShape(sf::Color::Cyan)};
+    sf::ConvexShape pred_boid{flock::MakeBoidShape(sf::Color::Red)};
     sf::CircleShape detectcirc{
         flock::MakeCircleShape(parameters.detectrad, sf::Color::Green)};
     sf::CircleShape dangercirc{
@@ -63,6 +69,8 @@ int main() {
               flockwindow.close();
             }
             break;
+          default:
+            break;
         }
       }
       // chiamare close su finestra già chiusa
@@ -77,6 +85,8 @@ int main() {
               iowindow.close();
             }
             break;
+          default:
+            break;
         }
       }
       // Sistema il clock in modo che il dt sia costante
@@ -85,7 +95,7 @@ int main() {
       flock::VChangeBoids(boids, dt, fwstsize, parameters);
 
       flock::RenderFrame(flockwindow, iowindow, boids, parameters, fwstsize,
-                         tri, detectcirc, dangercirc, cm, statistics);
+                         non_pred_boid, pred_boid, detectcirc, dangercirc, cm, statistics);
     }
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

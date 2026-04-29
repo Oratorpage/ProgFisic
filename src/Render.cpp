@@ -7,17 +7,17 @@ namespace flock {
 constexpr double PI{3.14159265358979323846264338327950288};
 
 // Caratteristiche grafiche del boid
-sf::ConvexShape MakeBoidShape() {
-  sf::ConvexShape tri;
-  tri.setPointCount(3);
-  tri.setPoint(0, {20.f, 0.f});    // nose
-  tri.setPoint(1, {-10.f, -8.f});  // back-left
-  tri.setPoint(2, {-10.f, 8.f});   // back-right
-  tri.setFillColor(sf::Color::Cyan);
-  tri.setOutlineThickness(0.5f);
-  tri.setOutlineColor(sf::Color::Black);
-  tri.setPosition(0, 0);
-  return tri;
+sf::ConvexShape MakeBoidShape(sf::Color const& boidcolor) {
+  sf::ConvexShape boid;
+  boid.setPointCount(3);
+  boid.setPoint(0, {20.f, 0.f});    // nose
+  boid.setPoint(1, {-10.f, -8.f});  // back-left
+  boid.setPoint(2, {-10.f, 8.f});   // back-right
+  boid.setFillColor(boidcolor);
+  boid.setOutlineThickness(0.5f);
+  boid.setOutlineColor(sf::Color::Black);
+  boid.setPosition(0, 0);
+  return boid;
 }
 
 sf::CircleShape MakeCircleShape(double radius, sf::Color outline) {
@@ -40,9 +40,10 @@ sf::CircleShape MakeCenterDot() {
 
 void RenderFrame(sf::RenderWindow& flockwindow, sf::RenderWindow& iowindow,
                  std::vector<Boid> const& boids, SimParams const& params,
-                 V2D const& fwstsize, sf::ConvexShape& tri,
-                 sf::CircleShape& detectcirc, sf::CircleShape& dangercirc,
-                 sf::CircleShape& cmpos, sf::Text& statistics) {
+                 V2D const& fwstsize, sf::ConvexShape& non_pred_boid,
+                 sf::ConvexShape& pred_boid, sf::CircleShape& detectcirc,
+                 sf::CircleShape& dangercirc, sf::CircleShape& cmpos,
+                 sf::Text& statistics) {
   flockwindow.clear(sf::Color(150, 150, 150));
 
   V2D cm;
@@ -53,8 +54,14 @@ void RenderFrame(sf::RenderWindow& flockwindow, sf::RenderWindow& iowindow,
     V2D p = b.Pos();
     V2D v = b.Vel();
     double ang = std::atan2(v.y, v.x) * 180.0 / PI;
-    tri.setRotation(static_cast<float>(ang));
-    tri.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+    if (b.IsPred()) {
+      pred_boid.setRotation(static_cast<float>(ang));
+      pred_boid.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+    } else {
+      non_pred_boid.setRotation(static_cast<float>(ang));
+      non_pred_boid.setPosition(static_cast<float>(p.x),
+                                static_cast<float>(p.y));
+    }
     // Possible bug/weird behaviour for non toroidal space but oprad on
     if (params.oprad) {
       detectcirc.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
@@ -67,7 +74,11 @@ void RenderFrame(sf::RenderWindow& flockwindow, sf::RenderWindow& iowindow,
         b.Pos().y > 0) {
       ++inwcount;
     }
-    flockwindow.draw(tri);
+    if (b.IsPred()) {
+      flockwindow.draw(pred_boid);
+    } else {
+      flockwindow.draw(non_pred_boid);
+    }
 
     cm += p;
     avgvel += v;

@@ -1,13 +1,14 @@
 # ninja log v5
-3	28	1777129519579144350	CMakeFiles/progetto.t.dir/Debug/tentativo.t.cpp.o	b3c1859e5bb04aa1
-1	58	1777129519611182650	CMakeFiles/flocksim.dir/Debug/src/V2D.cpp.o	1ae43c07d61bdcb0
-1	65	1777129519615187438	CMakeFiles/flocksim.dir/Debug/src/Boid.cpp.o	d247cb6469a2d26
-3	317	1777129519867489043	CMakeFiles/flocksim.dir/Debug/src/VChange.cpp.o	b77f39a3059c4c72
-1	395	1777129519947584790	CMakeFiles/flocksim.dir/Debug/src/Input.cpp.o	62c1dbdb3d461fbd
-2	562	1777129520111726384	CMakeFiles/flocksim.dir/Debug/src/Rand.cpp.o	e9745b5615a9d6b
-0	773	1777129520323870853	CMakeFiles/flocksim.dir/Debug/src/main.cpp.o	29dbe1628b1d374c
-2	829	1777129520379909015	CMakeFiles/flocksim.dir/Debug/src/Render.cpp.o	d7ec995ab89d2a33
-6	265	1777130322271950607	CMakeFiles/flocksim.dir/Debug/src/VChange.cpp.o	b77f39a3059c4c72
-4	301	1777130322308076900	CMakeFiles/flocksim.dir/Debug/src/Input.cpp.o	62c1dbdb3d461fbd
-4	595	1777130322601101280	CMakeFiles/flocksim.dir/Debug/src/main.cpp.o	29dbe1628b1d374c
-5	648	1777130322657297736	CMakeFiles/flocksim.dir/Debug/src/Render.cpp.o	d7ec995ab89d2a33
+16	170	1777287895890671314	CMakeFiles/progetto.t.dir/Release/tentativo.t.cpp.o	9487c3dd90ffc4c5
+12	280	1777287896002671486	CMakeFiles/flocksim.dir/Release/src/Boid.cpp.o	a7d8b3eb78ee8d6
+12	287	1777287896006671492	CMakeFiles/flocksim.dir/Release/src/V2D.cpp.o	85fe33fc8acf4c82
+15	538	1777287896258671880	CMakeFiles/flocksim.dir/Release/src/VChange.cpp.o	27da37a716a8685b
+13	780	1777287896502672255	CMakeFiles/flocksim.dir/Release/src/Input.cpp.o	e269c8c6271ee07c
+14	985	1777287896706672569	CMakeFiles/flocksim.dir/Release/src/Rand.cpp.o	d810668fdaa88b11
+11	1160	1777287896882672840	CMakeFiles/flocksim.dir/Release/src/main.cpp.o	a4f7adb93322ede6
+14	1345	1777287897066673123	CMakeFiles/flocksim.dir/Release/src/Render.cpp.o	9351351cbbc700b9
+7	125	1777470570015808116	CMakeFiles/flocksim.dir/Release/src/Boid.cpp.o	a7d8b3eb78ee8d6
+10	387	1777470570275807943	CMakeFiles/flocksim.dir/Release/src/VChange.cpp.o	27da37a716a8685b
+8	542	1777470570423141176	CMakeFiles/flocksim.dir/Release/src/Input.cpp.o	e269c8c6271ee07c
+6	817	1777470570709140985	CMakeFiles/flocksim.dir/Release/src/main.cpp.o	a4f7adb93322ede6
+9	933	1777470570826140906	CMakeFiles/flocksim.dir/Release/src/Render.cpp.o	9351351cbbc700b9

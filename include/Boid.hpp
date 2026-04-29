@@ -12,12 +12,15 @@ class Boid {
   V2D position_{0., 0.};
   static constexpr double maxspeedtor{150.};
   static constexpr double maxspeed{300.};
+  bool is_predator_{false};
 
  public:
   Boid(V2D v, V2D p);
+  Boid(V2D v, V2D p, bool is_predator);
 
   V2D const& Vel() const;
   V2D const& Pos() const;
+  bool const& IsPred() const;
 
   void update(double dt, V2D const& tsize, V2D const& vup,
               bool const& toroidal);

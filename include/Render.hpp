@@ -9,15 +9,16 @@
 #include "SimParams.hpp"
 
 namespace flock {
-sf::ConvexShape MakeBoidShape();
+sf::ConvexShape MakeBoidShape(sf::Color const& boidcolor);
 sf::CircleShape MakeCircleShape(double radius, sf::Color outline);
 sf::CircleShape MakeCenterDot();
 
 void RenderFrame(sf::RenderWindow& flockwindow, sf::RenderWindow& iowindow,
                  std::vector<Boid> const& boids, SimParams const& params,
-                 V2D const& fwstsize, sf::ConvexShape& tri,
-                 sf::CircleShape& detectcirc, sf::CircleShape& dangercirc,
-                 sf::CircleShape& cmpos, sf::Text& statistics);
+                 V2D const& fwstsize, sf::ConvexShape& non_pred_boid,
+                 sf::ConvexShape& pred_boid, sf::CircleShape& detectcirc,
+                 sf::CircleShape& dangercirc, sf::CircleShape& cmpos,
+                 sf::Text& statistics);
 }  // namespace flock
 
 #endif
