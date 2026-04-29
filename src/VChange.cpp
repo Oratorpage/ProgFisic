@@ -31,19 +31,36 @@ void VChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& fwstsize,
     if (!nearboids.empty()) {
       double invNear = 1. / static_cast<double>(nearboids.size());
       for (auto& bj : nearboids) {
-        if ((bi.IsPred() && !(bj->IsPred()))) {
-          vsep = params.s * vsep;
-          params.a*(invNear * vallig - bi.Vel());
-          xcm = invNear * xcm;
-          vcoes = params.c * (xcm - bi.Pos());
-          break;
-        }
         if (&bi != bj) {
-          if (distSq(bi.Pos(), bj->Pos()) < dangerradsq) {
-            vsep += bj->Pos() - bi.Pos();
+          // This is the update if bi is a predator and bj a prey
+          if (bi.IsPred() && !(bj->IsPred())) {
+            vsep -= bj->Pos() - bi.Pos();
+
+            xcm += bj->Pos();
           }
-          vallig += bj->Vel();
-          xcm += bj->Pos();
+          // This is the update if bi is a prey and bj a predator
+          if (!(bi.IsPred()) && bj->IsPred()) {
+            vsep += (bj->Pos() - bi.Pos()) * 2.;
+
+            vallig -= bj->Vel();
+            xcm -= bj->Pos();
+          }
+          // This is the update if bi is a predator and bj a predator
+          if (bi.IsPred() && bj->IsPred()) {
+            if (distSq(bi.Pos(), bj->Pos()) < dangerradsq) {
+              vsep += bj->Pos() - bi.Pos();
+            }
+            vallig += bj->Vel();
+            xcm += bj->Pos();
+          }
+          // This is the update if bi is a prey and bj a prey
+          if (!(bi.IsPred()) && !(bj->IsPred())) {
+            if (distSq(bi.Pos(), bj->Pos()) < dangerradsq) {
+              vsep += bj->Pos() - bi.Pos();
+            }
+            vallig += bj->Vel();
+            xcm += bj->Pos();
+          }
         }
       }
       vsep = -params.s * vsep;
@@ -51,6 +68,8 @@ void VChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& fwstsize,
       xcm = invNear * xcm;
       vcoes = params.c * (xcm - bi.Pos());
     }
+    // If there are no near boids it will update anyway but vup will be 0
+    // because of the standard inizialization of the V2D
     V2D vup = vsep + vallig + vcoes;
     bi.update(dt, fwstsize, vup, params.toroidal);
   }
