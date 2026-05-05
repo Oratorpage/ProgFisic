@@ -27,7 +27,7 @@
 /home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/ContinuousMemCheck.dir
 /home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/ContinuousSubmit.dir
 /home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/flocksim.dir
-/home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/progetto.t.dir
+/home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/flocksim.t.dir
 /home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/test.dir
 /home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/edit_cache.dir
 /home/g042/FISICA/Progetti/ProgFisic/build/CMakeFiles/rebuild_cache.dir

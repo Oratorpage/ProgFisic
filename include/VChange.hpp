@@ -7,7 +7,7 @@
 #include "SimParams.hpp"
 
 namespace flock {
-void VChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& fwstsize,
+void velocityChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& fwstsize,
                   SimParams const& params);
 }
 

@@ -127,20 +127,56 @@
 },
 {
   "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
-  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Debug\\\"  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -g -fsanitize=address,undefined -std=c++17 -o CMakeFiles/progetto.t.dir/Debug/tentativo.t.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp",
-  "file": "/home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp",
-  "output": "CMakeFiles/progetto.t.dir/Debug/tentativo.t.cpp.o"
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Debug\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -g -fsanitize=address,undefined -std=c++17 -o CMakeFiles/flocksim.t.dir/Debug/test/boid.test.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/Debug/test/boid.test.cpp.o"
 },
 {
   "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
-  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Release\\\"  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17 -o CMakeFiles/progetto.t.dir/Release/tentativo.t.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp",
-  "file": "/home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp",
-  "output": "CMakeFiles/progetto.t.dir/Release/tentativo.t.cpp.o"
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Debug\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -g -fsanitize=address,undefined -std=c++17 -o CMakeFiles/flocksim.t.dir/Debug/src/Boid.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/Debug/src/Boid.cpp.o"
 },
 {
   "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
-  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\"  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O2 -g -DNDEBUG -std=c++17 -o CMakeFiles/progetto.t.dir/RelWithDebInfo/tentativo.t.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp",
-  "file": "/home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp",
-  "output": "CMakeFiles/progetto.t.dir/RelWithDebInfo/tentativo.t.cpp.o"
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Debug\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -g -fsanitize=address,undefined -std=c++17 -o CMakeFiles/flocksim.t.dir/Debug/src/V2D.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/Debug/src/V2D.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Release\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17 -o CMakeFiles/flocksim.t.dir/Release/test/boid.test.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/Release/test/boid.test.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Release\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17 -o CMakeFiles/flocksim.t.dir/Release/src/Boid.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/Release/src/Boid.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"Release\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17 -o CMakeFiles/flocksim.t.dir/Release/src/V2D.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/Release/src/V2D.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O2 -g -DNDEBUG -std=c++17 -o CMakeFiles/flocksim.t.dir/RelWithDebInfo/test/boid.test.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/RelWithDebInfo/test/boid.test.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O2 -g -DNDEBUG -std=c++17 -o CMakeFiles/flocksim.t.dir/RelWithDebInfo/src/Boid.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/RelWithDebInfo/src/Boid.cpp.o"
+},
+{
+  "directory": "/home/g042/FISICA/Progetti/ProgFisic/build",
+  "command": "/usr/bin/c++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\" -I/home/g042/FISICA/Progetti/ProgFisic/include  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O2 -g -DNDEBUG -std=c++17 -o CMakeFiles/flocksim.t.dir/RelWithDebInfo/src/V2D.cpp.o -c /home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "file": "/home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp",
+  "output": "CMakeFiles/flocksim.t.dir/RelWithDebInfo/src/V2D.cpp.o"
 }
 ]

@@ -5,7 +5,7 @@
 #include "SimParams.hpp"
 
 namespace flock{
-    SimParams readparams();
+    SimParams readParams();
 }
 
 #endif

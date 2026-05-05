@@ -5,8 +5,8 @@
 #include "V2D.hpp"
 
 namespace flock {
-V2D randvel();
-V2D randpos(V2D const& fwstsize);
+V2D randVel();
+V2D randPos(V2D const& flock_window_size_d);
 }  // namespace flock
 
 #endif

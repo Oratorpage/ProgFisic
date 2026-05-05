@@ -120,19 +120,19 @@ build CMakeFiles/cmake_byproducts_for_clean_target: phony Experimental$:Debug CM
 #############################################
 # Clean byproducts.
 
-build CMakeFiles/cmake_byproducts_for_clean_target$:Debug: phony Debug/flocksim Debug/progetto.t
+build CMakeFiles/cmake_byproducts_for_clean_target$:Debug: phony Debug/flocksim Debug/flocksim.t
 
 
 #############################################
 # Clean byproducts.
 
-build CMakeFiles/cmake_byproducts_for_clean_target$:Release: phony Release/flocksim Release/progetto.t
+build CMakeFiles/cmake_byproducts_for_clean_target$:Release: phony Release/flocksim Release/flocksim.t
 
 
 #############################################
 # Clean byproducts.
 
-build CMakeFiles/cmake_byproducts_for_clean_target$:RelWithDebInfo: phony RelWithDebInfo/flocksim RelWithDebInfo/progetto.t
+build CMakeFiles/cmake_byproducts_for_clean_target$:RelWithDebInfo: phony RelWithDebInfo/flocksim RelWithDebInfo/flocksim.t
 
 
 #############################################

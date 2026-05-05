@@ -300,39 +300,60 @@ build Release/flocksim: CXX_EXECUTABLE_LINKER__flocksim_Release CMakeFiles/flock
   TARGET_PDB = Release/flocksim.pdb
 
 # =============================================================================
-# Object build statements for EXECUTABLE target progetto.t
+# Object build statements for EXECUTABLE target flocksim.t
 
 
 #############################################
-# Order-only phony target for progetto.t
+# Order-only phony target for flocksim.t
 
-build cmake_object_order_depends_target_progetto.t_RELEASE: phony || CMakeFiles/progetto.t.dir
+build cmake_object_order_depends_target_flocksim.t_RELEASE: phony || CMakeFiles/flocksim.t.dir
 
-build CMakeFiles/progetto.t.dir/Release/tentativo.t.cpp.o: CXX_COMPILER__progetto.2et_unscanned_Release /home/g042/FISICA/Progetti/ProgFisic/tentativo.t.cpp || cmake_object_order_depends_target_progetto.t_RELEASE
+build CMakeFiles/flocksim.t.dir/Release/test/boid.test.cpp.o: CXX_COMPILER__flocksim.2et_unscanned_Release /home/g042/FISICA/Progetti/ProgFisic/test/boid.test.cpp || cmake_object_order_depends_target_flocksim.t_RELEASE
   DEFINES = -DCMAKE_INTDIR=\"Release\"
-  DEP_FILE = CMakeFiles/progetto.t.dir/Release/tentativo.t.cpp.o.d
+  DEP_FILE = CMakeFiles/flocksim.t.dir/Release/test/boid.test.cpp.o.d
   FLAGS = -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17
-  OBJECT_DIR = CMakeFiles/progetto.t.dir/Release
-  OBJECT_FILE_DIR = CMakeFiles/progetto.t.dir/Release
-  TARGET_COMPILE_PDB = CMakeFiles/progetto.t.dir/Release/
-  TARGET_PDB = Release/progetto.t.pdb
+  INCLUDES = -I/home/g042/FISICA/Progetti/ProgFisic/include
+  OBJECT_DIR = CMakeFiles/flocksim.t.dir/Release
+  OBJECT_FILE_DIR = CMakeFiles/flocksim.t.dir/Release/test
+  TARGET_COMPILE_PDB = CMakeFiles/flocksim.t.dir/Release/
+  TARGET_PDB = Release/flocksim.t.pdb
+
+build CMakeFiles/flocksim.t.dir/Release/src/Boid.cpp.o: CXX_COMPILER__flocksim.2et_unscanned_Release /home/g042/FISICA/Progetti/ProgFisic/src/Boid.cpp || cmake_object_order_depends_target_flocksim.t_RELEASE
+  DEFINES = -DCMAKE_INTDIR=\"Release\"
+  DEP_FILE = CMakeFiles/flocksim.t.dir/Release/src/Boid.cpp.o.d
+  FLAGS = -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17
+  INCLUDES = -I/home/g042/FISICA/Progetti/ProgFisic/include
+  OBJECT_DIR = CMakeFiles/flocksim.t.dir/Release
+  OBJECT_FILE_DIR = CMakeFiles/flocksim.t.dir/Release/src
+  TARGET_COMPILE_PDB = CMakeFiles/flocksim.t.dir/Release/
+  TARGET_PDB = Release/flocksim.t.pdb
+
+build CMakeFiles/flocksim.t.dir/Release/src/V2D.cpp.o: CXX_COMPILER__flocksim.2et_unscanned_Release /home/g042/FISICA/Progetti/ProgFisic/src/V2D.cpp || cmake_object_order_depends_target_flocksim.t_RELEASE
+  DEFINES = -DCMAKE_INTDIR=\"Release\"
+  DEP_FILE = CMakeFiles/flocksim.t.dir/Release/src/V2D.cpp.o.d
+  FLAGS = -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG -std=c++17
+  INCLUDES = -I/home/g042/FISICA/Progetti/ProgFisic/include
+  OBJECT_DIR = CMakeFiles/flocksim.t.dir/Release
+  OBJECT_FILE_DIR = CMakeFiles/flocksim.t.dir/Release/src
+  TARGET_COMPILE_PDB = CMakeFiles/flocksim.t.dir/Release/
+  TARGET_PDB = Release/flocksim.t.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target progetto.t
+# Link build statements for EXECUTABLE target flocksim.t
 
 
 #############################################
-# Link the executable Release/progetto.t
+# Link the executable Release/flocksim.t
 
-build Release/progetto.t: CXX_EXECUTABLE_LINKER__progetto.2et_Release CMakeFiles/progetto.t.dir/Release/tentativo.t.cpp.o
+build Release/flocksim.t: CXX_EXECUTABLE_LINKER__flocksim.2et_Release CMakeFiles/flocksim.t.dir/Release/test/boid.test.cpp.o CMakeFiles/flocksim.t.dir/Release/src/Boid.cpp.o CMakeFiles/flocksim.t.dir/Release/src/V2D.cpp.o
   FLAGS = -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wimplicit-fallthrough -Wextra-semi -Wold-style-cast -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS -D_GLIBCXX_SANITIZE_STD_ALLOCATOR -O3 -DNDEBUG
-  OBJECT_DIR = CMakeFiles/progetto.t.dir/Release
+  OBJECT_DIR = CMakeFiles/flocksim.t.dir/Release
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_COMPILE_PDB = CMakeFiles/progetto.t.dir/Release/
-  TARGET_FILE = Release/progetto.t
-  TARGET_PDB = Release/progetto.t.pdb
+  TARGET_COMPILE_PDB = CMakeFiles/flocksim.t.dir/Release/
+  TARGET_FILE = Release/flocksim.t
+  TARGET_PDB = Release/flocksim.t.pdb
 
 
 #############################################
@@ -558,15 +579,15 @@ build CMakeFiles/ContinuousSubmit-Release | ${cmake_ninja_workdir}CMakeFiles/Con
   COMMAND = cd /home/g042/FISICA/Progetti/ProgFisic/build && /usr/bin/ctest -C Release -D ContinuousSubmit
   pool = console
 
-build flocksim$:Release: phony Release/flocksim
+build flocksim.t$:Release: phony Release/flocksim.t
 
-build progetto.t$:Release: phony Release/progetto.t
+build flocksim$:Release: phony Release/flocksim
 
 
 #############################################
 # Folder: /home/g042/FISICA/Progetti/ProgFisic/build
 
-build all$:Release: phony Release/flocksim Release/progetto.t
+build all$:Release: phony Release/flocksim Release/flocksim.t
 
 
 #############################################
