@@ -1,4 +1,4 @@
-#include "VChange.hpp"
+#include "vChange.hpp"
 // forse devi includere anche vector, anche se è già incluso nell'hpp dunque non
 // so
 
@@ -11,7 +11,8 @@ double distSq(V2D const& a, V2D const& b) {
 }
 
 void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
-                         V2D const& fwstsize, SimParams const& params) {
+                         V2D const& flock_window_size_d,
+                         SimParams const& params) {
   const double detection_rad_sq{params.detection_rad * params.detection_rad};
   const double danger_rad_sq{params.danger_rad * params.danger_rad};
   for (auto& bi : Boids) {
@@ -53,7 +54,7 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
             allignament_vel += bj->Vel();
             cm_pos += bj->Pos();
           }
-          // This is the update if bi is a prey and bj a prey
+          // This is the update if bi is a prey and bj a predator
           if (!(bi.IsPred()) && !(bj->IsPred())) {
             if (distSq(bi.Pos(), bj->Pos()) < danger_rad_sq) {
               separation_vel += bj->Pos() - bi.Pos();
@@ -70,8 +71,8 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
     }
     // If there are no near boids it will update anyway but vup will be 0
     // because of the standard inizialization of the V2D
-    V2D vup = separation_vel + allignament_vel + cohesion_vel;
-    bi.update(dt, fwstsize, vup, params.toroidal);
+    V2D vup{separation_vel + allignament_vel + cohesion_vel};
+    bi.update(dt, flock_window_size_d, vup, params.toroidal);
   }
 }
 }  // namespace flock

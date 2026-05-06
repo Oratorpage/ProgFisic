@@ -1,4 +1,4 @@
-#include "Render.hpp"
+#include "render.hpp"
 
 #include <cmath>
 #include <string>

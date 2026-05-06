@@ -2,7 +2,7 @@
 #ifndef FLOCK_RAND_HPP
 #define FLOCK_RAND_HPP
 
-#include "V2D.hpp"
+#include "v2D.hpp"
 
 namespace flock {
 V2D randVel();

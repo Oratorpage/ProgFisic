@@ -32,7 +32,7 @@ string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined")
 
 find_package(SFML 2 REQUIRED COMPONENTS graphics window system)
 
-add_executable(flocksim src/main.cpp src/V2D.cpp src/Boid.cpp src/Input.cpp src/Rand.cpp src/Render.cpp src/VChange.cpp)
+add_executable(flocksim src/main.cpp src/v2D.cpp src/boid.cpp src/input.cpp src/rand.cpp src/render.cpp src/vChange.cpp)
 
 
 target_include_directories(flocksim PRIVATE include)
@@ -46,7 +46,7 @@ target_link_libraries(flocksim PRIVATE
 if (BUILD_TESTING)
 
   # aggiungi l'eseguibile progetto.t
-  add_executable(flocksim.t test/boid.test.cpp src/Boid.cpp src/V2D.cpp)
+  add_executable(flocksim.t test/boid.test.cpp src/boid.cpp src/v2D.cpp)
   target_include_directories(flocksim.t PRIVATE ${CMAKE_SOURCE_DIR}/include)
   # aggiungi l'eseguibile progetto.t alla lista dei test
   add_test(NAME flockism.t COMMAND flocksim.t)

@@ -2,7 +2,7 @@
 #ifndef FLOCK_BOID_HPP
 #define FLOCK_BOID_HPP
 
-#include "V2D.hpp"
+#include "v2D.hpp"
 #include <stdexcept>
 
 namespace flock {
@@ -17,15 +17,15 @@ class Boid {
 
  public:
   Boid();
-  Boid(V2D v, V2D p);
-  Boid(V2D v, V2D p, bool is_predator);
+  Boid(V2D const& v, V2D const& p);
+  Boid(V2D const& v, V2D const& p, bool is_predator);
 
   V2D const& Vel() const;
   V2D const& Pos() const;
   bool IsPred() const;
 
   void update(double dt, V2D const& flock_window_size, V2D const& vel_update,
-              bool const& toroidal);
+              bool toroidal);
 };
 
 }  // namespace flock

@@ -2,7 +2,7 @@
 #ifndef FLOCK_INPUT_HPP
 #define FLOCK_INPUT_HPP
 
-#include "SimParams.hpp"
+#include "simParams.hpp"
 
 namespace flock{
     SimParams readParams();

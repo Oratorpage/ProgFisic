@@ -3,11 +3,11 @@
 
 #include <vector>
 
-#include "Boid.hpp"
-#include "SimParams.hpp"
+#include "boid.hpp"
+#include "simParams.hpp"
 
 namespace flock {
-void velocityChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& fwstsize,
+void velocityChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& flock_window_size_d,
                   SimParams const& params);
 }
 

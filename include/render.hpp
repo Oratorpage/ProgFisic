@@ -5,8 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "Boid.hpp"
-#include "SimParams.hpp"
+#include "boid.hpp"
+#include "simParams.hpp"
 
 namespace flock {
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor);

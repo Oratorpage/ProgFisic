@@ -1,10 +1,10 @@
-#include "Boid.hpp"
+#include "boid.hpp"
 
 namespace flock {
 
 Boid::Boid() = default;
-Boid::Boid(V2D v, V2D p) : velocity_{v}, position_{p} {}
-Boid::Boid(V2D v, V2D p, bool is_predator)
+Boid::Boid(V2D const& v, V2D const& p) : velocity_{v}, position_{p} {}
+Boid::Boid(V2D const& v, V2D const& p, bool is_predator)
     : velocity_{v}, position_{p}, is_predator_{is_predator} {}
 
 V2D const& Boid::Vel() const { return velocity_; }
@@ -12,7 +12,7 @@ V2D const& Boid::Pos() const { return position_; }
 bool Boid::IsPred() const { return is_predator_; }
 
 void Boid::update(double dt, V2D const& flock_window_size,
-                  V2D const& vel_update, bool const& toroidal) {
+                  V2D const& vel_update, bool toroidal) {
   if (dt > 0.5) {
     throw std::runtime_error{"dt is too big"};
   }

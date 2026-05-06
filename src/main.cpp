@@ -2,11 +2,11 @@
 #include <iostream>
 #include <vector>
 
-#include "Boid.hpp"
-#include "Input.hpp"
-#include "Rand.hpp"
-#include "Render.hpp"
-#include "VChange.hpp"
+#include "boid.hpp"
+#include "input.hpp"
+#include "rand.hpp"
+#include "render.hpp"
+#include "vChange.hpp"
 
 // Forse va tutto messo dopo flock_window_size_d nel ciclo while della finestra
 
@@ -91,13 +91,14 @@ int main() {
         }
       }
       // Sistema il clock in modo che il dt sia costante
-      double dt = clock.restart().asSeconds();
+      double dt{clock.restart().asSeconds()};
 
       flock::velocityChangeBoids(boids, dt, flock_window_size_d, parameters);
 
       flock::renderFrame(FlockWindow, IoWindow, boids, parameters,
                          flock_window_size_d, non_pred_boid, pred_boid,
-                         detection_circle, danger_circle, cm_circle, statistics);
+                         detection_circle, danger_circle, cm_circle,
+                         statistics);
     }
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

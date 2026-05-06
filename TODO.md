@@ -4,14 +4,14 @@
 - [ ] ALGOTRITHM THE WORLD, IF NOT THERE YOU CAN THINK OF MAKING YOUR OWN
 - [ ] Create different behaviours and make them optional
 - [ ] Resize according to window
-- [ ] Add another window that display stats for the boid flock, ~cm position, average velocity,~ highest, lowest, ~number of boids on screen~
+- [ ] Add another window that display stats for the boid flock, ~cm position, average velocity,~ highest, lowest, ~number of boids on screen~, average position between boids
 - [ ] MIRROR MIRROR OF MY WILL ARE YOU READY TO BE PARALLELIZED
 
 
 ---
 
 # Assignment
-- [ ] Sistema i nomi delle variabili per migliorare la comprensione
+- [x] Sistema i nomi delle variabili per migliorare la comprensione
 - [ ] Check performance and usability of algorithms
 
 ---
