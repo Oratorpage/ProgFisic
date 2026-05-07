@@ -6,12 +6,14 @@
 - [ ] Resize according to window
 - [ ] Add another window that display stats for the boid flock, ~cm position, average velocity,~ highest, lowest, ~number of boids on screen~, average position between boids
 - [ ] MIRROR MIRROR OF MY WILL ARE YOU READY TO BE PARALLELIZED
+- [ ] Maybe add an initialization function that allows you to create boids where you click with the mouse?
+- [ ] Maybe a trail for the boids would be kind of nice graphically?
 
 
 ---
 
 # Assignment
-- [x] Sistema i nomi delle variabili per migliorare la comprensione
+- [ ] Do the initialization by file dude, it's time
 - [ ] Check performance and usability of algorithms
 
 ---
@@ -23,6 +25,7 @@
 - [x] Fix Class invariance with the constexpression, look up theory before
 
 **ASS(ignment)**
+- [x] Sistema i nomi delle variabili per migliorare la comprensione
 - [x] Put everything into the namespace
 - [x] Implement the try catch in general 
 - [x] Divide into multiple translation units + file with tests

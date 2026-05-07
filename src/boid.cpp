@@ -17,7 +17,7 @@ void Boid::update(double dt, V2D const& flock_window_size,
     throw std::runtime_error{"dt is too big"};
   }
   velocity_ += vel_update * dt;
-  position_ += velocity_ * dt;
+
   if (toroidal) {
     if (position_.x < 0) {
       position_.x = flock_window_size.x;
@@ -73,6 +73,7 @@ void Boid::update(double dt, V2D const& flock_window_size,
       velocity_.y = -max_speed;
     }
   }
+  position_ += velocity_ * dt;
 }
 
 }  // namespace flock
