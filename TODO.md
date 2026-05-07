@@ -1,5 +1,7 @@
 # Functional
 
+- [ ] Sistema l'aggiornamento della posizione (la distanza) in modo che faccia wrap-around e veda quelli dall'altro lato, altrimenti non è precisa la modalità toroidale, un po'bruttina
+- [ ] Quando sistemi la cosa sopra devi anche sistemare gli inerenti test case(') in quanto cambia la situazione
 - [ ] Guarda la cosa che diceva giacomini della gestione della finestra iowindow e del polling degli eventi
 - [ ] ALGOTRITHM THE WORLD, IF NOT THERE YOU CAN THINK OF MAKING YOUR OWN
 - [ ] Create different behaviours and make them optional

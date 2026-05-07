@@ -69,16 +69,16 @@ TEST_CASE("Boid update - standard predator, non toroidal, behind 'wall'") {
   flock::V2D result_ipo_vel{21.667, 21.667};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
   flock::V2D result_ipo_pos{10.361, 10.361};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
 TEST_CASE("Boid update - standard predator, non toroidal, ahead of 'wall'") {
   flock::Boid b1{{10., 10.}, {20., 20.}, true};
@@ -91,37 +91,230 @@ TEST_CASE("Boid update - standard predator, non toroidal, ahead of 'wall'") {
   flock::V2D result_ipo_vel{11.667, 11.667};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
   flock::V2D result_ipo_pos{20.194, 20.194};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
 /*-------------------------------------TOROIDAL---------------------------------------
+                                         (e)
+                (a)   __________________________________________   (f)
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                (b)  |               flock_window               |  (g)
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                (c)   __________________________________________   (h)
 
-                      __________________________________________
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                     |                                          |
-                      __________________________________________
-
-
+                                         (d)
 *-------------------------------------------------------------------------------------
 */
-TEST_CASE(
-    "Boid update - standard predator, toroidal, befor window borders "
-    "left-down") {
+//(a)
+TEST_CASE("Boid update - standard predator, toroidal, case (a)") {
+  flock::Boid b1{{-10., -10.}, {-20., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-8.333, -8.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+    //Qua c'è un problema perchè io il calcolo l'ho fatto con un'altro valore e ritorna uguale quindi bho
+  flock::V2D result_ipo_pos{799.861, 599.861};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(b)
+TEST_CASE("Boid update - standard predator, toroidal, case (b)") {
+  flock::Boid b1{{-10., 0.}, {-20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-8.333, 1.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{799.861, 20.028};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(c)
+TEST_CASE("Boid update - standard predator, toroidal, case (c)") {
+  flock::Boid b1{{-10., 10.}, {-20., 620.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-8.333, 11.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{799.861, 0.1945};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(d)
+TEST_CASE("Boid update - standard predator, toroidal, case(d)") {
+  flock::Boid b1{{0., 10.}, {20., 620.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{1.667, 11.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{20.028, 0.1945};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(e)
+TEST_CASE("Boid update - standard predator, toroidal, case (e)") {
+  flock::Boid b1{{0., -10.}, {20., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{1.667, -8.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{20.028, 599.861};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(f)
+TEST_CASE("Boid update - standard predator, toroidal, case (f)") {
+  flock::Boid b1{{10., -10.}, {820., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{11.667, -8.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{0.1945, 599.861};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(g)
+TEST_CASE("Boid update - standard predator, toroidal, case (g)") {
+  flock::Boid b1{{10., 0.}, {820., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{11.667, 1.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{0.1945, 20.028};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(h)
+TEST_CASE("Boid update - standard predator, toroidal, case (h)") {
+  flock::Boid b1{{10., 10.}, {820., 620.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{11.667, 11.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{0.1945, 0.1945};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+/*Questi test evidenziano come se il boid arriva in una posizione al di fuori
+  della finestra con una velocità che non è compatibile con il suo percorso
+  precedente (com'è arrivato lì se la sua velocità puntava in un'altra
+  direzione complessiva? per esempio in direzione opposta a quella che lo
+  collega alla finestra) assumerà temporaneamente di nuovo una posizione
+  invalida e nell'aggiornamento successivo
+  Dipende in realtà molto da vel_update, se è zero allora al secondo
+  aggiornamento non ci sono problemi, altrimenti può creare problemi, tipo
+  mantenere attivamente il boid al di fuori della schermata di render
+ */
+//(a')
+TEST_CASE("Boid update - standard predator, toroidal, case (a')") {
   flock::Boid b1{{10., 10.}, {-20., -20.}, true};
   double dt{0.01667};
   flock::V2D flock_window_size{800., 600.};
@@ -132,113 +325,177 @@ TEST_CASE(
   flock::V2D result_ipo_vel{11.667, 11.667};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
-  flock::V2D result_ipo_pos{800., 600.};
+  flock::V2D result_ipo_pos{800.194, 600.194};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
-TEST_CASE(
-    "Boid update - standard predator, toroidal, before window borders "
-    "left - ok height") {
-  flock::Boid b1{{10., 10.}, {-20., 20.}, true};
+//(b')
+TEST_CASE("Boid update - standard predator, toroidal, case (b')") {
+  flock::Boid b1{{10., 0.}, {-20., 20.}, true};
   double dt{0.01667};
   flock::V2D flock_window_size{800., 600.};
   flock::V2D vel_update{100., 100.};
   bool toroidal{true};
   b1.update(dt, flock_window_size, vel_update, toroidal);
 
-  flock::V2D result_ipo_vel{11.667, 11.667};
+  flock::V2D result_ipo_vel{11.667, 1.667};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
-  flock::V2D result_ipo_pos{800., 20.194};
+  flock::V2D result_ipo_pos{800.194, 20.028};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
-TEST_CASE(
-    "Boid update - standard predator, toroidal, after window borders "
-    "ok side - down") {
-  flock::Boid b1{{10., 10.}, {20., -20.}, true};
+//(c')
+TEST_CASE("Boid update - standard predator, toroidal, case (c')") {
+  flock::Boid b1{{10., -10.}, {-20., 620.}, true};
   double dt{0.01667};
   flock::V2D flock_window_size{800., 600.};
   flock::V2D vel_update{100., 100.};
   bool toroidal{true};
   b1.update(dt, flock_window_size, vel_update, toroidal);
 
-  flock::V2D result_ipo_vel{11.667, 11.667};
+  flock::V2D result_ipo_vel{11.667, -8.333};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
-  flock::V2D result_ipo_pos{20.194, 600.};
+  flock::V2D result_ipo_pos{800.194, -0.139};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
-//--------------------------------------------------------------------------------
-TEST_CASE(
-    "Boid update - standard predator, toroidal, before window borders "
-    "ok side - up") {
-  flock::Boid b1{{10., 10.}, {20., 620.}, true};
+//(d')
+TEST_CASE("Boid update - standard predator, toroidal, case(d')") {
+  flock::Boid b1{{0., -10.}, {20., 620.}, true};
   double dt{0.01667};
   flock::V2D flock_window_size{800., 600.};
   flock::V2D vel_update{100., 100.};
   bool toroidal{true};
   b1.update(dt, flock_window_size, vel_update, toroidal);
 
-  flock::V2D result_ipo_vel{11.667, 11.667};
+  flock::V2D result_ipo_vel{1.667, -8.333};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
-  flock::V2D result_ipo_pos{20.194, 0.194};
+  flock::V2D result_ipo_pos{20.028, -0.139};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
-TEST_CASE(
-    "Boid update - standard predator, toroidal, before window borders "
-    "ok side - up") {
-  flock::Boid b1{{10., 10.}, {20., 620.}, true};
+//(e')
+TEST_CASE("Boid update - standard predator, toroidal, case (e')") {
+  flock::Boid b1{{0., 10.}, {20., -20.}, true};
   double dt{0.01667};
   flock::V2D flock_window_size{800., 600.};
   flock::V2D vel_update{100., 100.};
   bool toroidal{true};
   b1.update(dt, flock_window_size, vel_update, toroidal);
 
-  flock::V2D result_ipo_vel{11.667, 11.667};
+  flock::V2D result_ipo_vel{1.667, 11.667};
   flock::V2D result_real_vel{b1.Vel()};
   CHECK(
-      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.001)));
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
-      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.001)));
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
 
-  flock::V2D result_ipo_pos{20.194, 0.194};
+  flock::V2D result_ipo_pos{20.028, 600.194};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
-      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.001)));
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
   CHECK(
-      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.001)));
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(f')
+TEST_CASE("Boid update - standard predator, toroidal, case (f')") {
+  flock::Boid b1{{-10., 10.}, {820., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-8.333, 11.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{-0.139, 600.194};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(g')
+TEST_CASE("Boid update - standard predator, toroidal, case (g')") {
+  flock::Boid b1{{-10., 0.}, {820., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-8.333, 1.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{-0.139, 20.028};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+//(h')
+TEST_CASE("Boid update - standard predator, toroidal, case (h')") {
+  flock::Boid b1{{-10., -10.}, {820., 620.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-8.333, -8.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{-0.139, -0.139};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
 
 // TEST_CASE("Boid update - time is negative") {}
