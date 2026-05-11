@@ -1,12 +1,18 @@
+# Top Priorities
+
+- [ ] Fine test delle cose principali, boids TU e vChange TU
+- [ ] Input da file
+- [ ] Gestione della finestra e degli eventi, bisogna avere tutto nel loop while window is open
+
 # Functional
 
 - [ ] Sistema l'aggiornamento della posizione (la distanza) in modo che faccia wrap-around e veda quelli dall'altro lato, altrimenti non è precisa la modalità toroidale, un po'bruttina
-- [ ] Quando sistemi la cosa sopra devi anche sistemare gli inerenti test case(') in quanto cambia la situazione
+- [ ] Quando sistemi la cosa sopra devi anche sistemare gli inerenti test case(boids toroidal ') in quanto cambia la situazione
 - [ ] Guarda la cosa che diceva giacomini della gestione della finestra iowindow e del polling degli eventi
 - [ ] ALGOTRITHM THE WORLD, IF NOT THERE YOU CAN THINK OF MAKING YOUR OWN
-- [ ] Create different behaviours and make them optional
+- [ ] Create different behaviours and make them optional -> this means changing the vChange accordingly, would maybe require an enum for the tyoe of behaviour
 - [ ] Resize according to window
-- [ ] Add another window that display stats for the boid flock, ~cm position, average velocity,~ highest, lowest, ~number of boids on screen~, average position between boids
+- [ ] Add another window that displays stats for the boid flock, ~cm position, average velocity,~ highest, lowest, ~number of boids on screen~, average position between boids
 - [ ] MIRROR MIRROR OF MY WILL ARE YOU READY TO BE PARALLELIZED
 - [ ] Maybe add an initialization function that allows you to create boids where you click with the mouse?
 - [ ] Maybe a trail for the boids would be kind of nice graphically?

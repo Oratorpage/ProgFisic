@@ -54,11 +54,16 @@ TEST_CASE("Boid initialization - complete constructor with bad values") {
  shouldn't be a problem, it wouldn't be even with the manual insertion since the
  only thing the user can decide would be the position (by clicking inside the
  window).
+
+ Qua bisogna chiedere se test e struttura delle TU va fatta in maniera tale che
+ funzioni anche stand-alone con un main generico come libreria perchè in quel
+ caso devo cambiare effettivamente un po' di cose
 */
 
 // Boid update testing
-// For these there is no difference between prey or predator, it is only the
-// update not the vChange
+// For all of these tests there is no difference between prey or predator, this
+// difference only plays a part when the resulting velocity is calculated so in
+// the vChange TU
 TEST_CASE("Boid update - standard predator, non toroidal, behind 'wall'") {
   flock::Boid b1{{10., 10.}, {10., 10.}, true};
   double dt{0.01667};
@@ -134,7 +139,6 @@ TEST_CASE("Boid update - standard predator, toroidal, case (a)") {
       (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
   CHECK(
       (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
-    //Qua c'è un problema perchè io il calcolo l'ho fatto con un'altro valore e ritorna uguale quindi bho
   flock::V2D result_ipo_pos{799.861, 599.861};
   flock::V2D result_real_pos{b1.Pos()};
   CHECK(
@@ -498,7 +502,620 @@ TEST_CASE("Boid update - standard predator, toroidal, case (h')") {
       (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
 }
 
-// TEST_CASE("Boid update - time is negative") {}
-// TEST_CASE("Boid update - vel_update is zero") {}
-// TEST_CASE("Boid update - vel_update is negative") {}
-// TEST_CASE("Boid update - toroidal is weird") {}
+// Update velocity{0., 0.}
+
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', "
+    "vel_update{0., 0.}") {
+  flock::Boid b1{{10., 10.}, {10., 10.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{0., 0.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{20., 20.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{10.333, 10.333};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', "
+    "vel_update{0., 0.}") {
+  flock::Boid b1{{10., 10.}, {20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{0., 0.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{10., 10.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{20.167, 20.167};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// I'm not gonna do the test for every border of the toroidal configuration
+// given it works above
+TEST_CASE("Boid update - standard predator, toroidal, vel_update{0., 0.}") {
+  flock::Boid b1{{-10., -10.}, {-20., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{0., 0.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-10., -10.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{799.833, 599.833};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+
+// Update velocity is negative
+
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', "
+    "vel_update is negative") {
+  flock::Boid b1{{10., 10.}, {10., 10.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{18.333, 18.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{10.306, 10.306};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', "
+    "vel_update is negative") {
+  flock::Boid b1{{10., 10.}, {20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{8.333, 8.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{20.139, 20.139};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// I'm not gonna do the test for every border of the toroidal configuration
+// given it works above
+TEST_CASE("Boid update - standard predator, toroidal, vel_update is negative") {
+  flock::Boid b1{{-10., -10.}, {-20., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-11.667, -11.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{799.806, 599.806};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+
+/* Testing that the velocity limiter behaves according to expectations in the
+ * cases where the velocity is bigger that the maximum before or after the
+ * update, for both the positive and negative limits
+ *
+ * For the non_toroidal cases max_speed is 250.
+ * For the toroidal cases max_speed is 150.
+ */
+
+/*                                 AFTER CASE
+The initial velocity is smaller than the max_speed but the update increases it,
+the limiter should bring it down.
+*/
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', "
+    "velocity limiter works - > max vel after update") {
+  flock::Boid b1{{249., 249.}, {10., 10.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{250., 250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{14.168, 14.168};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// Negative velocity
+// The negative velocity gets lowered even earlier by the 'wall'
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', "
+    "velocity limiter works - > max vel after update  - negative") {
+  flock::Boid b1{{-249., -249.}, {10., 10.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-1000., -1000.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{-250., -250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{5.832, 5.832};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', "
+    "velocity limiter works - > max vel after update") {
+  flock::Boid b1{{249., 249.}, {20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{250., 250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{24.168, 24.168};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// Negative velocity
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', "
+    "velocity limiter works - > max vel after update - negative") {
+  flock::Boid b1{{-249., -249.}, {20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-250., -250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{15.832, 15.832};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// I'm not gonna do the test for every border of the toroidal configuration
+// given it works above
+TEST_CASE(
+    "Boid update - standard predator, toroidal, velocity limiter works - > max "
+    "vel after update") {
+  flock::Boid b1{{149., 149.}, {820., 620.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{150., 150.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{2.5005, 2.5005};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// Negative velocity
+TEST_CASE(
+    "Boid update - standard predator, toroidal, velocity limiter works - > max "
+    "vel after update - negative") {
+  flock::Boid b1{{-149., -149.}, {-20., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-150., -150.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{797.500, 597.500};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+
+/*                               BEFORE CASE
+The case where it has a bigger velocity than the max_speed before the update
+is impossible because in the preceding update the limiter should have brought
+the velocity down, I'll include it in case somewhere else in the program there
+is an error that causes this or if the user decides to create a boid with a
+velocity > max_speed
+*/
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', "
+    "velocity limiter works - > max vel before update") {
+  flock::Boid b1{{260., 260.}, {10., 10.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{250., 250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{14.168, 14.168};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// Negative velocity
+// The negative velocity gets lowered even earlier by the 'wall'
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', "
+    "velocity limiter works - > max vel before update  - negative") {
+  flock::Boid b1{{-260., -260.}, {10., 10.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{-248.333, -248.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{5.860, 5.860};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', "
+    "velocity limiter works - > max vel before update") {
+  flock::Boid b1{{260., 260.}, {20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{250., 250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{24.168, 24.168};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// Negative velocity
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', "
+    "velocity limiter works - > max vel before update - negative") {
+  flock::Boid b1{{-260., -260.}, {20., 20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-250., -250.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{15.832, 15.832};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// I'm not gonna do the test for every border of the toroidal configuration
+// given it works above
+TEST_CASE(
+    "Boid update - standard predator, toroidal, velocity limiter works - > max "
+    "vel before update") {
+  flock::Boid b1{{160., 160.}, {820., 620.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{150., 150.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{2.5005, 2.5005};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// Negative velocity
+TEST_CASE(
+    "Boid update - standard predator, toroidal, velocity limiter works - > max "
+    "vel before update - negative") {
+  flock::Boid b1{{-160., -160.}, {-20., -20.}, true};
+  double dt{0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{-100., -100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-150., -150.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{797.500, 597.500};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+
+/*These tests are only to ensure total functioning in case of weird problems, in
+ * no part of the simulations these situations would be encountered. Are they
+ * necessary if they only ensure regardless functionality or they can be
+ * ommitted based on the main i designed?
+ */
+//(dt = 0)
+
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', time is "
+    "zero") {
+  flock::Boid b1{{10., 10.}, {10., 10.}, true};
+  double dt{0.};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{20., 20.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{10., 10.};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', time is "
+    "zero") {
+  flock::Boid b1{{10., 10.}, {20., 20.}, true};
+  double dt{0.};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{10., 10.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{20., 20.};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// I'm not gonna do the test for every border of the toroidal configuration
+// given it works above
+TEST_CASE("Boid update - standard predator, toroidal, time is zero") {
+  flock::Boid b1{{-10., -10.}, {-20., -20.}, true};
+  double dt{0.};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-10., -10.};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{800., 600.};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+
+//(dt < 0)
+
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, behind 'wall', negative "
+    "time") {
+  flock::Boid b1{{10., 10.}, {10., 10.}, true};
+  double dt{-0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+  flock::V2D result_ipo_vel{18.333, 18.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{9.694, 9.694};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+TEST_CASE(
+    "Boid update - standard predator, non toroidal, ahead of 'wall', negative "
+    "time") {
+  flock::Boid b1{{10., 10.}, {20., 20.}, true};
+  double dt{-0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{false};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{8.333, 8.333};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{19.861, 19.861};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
+// I'm not gonna do the test for every border of the toroidal configuration
+// given it works above
+TEST_CASE("Boid update - standard predator, toroidal, negative time") {
+  flock::Boid b1{{-10., -10.}, {-20., -20.}, true};
+  double dt{-0.01667};
+  flock::V2D flock_window_size{800., 600.};
+  flock::V2D vel_update{100., 100.};
+  bool toroidal{true};
+  b1.update(dt, flock_window_size, vel_update, toroidal);
+
+  flock::V2D result_ipo_vel{-11.667, -11.667};
+  flock::V2D result_real_vel{b1.Vel()};
+  CHECK(
+      (result_ipo_vel.x == doctest::Approx(result_real_vel.x).epsilon(0.0001)));
+  CHECK(
+      (result_ipo_vel.y == doctest::Approx(result_real_vel.y).epsilon(0.0001)));
+
+  flock::V2D result_ipo_pos{800.194, 600.194};
+  flock::V2D result_real_pos{b1.Pos()};
+  CHECK(
+      (result_ipo_pos.x == doctest::Approx(result_real_pos.x).epsilon(0.0001)));
+  CHECK(
+      (result_real_pos.y == doctest::Approx(result_ipo_pos.y).epsilon(0.0001)));
+}
