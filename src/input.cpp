@@ -1,57 +1,156 @@
 #include "input.hpp"
 
-#include <iostream>
+#include <fstream>
 #include <stdexcept>
 
 namespace flock {
-SimParams readParams() {
-  SimParams p;
+// Due scelte qua, o faccio un void trim(std::string& line) oppure lo lascio
+// così, in teoria non ci dovrebbero essere problemi se anche non faccio una
+// copia tanto leggo solo da file
+std::string trim(std::string line) {
+  // size_t è un tipo particolare che si usa per indicare la lunghezza di
+  // vettori per esempio, è molto, molto grande, guardane meglio la
+  // documentazione; è un unsigned integral type
+  std::size_t first{0};
+  while (first < line.size() && line[first] == ' ') {
+    ++first;
+  }
+  std::size_t last{line.size()};
+  while (last > first && line[last - 1] == ' ') {
+    --last;
+  }
+  // substring mi ritorna una stringa creata da una copia di line con l'indice
+  // del primo carattere ed il numero di caratteri di cui è composta, entrambi
+  // lavorano con un size_t
+  return line.substr(first, last - first);
+  // according to documentation if pos is equal to string length it returns an
+  // empty string; if pos bigger than string legth then it throws out of range
+}
 
-  std::cout << "Input the values for the desired simulation: \n"
-            << "Number of non predator boids: ";
-  if (!(std::cin >> p.non_pred_boidnum) || p.non_pred_boidnum < 0) {
+int parseInt(std::string const& string_value) {
+  std::size_t position{0};
+  // std::stoi prende in entrata una stringa con la rapresentazione di un numero
+  // integrale ed un pointer ad un oggetto di tipo size_t il cui valore alla
+  // fine è aggiornato dalla funzione al carattere nella stringa dopo il valore
+  // numerico; assurdo, aggiorna due cose in una volta
+  int value{std::stoi(string_value, &position)};
+  if (position != string_value.size()) {
     throw std::runtime_error(
-        "Negative, or not integer number of non predator boids");
+        "Invalid integer value (remove characters near numbers): " +
+        string_value + "; refer to the above instructions for typing");
   }
-  std::cout << "Number of predator boids: ";
-  if (!(std::cin >> p.pred_boidnum) || p.pred_boidnum < 0) {
+  return value;
+}
+
+double parseDouble(std::string const& string_value) {
+  std::size_t position{0};
+  double value{std::stod(string_value, &position)};
+  if (position != string_value.size()) {
     throw std::runtime_error(
-        "Negative, or not integer number of predator boids");
+        "Invalid double value (remove characters near numbers): " +
+        string_value + "; refer to the above instructions for typing");
   }
-  std::cout << "separation coefficient: ";
-  if (!(std::cin >> p.s) || p.s <= 0) {
-    throw std::runtime_error(
-        "Negative or zero value for the separation coefficient");
+  return value;
+}
+
+bool parseBool(std::string const& string_value) {
+  if (string_value == "1" || string_value == "true") {
+    return true;
   }
-  std::cout << "alignment coefficient: ";
-  if (!(std::cin >> p.a) || p.a <= 0) {
-    throw std::runtime_error(
-        "Negative or zero value for the alignment coefficient");
+  if (string_value == "0" || string_value == "false") {
+    return false;
   }
-  std::cout << "cohesion coefficient: ";
-  if (!(std::cin >> p.c) || p.c <= 0) {
-    throw std::runtime_error(
-        "Negative or zero value for the cohesion coefficient");
+  throw std::runtime_error("Invalid boolean value: " + string_value +
+                           "; refer to the above instructions for typing");
+}
+
+SimParams readFileParams(std::string const& path) {
+  std::fstream filein(path);
+  if (!filein) {
+    throw std::runtime_error("File could not be opened: " + path);
   }
-  std::cout << "radius of detection: ";
-  if (!(std::cin >> p.detection_rad) || p.detection_rad <= 0) {
-    throw std::runtime_error("Negative or zero value for the detectrad value");
-  }
-  std::cout << "radius of danger: ";
-  if (!(std::cin >> p.danger_rad) || p.danger_rad <= 0) {
-    throw std::runtime_error("Negative or zero value for the dangerrad value");
-  }
-  std::cout << "Toroidal Space active (1 for yes, 0 for no): ";
-  if (!(std::cin >> p.toroidal)) {
-    throw std::runtime_error("Unvalid value for the Toroidal Space decision");
-  }
-  std::cout << "Operational Radiuses active (1 for yes, 0 for no): ";
-  if (!(std::cin >> p.op_rad)) {
-    throw std::runtime_error(
-        "Unvalid value for the Operational Radiuses decision");
+  SimParams parameters;
+  std::string line;
+
+  // This basically says that while i can get line from filein I'll put it into
+  // line (look up reference better) when it cannot read a line anymore it stops
+  while (std::getline(filein, line)) {
+    line = trim(line);
+
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+
+    std::size_t equal_position{line.find('=')};
+    std::size_t colon_position{line.find(':')};
+
+    if (equal_position == std::string::npos &&
+        colon_position == std::string::npos) {
+      throw std::runtime_error(
+          "This line doesn't have an equal or colon delimiter: " + line);
+    }
+
+    std::string key;
+    std::string value;
+    if (equal_position == std::string::npos) {
+      key = trim(line.substr(0, colon_position));
+      value = trim(line.substr(colon_position + 1));
+    } else if (colon_position == std::string::npos) {
+      key = trim(line.substr(0, equal_position));
+      value = trim(line.substr(equal_position + 1));
+    }
+
+    if (key == "non_pred_boidnum") {
+      parameters.non_pred_boidnum = parseInt(value);
+    } else if (key == "pred_boidnum") {
+      parameters.pred_boidnum = parseInt(value);
+    } else if (key == "separation") {
+      parameters.separation = parseDouble(value);
+    } else if (key == "allignment") {
+      parameters.allignment = parseDouble(value);
+    } else if (key == "cohesion") {
+      parameters.cohesion = parseDouble(value);
+    } else if (key == "detection_rad") {
+      parameters.detection_rad = parseDouble(value);
+    } else if (key == "danger_rad") {
+      parameters.danger_rad = parseDouble(value);
+    } else if (key == "toroidal") {
+      parameters.toroidal = parseBool(value);
+    } else if (key == "op_rad") {
+      parameters.op_rad = parseBool(value);
+    } else {
+      throw std::runtime_error("Unknown input key: " + key);
+    }
   }
 
-  return p;
+  if (parameters.non_pred_boidnum < 0) {
+    throw std::runtime_error("Negative non_pred_boinum value");
+  }
+  if (parameters.pred_boidnum < 0) {
+    throw std::runtime_error("Negative pred_boinum value");
+  }
+  if (parameters.separation <= 0) {
+    throw std::runtime_error("Negative or zero separation value");
+  }
+  if (parameters.allignment <= 0) {
+    throw std::runtime_error("Negative or zero allignment value");
+  }
+  if (parameters.cohesion <= 0) {
+    throw std::runtime_error("Negative or zero cohesion value");
+  }
+  if (parameters.detection_rad <= 0) {
+    throw std::runtime_error("Negative or zero detection_rad value");
+  }
+  if (parameters.danger_rad <= 0) {
+    throw std::runtime_error("Negative or zero danger_rad value");
+  }
+  if (parameters.non_pred_boidnum == 0 && parameters.pred_boidnum == 0) {
+    throw std::runtime_error(
+        "non_pred_boidnum and pred_boidnum are both zero, no boids would be "
+        "visualized");
+  }
+
+  return parameters;
 }
 
 }  // namespace flock

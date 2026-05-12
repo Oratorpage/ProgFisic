@@ -18,12 +18,14 @@ int main() {
 
     sf::RenderWindow IoWindow(sf::VideoMode(600, 400), "I/O View",
                               sf::Style::Default);
+    IoWindow.setPosition(sf::Vector2i(0, 200));
 
     flock::V2D flock_window_size_d{
         static_cast<double>(FlockWindow.getSize().x),
         static_cast<double>(FlockWindow.getSize().y)};
 
-    flock::SimParams parameters{flock::readParams()};
+    std::string const path{"parameters.txt"};
+    flock::SimParams parameters{flock::readFileParams(path)};
     std::vector<flock::Boid> boids;
     int tot_boids{parameters.pred_boidnum + parameters.non_pred_boidnum};
 

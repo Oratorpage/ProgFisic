@@ -1,0 +1,19 @@
+#This is the standard configuration file where all the parameters are inserted.
+#A standard configuration is <parameter name/key> = <value> or <parameter name/key> : <value>
+#Any line starting with # or empty will be skipped
+#Values need to be only numbers when integers, separated by a fullstop (.) when doubles and indicated by 1 or true,
+# 0 or false when booleans
+#i.e. non_pred_boidnum = 100
+#     allignment : 0.3
+#     toroidal = false 
+#Change this file to change the simulation parameters or change the path in the main to use a custom parameters file, some are provided in the resources folder
+
+non_pred_boidnum = 500
+pred_boidnum = 0
+separation = 20
+allignment = 3
+cohesion = 5
+detection_rad = 45
+danger_rad = 23
+toroidal : false
+op_rad : false

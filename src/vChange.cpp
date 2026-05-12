@@ -64,10 +64,10 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
           }
         }
       }
-      separation_vel = -params.s * separation_vel;
-      allignament_vel = params.a * (invNear * allignament_vel - bi.Vel());
+      separation_vel = -params.separation * separation_vel;
+      allignament_vel = params.allignment * (invNear * allignament_vel - bi.Vel());
       cm_pos = invNear * cm_pos;
-      cohesion_vel = params.c * (cm_pos - bi.Pos());
+      cohesion_vel = params.cohesion * (cm_pos - bi.Pos());
     }
     // If there are no near boids it will update anyway but vup will be 0
     // because of the standard inizialization of the V2D
