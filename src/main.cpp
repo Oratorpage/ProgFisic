@@ -100,7 +100,7 @@ int main() {
       flock::renderFrame(FlockWindow, IoWindow, boids, parameters,
                          flock_window_size_d, non_pred_boid, pred_boid,
                          detection_circle, danger_circle, cm_circle,
-                         statistics);
+                         statistics, dt);
     }
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

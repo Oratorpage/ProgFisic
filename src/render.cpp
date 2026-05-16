@@ -11,8 +11,10 @@ sf::ConvexShape makeBoidShape(sf::Color const& boidcolor) {
   sf::ConvexShape boid;
   boid.setPointCount(3);
   boid.setPoint(0, {20.f, 0.f});    // nose
-  boid.setPoint(1, {-10.f, -8.f});  // back-left
-  boid.setPoint(2, {-10.f, 8.f});   // back-right
+  boid.setPoint(1, {-10.f, -8.f});  // back-down/right
+  boid.setPoint(2, {-10.f, 8.f});   // back-up/left
+  // This shape does not need an origin as the up-left corner from which it
+  // originates is already in the perfect spot to represent the boid
   boid.setFillColor(boidcolor);
   boid.setOutlineThickness(0.5f);
   boid.setOutlineColor(sf::Color::Black);
@@ -33,6 +35,7 @@ sf::CircleShape makeCircleShape(double radius, sf::Color outline) {
 sf::CircleShape makeCenterDot() {
   sf::CircleShape cm_pos;
   cm_pos.setRadius(5.f);
+  cm_pos.setOrigin(5.f, 5.f);
   cm_pos.setOutlineColor(sf::Color::Black);
   cm_pos.setFillColor(sf::Color::Black);
   return cm_pos;
@@ -43,7 +46,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
                  V2D const& flock_window_size_d, sf::ConvexShape& non_pred_boid,
                  sf::ConvexShape& pred_boid, sf::CircleShape& detection_circle,
                  sf::CircleShape& danger_circle, sf::CircleShape& cm_circle,
-                 sf::Text& statistics) {
+                 sf::Text& statistics, double const dt) {
   FlockWindow.clear(sf::Color(150, 150, 150));
 
   V2D cm_pos;
@@ -64,14 +67,16 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
     }
     // Possible bug/weird behaviour for non toroidal space but oprad on
     if (parameters.op_rad) {
-      detection_circle.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-      danger_circle.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+      detection_circle.setPosition(static_cast<float>(p.x),
+                                   static_cast<float>(p.y));
+      danger_circle.setPosition(static_cast<float>(p.x),
+                                static_cast<float>(p.y));
       FlockWindow.draw(detection_circle);
       FlockWindow.draw(danger_circle);
     }
 
-    if (b.Pos().x < flock_window_size_d.x && b.Pos().y < flock_window_size_d.y && b.Pos().x > 0 &&
-        b.Pos().y > 0) {
+    if (b.Pos().x < flock_window_size_d.x &&
+        b.Pos().y < flock_window_size_d.y && b.Pos().x > 0 && b.Pos().y > 0) {
       ++in_window_count;
     }
     if (b.IsPred()) {
@@ -86,17 +91,20 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
   cm_pos = cm_pos / static_cast<double>(boids.size());
   avg_vel = avg_vel / static_cast<double>(boids.size());
 
-  std::string cm_string = "Position of the cm_pos: x :" + std::to_string(cm_pos.x) +
-                         " , y: " + std::to_string(cm_pos.y) + "\n";
-  std::string avg_vel_string =
+  std::string cm_string{
+      "Position of the cm_pos: x :" + std::to_string(cm_pos.x) +
+      " , y: " + std::to_string(cm_pos.y) + "\n"};
+  std::string avg_vel_string{
       "Velocity of the total flock: x :" + std::to_string(avg_vel.x) +
-      " , y: " + std::to_string(avg_vel.y) + "\n";
-  std::string strinwc =
-      "Boids present in window view: " + std::to_string(in_window_count) + "\n";
+      " , y: " + std::to_string(avg_vel.y) + "\n"};
+  std::string strinwc{"Boids present in window view: " +
+                      std::to_string(in_window_count) + "\n"};
+  std::string timetest{"Elapsed time: " + std::to_string(dt) + '\n'};
 
-  statistics.setString(cm_string + avg_vel_string + strinwc);
+  statistics.setString(cm_string + avg_vel_string + strinwc + timetest);
 
-  cm_circle.setPosition(static_cast<float>(cm_pos.x), static_cast<float>(cm_pos.y));
+  cm_circle.setPosition(static_cast<float>(cm_pos.x),
+                        static_cast<float>(cm_pos.y));
   FlockWindow.draw(cm_circle);
 
   IoWindow.clear(sf::Color(150, 150, 150));

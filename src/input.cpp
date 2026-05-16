@@ -7,7 +7,7 @@ namespace flock {
 // Due scelte qua, o faccio un void trim(std::string& line) oppure lo lascio
 // così, in teoria non ci dovrebbero essere problemi se anche non faccio una
 // copia tanto leggo solo da file
-std::string trim(std::string line) {
+std::string trimSpaces(std::string line) {
   // size_t è un tipo particolare che si usa per indicare la lunghezza di
   // vettori per esempio, è molto, molto grande, guardane meglio la
   // documentazione; è un unsigned integral type
@@ -75,7 +75,7 @@ SimParams readFileParams(std::string const& path) {
   // This basically says that while i can get line from filein I'll put it into
   // line (look up reference better) when it cannot read a line anymore it stops
   while (std::getline(filein, line)) {
-    line = trim(line);
+    line = trimSpaces(line);
 
     if (line.empty() || line[0] == '#') {
       continue;
@@ -93,11 +93,11 @@ SimParams readFileParams(std::string const& path) {
     std::string key;
     std::string value;
     if (equal_position == std::string::npos) {
-      key = trim(line.substr(0, colon_position));
-      value = trim(line.substr(colon_position + 1));
+      key = trimSpaces(line.substr(0, colon_position));
+      value = trimSpaces(line.substr(colon_position + 1));
     } else if (colon_position == std::string::npos) {
-      key = trim(line.substr(0, equal_position));
-      value = trim(line.substr(equal_position + 1));
+      key = trimSpaces(line.substr(0, equal_position));
+      value = trimSpaces(line.substr(equal_position + 1));
     }
 
     if (key == "non_pred_boidnum") {
@@ -114,6 +114,8 @@ SimParams readFileParams(std::string const& path) {
       parameters.detection_rad = parseDouble(value);
     } else if (key == "danger_rad") {
       parameters.danger_rad = parseDouble(value);
+    } else if (key == "angle_of_view") {
+      parameters.angle_of_view = parseDouble(value);
     } else if (key == "toroidal") {
       parameters.toroidal = parseBool(value);
     } else if (key == "op_rad") {
@@ -143,6 +145,9 @@ SimParams readFileParams(std::string const& path) {
   }
   if (parameters.danger_rad <= 0) {
     throw std::runtime_error("Negative or zero danger_rad value");
+  }
+  if (parameters.angle_of_view < 0 || parameters.angle_of_view > 365.) {
+    throw std::runtime_error("Negative or larger than 365 angle_of view value");
   }
   if (parameters.non_pred_boidnum == 0 && parameters.pred_boidnum == 0) {
     throw std::runtime_error(

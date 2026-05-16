@@ -1,9 +1,16 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "boid.hpp"
 
 #include "doctest.h"
 #include "v2D.hpp"
+
+// Le domande sono due:
+// Cosa devo testare a partire dall'hpp? Devo
+// testare solo le funzioni membro? Anche i costruttori? Anche le funzioni che
+// mi restituiscono solo il parametro privato?
+// Inoltre, delle funzioni membro, devo testare tutti i casi possibili, anche
+// quelli irrealizzabili con il mio main? anche quelli irrealizzabili per lo
+// scopo del programma in sè?
 
 // Boid constructors testing
 TEST_CASE("Boid initialization - standard constructor") {
