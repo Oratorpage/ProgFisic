@@ -46,7 +46,7 @@ target_link_libraries(flocksim PRIVATE
 if (BUILD_TESTING)
 
   # aggiungi l'eseguibile progetto.t
-  add_executable(flocksim.t test/main.test.cpp test/boid.test.cpp src/boid.cpp src/v2D.cpp test/input.test.cpp src/input.cpp )
+  add_executable(flocksim.t test/main.test.cpp test/boid.test.cpp src/boid.cpp src/v2D.cpp test/input.test.cpp src/input.cpp test/vChange.test.cpp src/vChange.cpp)
   target_include_directories(flocksim.t PRIVATE ${CMAKE_SOURCE_DIR}/include)
   # aggiungi l'eseguibile progetto.t alla lista dei test
   add_test(NAME flockism.t COMMAND flocksim.t)

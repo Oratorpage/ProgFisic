@@ -18,7 +18,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
                  V2D const& flock_window_size_d, sf::ConvexShape& non_pred_boid,
                  sf::ConvexShape& pred_boid, sf::CircleShape& detection_circle,
                  sf::CircleShape& danger_circle, sf::CircleShape& cm_circle,
-                 sf::Text& statistics, double const dt);
+                 sf::Text& statistics);
 }  // namespace flock
 
 #endif

@@ -7,7 +7,8 @@
 #include "simParams.hpp"
 
 namespace flock {
-double angleDist();
+double normGammaHorizon(Boid const& bi);
+double normAngHorizon(Boid const& bi, Boid const& bj);
 double distSq(V2D const& a, V2D const& b);
 void velocityChangeBoids(std::vector<Boid>& Boids, double dt, V2D const& flock_window_size_d,
                   SimParams const& params);

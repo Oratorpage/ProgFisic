@@ -11,12 +11,79 @@ double distSq(V2D const& a, V2D const& b) {
   double dy{a.y - b.y};
   return dx * dx + dy * dy;
 }
+// atan2 ha già un error handling, l'unica cosa è se sono zero entrambi
+// Forse il lavoro che ho fatto non è inutile in quanto dato che lo voglio
+// normalizzare rispetto all'orizzonte è più comodo sistemarli direttamente così
 
+// Mancano test
+// Pure questo è sbagliato perchè anche la velocità si comporta al contrario per
+// sfml; sì ha la stessa convenzione, bisogna rifare pure quello
+double normGammaHorizon(Boid const& bi) {
+  double gamma{0.};
+  constexpr double PI{3.14159265358979323846264338327950288};
+  // First quadrant and second
+  if ((bi.Vel().x >= 0 && bi.Vel().y >= 0) ||
+      (bi.Vel().x < 0 && bi.Vel().y > 0)) {
+    gamma = std::atan2(bi.Vel().y, bi.Vel().x) * 180. / PI;
+  }
+  // Third quadrant and fourth
+  else if ((bi.Vel().x < 0 && bi.Vel().y < 0) ||
+           (bi.Vel().x >= 0 && bi.Vel().y < 0)) {
+    gamma = 360. + std::atan2(bi.Vel().y, bi.Vel().x) * 180. / PI;
+  }  // Special case
+  else if (bi.Vel().x < 0 && bi.Vel().y == 0) {
+    gamma = 180.;
+  } else {
+    throw std::runtime_error(
+        "The velocity of the boid was not a compatible value to deduce an "
+        "angle with the horizon (counter-clockwise)");
+  }
+  return gamma;
+}
+
+double normAngHorizon(Boid const& bi, Boid const& bj) {
+  double ang{0.};
+  V2D dist{bj.Pos() - bi.Pos()};
+  constexpr double PI{3.14159265358979323846264338327950288};
+  ang = - std::atan2(dist.y, dist.x) * 180. / PI;
+  // if (dist.x >= 0. && dist.y >= 0.) {
+  //   ang = 360. - std::atan2(dist.y, dist.x) * 180. / PI;
+  // } else if (dist.x <= 0. && dist.y >= 0.) {
+  //   ang = 180. + std::atan2(dist.y, dist.x) * 180. / PI;
+  // } else if (dist.x <= 0. && dist.y < 0.) {
+  //   ang = 180 - std::atan2(dist.y, dist.x) * 180. / PI;
+  // } else if (dist.x > 0. && dist.y < 0.) {
+  //   ang = 360 + std::atan2(dist.y, dist.x) * 180. / PI;
+  // } else if (dist.x == 0. && dist.y < 0.) {
+  //   ang = 90.;
+  // } else {
+  //   throw std::runtime_error(
+  //       "The velocity of the boid was not a compatible value to deduce an "
+  //       "angle with the horizon (counter-clockwise)");
+  // }
+  return ang;
+}
+
+// Devi fare il test per quando la velocità è zero nel caso
+void angleBoidadd(Boid& bi, Boid& bj, SimParams const& parameters,
+                  std::vector<Boid*>& nearboids) {
+  double gamma{normGammaHorizon(bi)};
+  double ang{normAngHorizon(bi, bj)};
+  if ((ang - (gamma + parameters.angle_of_view / 2.)) <= 0 ||
+      (ang - (gamma - parameters.angle_of_view / 2.)) >= 0) {
+    nearboids.push_back(&bj);
+  }
+}
+
+// Qua aiuterebbe dividere la funzione di aggiornamento della velocità in due
+// diverse basate sull'angolo o no, ridurrebbe il numero di check a loop che
+// viene eseguito
+// Però è bello che dal main chiamando velocity update ti cambi tutto da solo;
+// alternativamente si possono fare un paio di funzioni ausiliarie: velocity
+// update chiama in base all'angolo fullangleupdate o angleupdate
 void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
                          V2D const& flock_window_size_d,
                          SimParams const& params) {
-  constexpr double PI{3.14159265358979323846264338327950288};
-
   const double detection_rad_sq{params.detection_rad * params.detection_rad};
   const double danger_rad_sq{params.danger_rad * params.danger_rad};
   for (auto& bi : Boids) {
@@ -25,7 +92,7 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
     V2D allignament_vel;
     V2D cm_pos;
     V2D cohesion_vel;
-    bool in_view;
+
     // Here I need to invert the sign of the y coordinate of the velocity to get
     // the angle gamma because sfml uses a convention with the y axis growing
     // towards down, since bi is not an sfml object I cannot getRotation() and I
@@ -35,10 +102,10 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
     // with sfml angles and besides, if I'll do It'll be easier to just make
     // those positive
     // Tomorrow we test for bugs
-    double gamma{std::atan2(bi.Vel().y, bi.Vel().x)};
+
     // Based on the angle it creates a neighbouring boids vector* to calculate
     // vchange based on near boids that are visible
-    if (params.angle_of_view == 365.) {
+    if (params.angle_of_view == 360.) {
       for (auto& bj : Boids) {
         if (&bi != &bj && distSq(bi.Pos(), bj.Pos()) < detection_rad_sq) {
           nearboids.push_back(&bj);
@@ -46,22 +113,7 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
       }
     } else {
       for (auto& bj : Boids) {
-        V2D dist{bj.Pos() - bi.Pos()};
-        double horizon_angle{std::atan2(dist.y, dist.x) * 180 / PI};
-        horizon_angle = std::abs(horizon_angle);
-
-        if (gamma > horizon_angle) {
-          in_view = (gamma - horizon_angle < params.angle_of_view);
-        } else if (gamma < horizon_angle) {
-          in_view = (horizon_angle - gamma < params.angle_of_view);
-        } else {
-          in_view = true;
-        }
-
-        if (&bi != &bj && distSq(bi.Pos(), bj.Pos()) < detection_rad_sq &&
-            in_view) {
-          nearboids.push_back(&bj);
-        }
+        angleBoidadd(bi, bj, params, nearboids);
       }
     }
     // Loop that calculates vchange based on nearby boids
@@ -72,6 +124,10 @@ void velocityChangeBoids(std::vector<Boid>& Boids, double dt,
           // This is the update if bi is a predator and bj a prey
           // The predator does not wait for the prey to enter his danger_radius
           // and so the velocity gets updated whenever it sees it
+          // Forse addirittura si potrebbe fare una funzione che gestisce il
+          // cambio di velocità: una funzione che gestisce references e va a
+          // modificare direttamente cm_pos e altro in base alla combinazione
+          // predatore o non
           if (bi.IsPred() && !(bj->IsPred())) {
             separation_vel -= bj->Pos() - bi.Pos();
 

@@ -92,7 +92,7 @@ int main() {
             break;
         }
       }
-      // Sistema il clock in modo che il dt sia costante 0.00833
+      // Sistema il clock in modo che il dt sia costante 0.00833 0.01667
       double dt{clock.restart().asSeconds()};
 
       flock::velocityChangeBoids(boids, dt, flock_window_size_d, parameters);
@@ -100,7 +100,7 @@ int main() {
       flock::renderFrame(FlockWindow, IoWindow, boids, parameters,
                          flock_window_size_d, non_pred_boid, pred_boid,
                          detection_circle, danger_circle, cm_circle,
-                         statistics, dt);
+                         statistics);
     }
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

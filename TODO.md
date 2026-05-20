@@ -1,7 +1,9 @@
 # Top Priorities
 
+- [ ] Fine gestione angolo, fine gestione inseguimento dei predatori e allontanamento delle prede, devi fare i calcoli lì
 - [ ] Fine test, ~boids TU~ e vChange TU
 - [ ] Gestione della finestra e degli eventi, bisogna avere tutto nel loop while window is open
+- [ ] Trimma le funzioni per seguire la regola una funzione una cosa, in particolare vChange e render
 
 # Functional
 

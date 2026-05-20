@@ -46,7 +46,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
                  V2D const& flock_window_size_d, sf::ConvexShape& non_pred_boid,
                  sf::ConvexShape& pred_boid, sf::CircleShape& detection_circle,
                  sf::CircleShape& danger_circle, sf::CircleShape& cm_circle,
-                 sf::Text& statistics, double const dt) {
+                 sf::Text& statistics) {
   FlockWindow.clear(sf::Color(150, 150, 150));
 
   V2D cm_pos;
@@ -56,6 +56,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
   for (auto const& b : boids) {
     V2D p = b.Pos();
     V2D v = b.Vel();
+    // Questo ha un problema di angoli limiti che va risolto, v.x ==0
     double ang = std::atan2(v.y, v.x) * 180.0 / PI;
     if (b.IsPred()) {
       pred_boid.setRotation(static_cast<float>(ang));
@@ -99,9 +100,8 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
       " , y: " + std::to_string(avg_vel.y) + "\n"};
   std::string strinwc{"Boids present in window view: " +
                       std::to_string(in_window_count) + "\n"};
-  std::string timetest{"Elapsed time: " + std::to_string(dt) + '\n'};
 
-  statistics.setString(cm_string + avg_vel_string + strinwc + timetest);
+  statistics.setString(cm_string + avg_vel_string + strinwc);
 
   cm_circle.setPosition(static_cast<float>(cm_pos.x),
                         static_cast<float>(cm_pos.y));

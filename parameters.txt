@@ -7,10 +7,10 @@
 #     separation : 20.       (double)
 #     allignment : 3.        (double)
 #     cohesion = 5.          (double)
-#     detection_rad = 45.    (double)
+#     detection_rad = 55.    (double)
 #     danger_rad : 23.       (double)
-#     angle_of_view = 75 .   (double)
-#     toroidal = true        (boolean)
+#     angle_of_view = 360.   (double)
+#     toroidal = false        (boolean)
 #     op_rad : false         (boolean)
 #Change this file to change the simulation parameters or change the path in the main to use a custom parameters file, some are provided in the resources folder
 
@@ -19,9 +19,9 @@ pred_boidnum = 0
 separation = 20.
 allignment = 3.
 cohesion = 5.
-detection_rad = 45.
+detection_rad = 55.
 danger_rad = 23.
-angle_of_view = 75.
+angle_of_view = 360.
 toroidal : true
 op_rad : false
 
