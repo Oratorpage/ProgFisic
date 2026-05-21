@@ -76,8 +76,12 @@ double normAngHorizon(Boid const& bi, Boid const& bj) {
 void angleBoidAdd(Boid& bi, Boid& bj, SimParams const& parameters, double gamma,
                   std::vector<Boid*>& nearboids) {
   double ang{normAngHorizon(bi, bj)};
-  if ((ang - (gamma + parameters.angle_of_view / 2.)) <= 0 ||
-      (ang - (gamma - parameters.angle_of_view / 2.)) >= 0) {
+  const double detection_rad_sq{parameters.detection_rad *
+                                parameters.detection_rad};
+  if (&bi != &bj &&
+      ((gamma + parameters.angle_of_view / 2. - ang >= 0.) &&
+       (gamma - parameters.angle_of_view / 2. - ang <= 0.)) &&
+      distSq(bi.Pos(), bj.Pos()) < detection_rad_sq) {
     nearboids.push_back(&bj);
   }
 }

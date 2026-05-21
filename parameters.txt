@@ -21,7 +21,7 @@ allignment = 3.
 cohesion = 5.
 detection_rad = 55.
 danger_rad = 23.
-angle_of_view = 360.
-toroidal : true
-op_rad : false
+angle_of_view = 180.
+toroidal : false
+op_rad : true
 
