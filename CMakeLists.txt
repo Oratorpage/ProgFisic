@@ -30,9 +30,16 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined")
 
-find_package(SFML 2 REQUIRED COMPONENTS graphics window system)
+find_package(SFML 2.6 REQUIRED COMPONENTS graphics window system)
 
-add_executable(flocksim src/main.cpp src/v2D.cpp src/boid.cpp src/input.cpp src/rand.cpp src/render.cpp src/vChange.cpp)
+add_executable(flocksim
+ src/main.cpp
+ src/v2D.cpp
+ src/boid.cpp
+ src/input.cpp
+ src/rand.cpp
+ src/render.cpp
+ src/vChange.cpp)
 
 
 target_include_directories(flocksim PRIVATE include)

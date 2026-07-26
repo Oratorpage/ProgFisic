@@ -8,9 +8,6 @@ namespace flock {
 // così, in teoria non ci dovrebbero essere problemi se anche non faccio una
 // copia tanto leggo solo da file
 std::string trimSpaces(std::string line) {
-  // size_t è un tipo particolare che si usa per indicare la lunghezza di
-  // vettori per esempio, è molto, molto grande, guardane meglio la
-  // documentazione; è un unsigned integral type
   std::size_t first{0};
   while (first < line.size() && line[first] == ' ') {
     ++first;
@@ -19,9 +16,7 @@ std::string trimSpaces(std::string line) {
   while (last > first && line[last - 1] == ' ') {
     --last;
   }
-  // substring mi ritorna una stringa creata da una copia di line con l'indice
-  // del primo carattere ed il numero di caratteri di cui è composta, entrambi
-  // lavorano con un size_t
+
   return line.substr(first, last - first);
   // according to documentation if pos is equal to string length it returns an
   // empty string; if pos bigger than string legth then it throws out of range
@@ -29,15 +24,11 @@ std::string trimSpaces(std::string line) {
 
 int parseInt(std::string const& string_value) {
   std::size_t position{0};
-  // std::stoi prende in entrata una stringa con la rapresentazione di un numero
-  // integrale ed un pointer ad un oggetto di tipo size_t il cui valore alla
-  // fine è aggiornato dalla funzione al carattere nella stringa dopo il valore
-  // numerico; assurdo, aggiorna due cose in una volta
   int value{std::stoi(string_value, &position)};
   if (position != string_value.size()) {
     throw std::runtime_error(
         "Invalid integer value (remove characters near numbers): " +
-        string_value + "; refer to the above instructions for typing");
+        string_value + " ; refer to the above instructions for typing.");
   }
   return value;
 }
@@ -48,7 +39,7 @@ double parseDouble(std::string const& string_value) {
   if (position != string_value.size()) {
     throw std::runtime_error(
         "Invalid double value (remove characters near numbers): " +
-        string_value + "; refer to the above instructions for typing");
+        string_value + " ; refer to the above instructions for typing.");
   }
   return value;
 }
@@ -61,7 +52,7 @@ bool parseBool(std::string const& string_value) {
     return false;
   }
   throw std::runtime_error("Invalid boolean value: " + string_value +
-                           "; refer to the above instructions for typing");
+                           " ; refer to the above instructions for typing.");
 }
 
 SimParams readFileParams(std::string const& path) {
@@ -92,6 +83,7 @@ SimParams readFileParams(std::string const& path) {
 
     std::string key;
     std::string value;
+
     if (equal_position == std::string::npos) {
       key = trimSpaces(line.substr(0, colon_position));
       value = trimSpaces(line.substr(colon_position + 1));

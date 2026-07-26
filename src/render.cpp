@@ -33,12 +33,12 @@ sf::CircleShape makeCircleShape(double radius, sf::Color outline) {
 }
 
 sf::CircleShape makeCenterDot() {
-  sf::CircleShape cm_pos;
-  cm_pos.setRadius(5.f);
-  cm_pos.setOrigin(5.f, 5.f);
-  cm_pos.setOutlineColor(sf::Color::Black);
-  cm_pos.setFillColor(sf::Color::Black);
-  return cm_pos;
+  sf::CircleShape center_pos;
+  center_pos.setRadius(5.f);
+  center_pos.setOrigin(5.f, 5.f);
+  center_pos.setOutlineColor(sf::Color::Black);
+  center_pos.setFillColor(sf::Color::Black);
+  return center_pos;
 }
 
 void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
@@ -46,7 +46,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
                  V2D const& flock_window_size_d, sf::ConvexShape& non_pred_boid,
                  sf::ConvexShape& pred_boid, sf::CircleShape& detection_circle,
                  sf::CircleShape& danger_circle, sf::CircleShape& cm_circle,
-                 sf::Text& statistics) {
+                 sf::Text& statistics, double& dt) {
   FlockWindow.clear(sf::Color(150, 150, 150));
 
   V2D cm_pos;
@@ -58,7 +58,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
     V2D v = b.Vel();
     // Questo ha un problema di angoli limiti che va risolto, v.x ==0
     double ang = std::atan2(v.y, v.x) * 180.0 / PI;
-    if (b.IsPred()) {
+    if (b.IsPredator()) {
       pred_boid.setRotation(static_cast<float>(ang));
       pred_boid.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
     } else {
@@ -80,7 +80,7 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
         b.Pos().y < flock_window_size_d.y && b.Pos().x > 0 && b.Pos().y > 0) {
       ++in_window_count;
     }
-    if (b.IsPred()) {
+    if (b.IsPredator()) {
       FlockWindow.draw(pred_boid);
     } else {
       FlockWindow.draw(non_pred_boid);
@@ -96,12 +96,14 @@ void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
       "Position of the cm_pos: x :" + std::to_string(cm_pos.x) +
       " , y: " + std::to_string(cm_pos.y) + "\n"};
   std::string avg_vel_string{
-      "Velocity of the total flock: x :" + std::to_string(avg_vel.x) +
+      "Average velocity of the total flock: x :" + std::to_string(avg_vel.x) +
       " , y: " + std::to_string(avg_vel.y) + "\n"};
   std::string strinwc{"Boids present in window view: " +
                       std::to_string(in_window_count) + "\n"};
+  std::string deltatime{"Delta time: " + std::to_string(dt) + "\n"};
+  std::string fps{"fps: " + std::to_string(1 / dt) + "\n"};
 
-  statistics.setString(cm_string + avg_vel_string + strinwc);
+  statistics.setString(cm_string + avg_vel_string + strinwc + deltatime + fps);
 
   cm_circle.setPosition(static_cast<float>(cm_pos.x),
                         static_cast<float>(cm_pos.y));

@@ -1,6 +1,6 @@
 #This is the standard configuration file where all the parameters are inserted.
-#A standard configuration is <parameter name/key> = <value> or <parameter name/key> : <value>
-#Any line starting with # or empty will be skipped
+#The configuration format is <parameter name/key> = <value> or <parameter name/key> : <value> , spaces are necessary and must follow this pattern in order for values to be correctly parsed.
+#Any line starting with # or empty will be skipped, comments with # are not accepted after values
 #Values accepted are numbers only when integers, numbers with a fullstop (.) at the end when doubles and ay 1 or true, 0 or false when booleans.
 #i.e. non_pred_boidnum = 500 (integer)
 #     pred_boid_num = 0      (integer)
@@ -10,18 +10,18 @@
 #     detection_rad = 55.    (double)
 #     danger_rad : 23.       (double)
 #     angle_of_view = 360.   (double)
-#     toroidal = false        (boolean)
+#     toroidal = false       (boolean)
 #     op_rad : false         (boolean)
-#Change this file to change the simulation parameters or change the path in the main to use a custom parameters file, some are provided in the resources folder
+#Change this file to change the simulation parameters or change the path in the main to use a custom parameters file, some are provided in the configuration folder
 
-non_pred_boidnum = 500
-pred_boidnum = 0
+non_pred_boidnum = 250
+pred_boidnum = 1
 separation = 20.
 allignment = 3.
 cohesion = 5.
 detection_rad = 55.
 danger_rad = 23.
-angle_of_view = 180.
-toroidal : false
-op_rad : true
+angle_of_view = 360.
+toroidal : true
+op_rad : false
 

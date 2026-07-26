@@ -22,7 +22,7 @@ class Boid {
 
   V2D const& Vel() const;
   V2D const& Pos() const;
-  bool IsPred() const;
+  bool IsPredator() const;
 
   void update(double dt, V2D const& flock_window_size, V2D const& vel_update,
               bool toroidal);

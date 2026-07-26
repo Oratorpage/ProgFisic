@@ -19,7 +19,7 @@ TEST_CASE("Boid initialization - standard constructor") {
   CHECK(b.Vel().y == 0.);
   CHECK(b.Pos().x == 0.);
   CHECK(b.Pos().y == 0.);
-  CHECK(b.IsPred() == false);
+  CHECK(b.IsPredator() == false);
 }
 TEST_CASE("Boid initialization - constructor with velocity and position") {
   flock::Boid b{{10., 10.}, {20., 20.}};
@@ -27,7 +27,7 @@ TEST_CASE("Boid initialization - constructor with velocity and position") {
   CHECK(b.Vel().y == 10.);
   CHECK(b.Pos().x == 20.);
   CHECK(b.Pos().y == 20.);
-  CHECK(b.IsPred() == false);
+  CHECK(b.IsPredator() == false);
 }
 TEST_CASE(
     "Boid initialization - constructor with velocity, position and pred") {
@@ -36,7 +36,7 @@ TEST_CASE(
   CHECK(b.Vel().y == 10.);
   CHECK(b.Pos().x == 20.);
   CHECK(b.Pos().y == 20.);
-  CHECK(b.IsPred() == false);
+  CHECK(b.IsPredator() == false);
 }
 TEST_CASE("Boid initialization - complete constructor with bad values") {
   flock::Boid b{{10., 10.}, {20., 20.}, false};
@@ -44,7 +44,7 @@ TEST_CASE("Boid initialization - complete constructor with bad values") {
   CHECK(b.Vel().y == 10.);
   CHECK(b.Pos().x == 20.);
   CHECK(b.Pos().y == 20.);
-  CHECK(b.IsPred() != 0.2);
+  CHECK(b.IsPredator() != 0.2);
 }
 /* No bad values can be introduced for a boid initialization, any value that
  doesn't produce compilation errors is acceptable, if it is far from the

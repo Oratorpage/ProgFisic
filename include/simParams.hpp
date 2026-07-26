@@ -75,7 +75,7 @@ struct SimParams {
                             /       |       \
                            /        |        \
 
-The danger distance is based on danger_rad when angle_of_view != 0. or !=365,
+The danger distance is based on danger_rad when angle_of_view != 0. or !=365.,
 need to make the function and study this better
 */
 

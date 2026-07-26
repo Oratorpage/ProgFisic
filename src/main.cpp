@@ -12,6 +12,7 @@
 
 int main() {
   try {
+    // Questa parte qua, da qua
     sf::RenderWindow FlockWindow(sf::VideoMode(800, 600), "Flock View",
                                  sf::Style::Default);
     FlockWindow.setPosition(sf::Vector2i(750, 200));
@@ -26,6 +27,9 @@ int main() {
 
     std::string const path{"parameters.txt"};
     flock::SimParams parameters{flock::readFileParams(path)};
+    // Fino a qua, lo voglio rendere modificabile attraverso file di
+    // configurazione, non tramite cambio di codice, dunque devo implementare
+    // una struttura per renderlo possibile
     std::vector<flock::Boid> boids;
     int tot_boids{parameters.pred_boidnum + parameters.non_pred_boidnum};
 
@@ -48,6 +52,8 @@ int main() {
     sf::CircleShape cm_circle{flock::makeCenterDot()};
 
     sf::Font out_font;
+    // Questo deve essere letto dalla directory corrente o da un include dunque
+    // non va bene per ora
     if (out_font.loadFromFile(
             "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
       std::cout << "Font file was  loaded correctly \n";
@@ -59,6 +65,7 @@ int main() {
 
     sf::Clock clock;
 
+    // Questo anche lo dovrei aggiungere nel render, relegarlo a quello
     while (FlockWindow.isOpen()) {
       sf::Event event;
       while (FlockWindow.pollEvent(event)) {
@@ -93,14 +100,18 @@ int main() {
         }
       }
       // Sistema il clock in modo che il dt sia costante 0.00833 0.01667
+      // Questo adesso provo a normalizzarlo a costante tramite un elapsed come
+      // game loop documentazione sfml poi se funzia bene e lo lascio così, se
+      // no dt fluttuante
       double dt{clock.restart().asSeconds()};
-
+      // Avere il dt costante sistemerebbe anche il problema di interazione
+      // quando c'è tanto da calcolare, come nel caso di oprad true
       flock::velocityChangeBoids(boids, dt, flock_window_size_d, parameters);
 
       flock::renderFrame(FlockWindow, IoWindow, boids, parameters,
                          flock_window_size_d, non_pred_boid, pred_boid,
-                         detection_circle, danger_circle, cm_circle,
-                         statistics);
+                         detection_circle, danger_circle, cm_circle, statistics,
+                         dt);
     }
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

@@ -9,10 +9,11 @@ Boid::Boid(V2D const& v, V2D const& p, bool is_predator)
 
 V2D const& Boid::Vel() const { return velocity_; }
 V2D const& Boid::Pos() const { return position_; }
-bool Boid::IsPred() const { return is_predator_; }
+bool Boid::IsPredator() const { return is_predator_; }
 
 void Boid::update(double dt, V2D const& flock_window_size,
                   V2D const& vel_update, bool toroidal) {
+  //Questo lo vado a gestire nella parte di render
   if (dt > 0.5) {
     throw std::runtime_error{"dt is too big"};
   }

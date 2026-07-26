@@ -21,6 +21,7 @@ V2D operator/(V2D lhs, double d);
 
 double dotprod(V2D const& a, V2D const& b);
 double xprod(V2D const& a, V2D const& b);
+double norm(V2D const& v);
 
 }  // namespace flock
 
