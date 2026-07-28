@@ -1,12 +1,12 @@
 // Generate random position and velocity
-#ifndef FLOCK_RAND_HPP
-#define FLOCK_RAND_HPP
+#ifndef BS_RAND_HPP
+#define BS_RAND_HPP
 
 #include "v2D.hpp"
 
-namespace flock {
+namespace bs {
 V2D randVel();
 V2D randPos(V2D const& flock_window_size_d);
-}  // namespace flock
+}  // namespace bs
 
 #endif

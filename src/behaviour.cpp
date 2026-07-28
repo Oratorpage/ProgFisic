@@ -1,8 +1,8 @@
-#include "vChange.hpp"
+#include "behaviour.hpp"
 
 #include <cmath>
 
-namespace flock {
+namespace bs {
 
 double distSq(V2D const& a, V2D const& b) {
   V2D d = a - b;
@@ -65,13 +65,13 @@ std::vector<Boid*> collectVisibleBoids(std::vector<Boid>& boids, Boid const& bi,
   return nearboids;
 }
 
-void velocityChangeBoids(std::vector<Boid>& boids, double dt,
+void velocityChangeBoids(std::vector<Boid>& flock, double dt,
                          V2D const& flock_window_size_d,
                          SimParams const& params) {
   const double danger_rad_sq{params.danger_rad * params.danger_rad};
 
-  for (Boid& bi : boids) {
-    std::vector<Boid*> nearboids{collectVisibleBoids(boids, bi, params)};
+  for (Boid& bi : flock) {
+    std::vector<Boid*> nearboids{collectVisibleBoids(flock, bi, params)};
     V2D separation_vel;
     V2D alignment_vel;
     V2D cm_pos;

@@ -1,0 +1,11 @@
+
+non_pred_boidnum = 250
+pred_boidnum = 0
+separation = 20.
+allignment = 3.
+cohesion = 5.
+detection_rad = 60.
+danger_rad = 25.
+angle_of_view = 360.
+toroidal : false
+op_rad : false

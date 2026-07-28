@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace flock {
+namespace bs {
 std::random_device r;
 std::mt19937 gen(r());
 
@@ -18,4 +18,4 @@ V2D randPos(V2D const& flock_window_size_d) {
   return V2D{distrx(gen), distry(gen)};
 }
 
-}  // namespace flock
+}  // namespace bs

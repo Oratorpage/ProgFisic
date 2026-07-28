@@ -1,17 +1,17 @@
 // Specialized variable defining a singular element of the flock
-#ifndef FLOCK_BOID_HPP
-#define FLOCK_BOID_HPP
+#ifndef BS_BOID_HPP
+#define BS_BOID_HPP
 
 #include "v2D.hpp"
 #include <stdexcept>
 
-namespace flock {
+namespace bs {
 
 class Boid {
  private:
   V2D velocity_{0., 0.};
   V2D position_{0., 0.};
-  static constexpr double max_speed_tor{150.};
+  static constexpr double max_speed_tor{150.}; // La velocità la posso limitare tramite una funzione magari, vedo com'è il limiter all'interno, forse è meno efficente, però effettivamente sarebbe bello avere un'opzione limiter off e semplicemente vedere il caos
   static constexpr double max_speed{250.};
   bool is_predator_{false};
 
@@ -28,6 +28,6 @@ class Boid {
               bool toroidal);
 };
 
-}  // namespace flock
+}  // namespace bs
 
 #endif

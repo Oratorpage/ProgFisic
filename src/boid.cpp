@@ -1,6 +1,6 @@
 #include "boid.hpp"
 
-namespace flock {
+namespace bs {
 
 Boid::Boid() = default;
 Boid::Boid(V2D const& v, V2D const& p) : velocity_{v}, position_{p} {}
@@ -13,7 +13,7 @@ bool Boid::IsPredator() const { return is_predator_; }
 
 void Boid::update(double dt, V2D const& flock_window_size,
                   V2D const& vel_update, bool toroidal) {
-  //Questo lo vado a gestire nella parte di render
+  // Questo lo vado a gestire nella parte di render
   if (dt > 0.5) {
     throw std::runtime_error{"dt is too big"};
   }
@@ -34,6 +34,13 @@ void Boid::update(double dt, V2D const& flock_window_size,
     }
     // Velocity constraint for the toroidal space, avoids particle
     // accellerator behaviour
+    // Questa effettivamente è un po' una cacata perchè significa che  la
+    // velocità massima complessiva può comunque essere maggiore di quella
+    // limite Se è voluto bene, altrimenti non ha molto senso; è sensato quando
+    // si fa un calcolo più accurato del comportamento basandosi su
+    // Ok però effettivamente se anche vado a porre la velocità massima uguale a
+    // const speed non sarebbe utile in quanto mi baso su velocità direzionale e
+    // dipende da quale delle due stia superando il limite quindi va bene così
     if (velocity_.x > max_speed_tor) {
       velocity_.x = max_speed_tor;
     }
@@ -77,4 +84,4 @@ void Boid::update(double dt, V2D const& flock_window_size,
   position_ += velocity_ * dt;
 }
 
-}  // namespace flock
+}  // namespace bs

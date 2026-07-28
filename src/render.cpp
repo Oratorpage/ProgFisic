@@ -3,8 +3,195 @@
 #include <cmath>
 #include <string>
 
-namespace flock {
+namespace bs {
 constexpr double PI{3.14159265358979323846264338327950288};
+
+Render::Render() = default;
+Render::Render(SimParams const& s)
+    : flockWindow_{sf::VideoMode(s.flockWindowWidth, s.flockWindowHeight),
+                   s.flockWindowTitle, sf::Style::Default},
+      statisticsWindow_{
+          sf::VideoMode(s.statisticsWindowWidth, s.statisticsWindowHeight),
+          s.statisticsWindowTitle, sf::Style::Default} {
+  flockWindow_.setFramerateLimit(flockWindowFps_);
+  flockWindow_.setPosition({flockWindowPositionX_, flockWindowPositionY_});
+
+  statisticsWindow_.setFramerateLimit(statisticsWindowFps_);
+  statisticsWindow_.setPosition(
+      {statisticsWindowPositionX_, statisticsWindowPositionY_});
+};
+
+bool Render::isFWOpen() const { return flockWindow_.isOpen(); }
+bool Render::isSWOpen() const { return statisticsWindow_.isOpen(); }
+V2D Render::flockWindowDimensions() const {
+  return {static_cast<double>(flockWindow_.getSize().x),
+          static_cast<double>(flockWindow_.getSize().y)};
+}
+V2D Render::statisticsWindowDimensions() const {
+  return {static_cast<double>(statisticsWindow_.getSize().x),
+          static_cast<double>(statisticsWindow_.getSize().y)};
+}
+
+void Render::manageEvents() {
+  manageWindowEvents(flockWindow_);
+
+  if (statisticsWindow_.isOpen()) {
+    manageWindowEvents(statisticsWindow_);
+  }
+
+  if (!flockWindow_.isOpen() && statisticsWindow_.isOpen()) {
+    statisticsWindow_.close();
+  }
+}
+
+void Render::manageWindowEvents(sf::RenderWindow& window) {
+  sf::Event event;
+  while (window.pollEvent(event)) {
+    switch (event.type) {
+      case sf::Event::Closed:
+        window.close();
+        break;
+
+      case sf::Event::KeyPressed:
+        if (event.key.code == sf::Keyboard::Escape ||
+            event.key.code == sf::Keyboard::Q) {
+          window.close();
+          break;
+        }
+
+      default:
+        break;
+    }
+  }
+}
+
+Statistics Render::calculateStats(Statistics stats, std::vector<Boid> flock) {
+  stats.cm_pos = {0, 0};
+  stats.avg_vel = {0, 0};
+  stats.in_window_count = {0};
+  for (Boid b : flock) {
+    V2D p = b.Pos();
+    V2D v = b.Vel();
+
+    if (b.Pos().x < static_cast<double>(flockWindow_.getSize().x) &&
+        b.Pos().y < static_cast<double>(flockWindow_.getSize().y) &&
+        b.Pos().x > 0 && b.Pos().y > 0) {
+      ++stats.in_window_count;
+    }
+    stats.cm_pos += p;
+    stats.avg_vel += v;
+  }
+  stats.cm_pos = stats.cm_pos / static_cast<double>(flock.size());
+  stats.avg_vel = stats.avg_vel / static_cast<double>(flock.size());
+
+  std::string cm_string{
+      "Position of the cm_pos: x :" + std::to_string(stats.cm_pos.x) +
+      " , y: " + std::to_string(stats.cm_pos.y) + "\n"};
+  std::string avg_vel_string{"Average velocity of the total flock: x :" +
+                             std::to_string(stats.avg_vel.x) +
+                             " , y: " + std::to_string(stats.avg_vel.y) + "\n"};
+  std::string in_view_string{"Boids present in window view: " +
+                             std::to_string(stats.in_window_count) + "\n"};
+
+  std::string fps_string{
+      "flockwindow fps: " + std::to_string(flockWindowFps_) + "\n" +
+      "statisticswindow fps:" + std::to_string(statisticsWindowFps_) + "\n"};
+
+  stats.output = cm_string + avg_vel_string + in_view_string + fps_string;
+
+  return stats;
+}
+
+void Render::renderFrame(
+    std::vector<Boid> const& flock, SimParams const& parameters,
+    sf::ConvexShape& non_pred_boid, sf::ConvexShape& pred_boid,
+    sf::CircleShape& detection_circle, sf::CircleShape& danger_circle,
+    sf::CircleShape& cm_circle, sf::Text& statistics, double& dt) {
+  flockWindow_.clear(sf::Color(150, 150, 150));
+  statisticsWindow_.clear(sf::Color(150, 150, 150));
+  // Questi oggetti si potrebbero mettere in una struct (o classe) statistics
+  // per tenerlo ordinato e fare fare una cosa per volta alla funzione ma non so
+  // se possa funzionare, sarebbe scomodo passare gli argomenti attraverso due
+  // funzioni se posso restituire un solo argomento per funzione
+
+  // Prima di eliminare questa cosa qua, mi rendo conto dopo aver fatto la
+  // funzione per la statistica che si potevano tenere questi dati ed usarli per
+  // disegnare una freccia che indica la velocità media dello stormo (posta nel
+  // centro della finestra) e come prima il cm; questo è opzionale ma sarebbe
+  // carino, e prima di eliminarlo da qua devo decidere come strutturarlo
+  V2D cm_pos;
+  V2D avg_vel;
+  int in_window_count{0};
+
+  for (auto const& b : flock) {
+    V2D p = b.Pos();
+    V2D v = b.Vel();
+    // Questo ha un problema di angoli limiti che va risolto, v.x ==0; guardando
+    // la documentazinoe direi basti fare un if case ed in base al segno di v.y
+    // allora bisogna invertire il segno che ritorna  atan2 perchè sfml è al
+    // contrario
+    double ang = std::atan2(v.y, v.x) * 180.0 / PI;
+    if (b.IsPredator()) {
+      pred_boid.setRotation(static_cast<float>(ang));
+      pred_boid.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
+    } else {
+      non_pred_boid.setRotation(static_cast<float>(ang));
+      non_pred_boid.setPosition(static_cast<float>(p.x),
+                                static_cast<float>(p.y));
+    }
+    // Possible bug/weird behaviour for non toroidal space but oprad on, kinda,
+    // takes longer time to update so it iteracts less, need to fix
+    if (parameters.op_rad) {
+      detection_circle.setPosition(static_cast<float>(p.x),
+                                   static_cast<float>(p.y));
+      danger_circle.setPosition(static_cast<float>(p.x),
+                                static_cast<float>(p.y));
+      flockWindow_.draw(detection_circle);
+      flockWindow_.draw(danger_circle);
+    }
+
+    // Fai una funzione isInView o di statistics o di render per determinare se
+    // un oggetto è visibile nello schermo attuale, impara meglio anche view, se
+    // si sposta è diverso
+    if (b.Pos().x < static_cast<double>(flockWindow_.getSize().x) &&
+        b.Pos().y < static_cast<double>(flockWindow_.getSize().y) &&
+        b.Pos().x > 0 && b.Pos().y > 0) {
+      ++in_window_count;
+    }
+    if (b.IsPredator()) {
+      flockWindow_.draw(pred_boid);
+    } else {
+      flockWindow_.draw(non_pred_boid);
+    }
+
+    cm_pos += p;
+    avg_vel += v;
+  }
+  cm_pos = cm_pos / static_cast<double>(flock.size());
+  avg_vel = avg_vel / static_cast<double>(flock.size());
+
+  std::string cm_string{
+      "Position of the cm_pos: x :" + std::to_string(cm_pos.x) +
+      " , y: " + std::to_string(cm_pos.y) + "\n"};
+  std::string avg_vel_string{
+      "Average velocity of the total flock: x :" + std::to_string(avg_vel.x) +
+      " , y: " + std::to_string(avg_vel.y) + "\n"};
+  std::string strinwc{"Boids present in window view: " +
+                      std::to_string(in_window_count) + "\n"};
+  std::string deltatime{"Delta time: " + std::to_string(dt) + "\n"};
+  std::string fps{"fps: " + std::to_string(1 / dt) + "\n"};
+
+  statistics.setString(cm_string + avg_vel_string + strinwc + deltatime + fps);
+
+  cm_circle.setPosition(static_cast<float>(cm_pos.x),
+                        static_cast<float>(cm_pos.y));
+  flockWindow_.draw(cm_circle);
+
+  statisticsWindow_.draw(statistics);
+
+  statisticsWindow_.display();
+  flockWindow_.display();
+}
 
 // Caratteristiche grafiche del boid
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor) {
@@ -41,79 +228,4 @@ sf::CircleShape makeCenterDot() {
   return center_pos;
 }
 
-void renderFrame(sf::RenderWindow& FlockWindow, sf::RenderWindow& IoWindow,
-                 std::vector<Boid> const& boids, SimParams const& parameters,
-                 V2D const& flock_window_size_d, sf::ConvexShape& non_pred_boid,
-                 sf::ConvexShape& pred_boid, sf::CircleShape& detection_circle,
-                 sf::CircleShape& danger_circle, sf::CircleShape& cm_circle,
-                 sf::Text& statistics, double& dt) {
-  FlockWindow.clear(sf::Color(150, 150, 150));
-
-  V2D cm_pos;
-  V2D avg_vel;
-  int in_window_count{0};
-
-  for (auto const& b : boids) {
-    V2D p = b.Pos();
-    V2D v = b.Vel();
-    // Questo ha un problema di angoli limiti che va risolto, v.x ==0
-    double ang = std::atan2(v.y, v.x) * 180.0 / PI;
-    if (b.IsPredator()) {
-      pred_boid.setRotation(static_cast<float>(ang));
-      pred_boid.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-    } else {
-      non_pred_boid.setRotation(static_cast<float>(ang));
-      non_pred_boid.setPosition(static_cast<float>(p.x),
-                                static_cast<float>(p.y));
-    }
-    // Possible bug/weird behaviour for non toroidal space but oprad on
-    if (parameters.op_rad) {
-      detection_circle.setPosition(static_cast<float>(p.x),
-                                   static_cast<float>(p.y));
-      danger_circle.setPosition(static_cast<float>(p.x),
-                                static_cast<float>(p.y));
-      FlockWindow.draw(detection_circle);
-      FlockWindow.draw(danger_circle);
-    }
-
-    if (b.Pos().x < flock_window_size_d.x &&
-        b.Pos().y < flock_window_size_d.y && b.Pos().x > 0 && b.Pos().y > 0) {
-      ++in_window_count;
-    }
-    if (b.IsPredator()) {
-      FlockWindow.draw(pred_boid);
-    } else {
-      FlockWindow.draw(non_pred_boid);
-    }
-
-    cm_pos += p;
-    avg_vel += v;
-  }
-  cm_pos = cm_pos / static_cast<double>(boids.size());
-  avg_vel = avg_vel / static_cast<double>(boids.size());
-
-  std::string cm_string{
-      "Position of the cm_pos: x :" + std::to_string(cm_pos.x) +
-      " , y: " + std::to_string(cm_pos.y) + "\n"};
-  std::string avg_vel_string{
-      "Average velocity of the total flock: x :" + std::to_string(avg_vel.x) +
-      " , y: " + std::to_string(avg_vel.y) + "\n"};
-  std::string strinwc{"Boids present in window view: " +
-                      std::to_string(in_window_count) + "\n"};
-  std::string deltatime{"Delta time: " + std::to_string(dt) + "\n"};
-  std::string fps{"fps: " + std::to_string(1 / dt) + "\n"};
-
-  statistics.setString(cm_string + avg_vel_string + strinwc + deltatime + fps);
-
-  cm_circle.setPosition(static_cast<float>(cm_pos.x),
-                        static_cast<float>(cm_pos.y));
-  FlockWindow.draw(cm_circle);
-
-  IoWindow.clear(sf::Color(150, 150, 150));
-  IoWindow.draw(statistics);
-
-  IoWindow.display();
-  FlockWindow.display();
-}
-
-}  // namespace flock
+}  // namespace bs

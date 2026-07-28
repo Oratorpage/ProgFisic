@@ -1,17 +1,18 @@
-#ifndef FLOCK_INPUT_HPP
-#define FLOCK_INPUT_HPP
+#ifndef BS_INPUT_HPP
+#define BS_INPUT_HPP
 
-#include "simParams.hpp"
 #include <string>
 
-namespace flock{
-    std::string trimSpaces(std::string line);
+#include "simulationParams.hpp"
 
-    int parseInt(std::string const& string_value);
-    double parseDouble(std::string const& string_value);
-    bool parseBool(std::string const& string_value);
+namespace bs {
+std::string trimSpaces(std::string line);
 
-    SimParams readFileParams(std::string const& path);
-}
+int parseInt(std::string const& string_value);
+double parseDouble(std::string const& string_value);
+bool parseBool(std::string const& string_value);
+
+SimParams readSimulationParams(std::string const& path);
+}  // namespace bs
 
 #endif

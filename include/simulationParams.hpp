@@ -1,11 +1,12 @@
 // Defines the parameters that will be used
-#ifndef FLOCK_SIMPARAMS_HPP
-#define FLOCK_SIMPARAMS_HPP
+#ifndef BS_SIMULATIONPARAMS_HPP
+#define BS_SIMULATIONPARAMS_HPP
 
-namespace flock {
+namespace bs {
 
 struct SimParams {
-  int non_pred_boidnum{0};
+  // Simulation
+  int non_pred_boidnum{10};  // Come caso standard cosa scelg0, 0 o 10?
   int pred_boidnum{0};
   double separation{0.};
   double allignment{0.};
@@ -15,6 +16,22 @@ struct SimParams {
   double angle_of_view{0.};
   bool toroidal{false};
   bool op_rad{false};
+  double dt{0.001};
+
+  // Render
+  std::string flockWindowTitle{"Simulation"};
+  unsigned int flockWindowWidth{800};
+  unsigned int flockWindowHeight{600};
+  unsigned int flockWindowPositionX{750};
+  unsigned int flockWindowPositionY{200};
+  unsigned int flockWindowFps{60};
+
+  std::string statisticsWindowTitle{"Statistics"};
+  unsigned int statisticsWindowWidth{600};
+  unsigned int statisticsWindowHeight{400};
+  unsigned int statisticsWindowPositionX{0};
+  unsigned int statisticsWindowPositionY{200};
+  unsigned int statisticsWindowFps{60};
 };
 
 /*
@@ -76,9 +93,10 @@ struct SimParams {
                            /        |        \
 
 The danger distance is based on danger_rad when angle_of_view != 0. or !=365.,
-need to make the function and study this better
+Controlla se l'angolo di input è la metà o è già l'angolo completo, questo
+deriva dalla funzione che gestisce l'angolo per l'inserzione dei boid
 */
 
-}  // namespace flock
+}  // namespace bs
 
 #endif

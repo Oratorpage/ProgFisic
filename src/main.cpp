@@ -3,15 +3,58 @@
 #include <vector>
 
 #include "boid.hpp"
+#include "conductor.hpp"
 #include "input.hpp"
 #include "rand.hpp"
-#include "render.hpp"
-#include "vChange.hpp"
-
-// Forse va tutto messo dopo flock_window_size_d nel ciclo while della finestra
 
 int main() {
   try {
+    /*
+
+
+
+
+
+
+
+
+
+
+
+
+    Ok facciamo pulizia
+
+
+
+
+
+
+
+
+
+
+
+     Qua ci deve andare la parte inerente al parsing del nome del file di
+     configurazione, argv e argc
+
+
+
+
+
+
+
+
+
+
+    */
+
+    double time_factor{};
+    bs::SimParams parameters{};
+    bs::Conductor application{parameters, time_factor};
+
+    application.start(parameters);
+
+    ////////////////////////////////////////////////////////////
     // Questa parte qua, da qua
     sf::RenderWindow FlockWindow(sf::VideoMode(800, 600), "Flock View",
                                  sf::Style::Default);
@@ -21,35 +64,35 @@ int main() {
                               sf::Style::Default);
     IoWindow.setPosition(sf::Vector2i(0, 200));
 
-    flock::V2D flock_window_size_d{
-        static_cast<double>(FlockWindow.getSize().x),
-        static_cast<double>(FlockWindow.getSize().y)};
-
-    std::string const path{"parameters.txt"};
-    flock::SimParams parameters{flock::readFileParams(path)};
+    bs::V2D flock_window_size_d{static_cast<double>(FlockWindow.getSize().x),
+                                static_cast<double>(FlockWindow.getSize().y)};
     // Fino a qua, lo voglio rendere modificabile attraverso file di
     // configurazione, non tramite cambio di codice, dunque devo implementare
     // una struttura per renderlo possibile
-    std::vector<flock::Boid> boids;
-    int tot_boids{parameters.pred_boidnum + parameters.non_pred_boidnum};
+
+    // Questo va sistemato tramite argv e argc
+    std::string const path{"standard_parameters.txt"};
+    bs::SimParams parameters{bs::readSimulationParams(path)};
+
+    std::vector<bs::Boid> boids;
+    int tot_boids{};
 
     boids.reserve(static_cast<long unsigned int>(tot_boids));
 
     for (int i{0}; i < parameters.non_pred_boidnum; ++i) {
-      boids.emplace_back(flock::randVel(), flock::randPos(flock_window_size_d));
+      boids.emplace_back(bs::randVel(), bs::randPos(flock_window_size_d));
     }
     for (int i{0}; i < parameters.pred_boidnum; ++i) {
-      boids.emplace_back(flock::randVel(), flock::randPos(flock_window_size_d),
-                         true);
+      boids.emplace_back(bs::randVel(), bs::randPos(flock_window_size_d), true);
     }
 
-    sf::ConvexShape non_pred_boid{flock::makeBoidShape(sf::Color::Cyan)};
-    sf::ConvexShape pred_boid{flock::makeBoidShape(sf::Color::Red)};
+    sf::ConvexShape non_pred_boid{bs::makeBoidShape(sf::Color::Cyan)};
+    sf::ConvexShape pred_boid{bs::makeBoidShape(sf::Color::Red)};
     sf::CircleShape detection_circle{
-        flock::makeCircleShape(parameters.detection_rad, sf::Color::Green)};
+        bs::makeCircleShape(parameters.detection_rad, sf::Color::Green)};
     sf::CircleShape danger_circle{
-        flock::makeCircleShape(parameters.danger_rad, sf::Color::Red)};
-    sf::CircleShape cm_circle{flock::makeCenterDot()};
+        bs::makeCircleShape(parameters.danger_rad, sf::Color::Red)};
+    sf::CircleShape cm_circle{bs::makeCenterDot()};
 
     sf::Font out_font;
     // Questo deve essere letto dalla directory corrente o da un include dunque
@@ -63,56 +106,28 @@ int main() {
     statistics.setFont(out_font);
     statistics.setCharacterSize(15);
 
-    sf::Clock clock;
+    // La suddivisione sarà così, nel main voglio solo load di simulation_params
+    // e render_params, poi faccio un conductor.run() e quello fa sì che render
+    // si occupi della gestione della finestra (renderstart) e simulation
+    // (simulationstart) faccia sì che behaviour(ex vChange) si occupi del
+    // calcolo delle velocità e degli spostamenti, tutto sfruttando i metodi di
+    // boid, in questa maniera ogni TU contiene correttamente tutte le parti
+    // dedicate ad un singolo scopo e non ad un argomento. Devo arrivare a
+    // gestire meglio il vettore di boids che chiamerò flock perchè altrimenti
+    // com'è ora viene gestito in parte da main e da renderFrame di render, la
+    // domanda è, come lo chiamo?
+    // sviluppare una TU per statistics
 
-    // Questo anche lo dovrei aggiungere nel render, relegarlo a quello
-    while (FlockWindow.isOpen()) {
-      sf::Event event;
-      while (FlockWindow.pollEvent(event)) {
-        switch (event.type) {
-          case sf::Event::Closed:
-            FlockWindow.close();
-            break;
+    // Un pelo meglio la divisione in layer:
+    // input layer: input e i due config file
+    // base/math layer: v2D e rand
+    // Simulation_lower:boid
+    // Simulation: simulation
+    // Render: render
+    // Application: conductor
 
-          case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Escape) {
-              FlockWindow.close();
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      // chiamare close su finestra già chiusa
-      while (IoWindow.isOpen() && IoWindow.pollEvent(event)) {
-        switch (event.type) {
-          case sf::Event::Closed:
-            IoWindow.close();
-            break;
+    //  Questo anche lo dovrei aggiungere nel render, relegarlo a quello
 
-          case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Escape) {
-              IoWindow.close();
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      // Sistema il clock in modo che il dt sia costante 0.00833 0.01667
-      // Questo adesso provo a normalizzarlo a costante tramite un elapsed come
-      // game loop documentazione sfml poi se funzia bene e lo lascio così, se
-      // no dt fluttuante
-      double dt{clock.restart().asSeconds()};
-      // Avere il dt costante sistemerebbe anche il problema di interazione
-      // quando c'è tanto da calcolare, come nel caso di oprad true
-      flock::velocityChangeBoids(boids, dt, flock_window_size_d, parameters);
-
-      flock::renderFrame(FlockWindow, IoWindow, boids, parameters,
-                         flock_window_size_d, non_pred_boid, pred_boid,
-                         detection_circle, danger_circle, cm_circle, statistics,
-                         dt);
-    }
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";
     return 1;

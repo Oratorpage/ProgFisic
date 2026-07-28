@@ -1,8 +1,8 @@
 // Bidimensional vector of double components and pertinent operations
-#ifndef FLOCK_V2D_HPP
-#define FLOCK_V2D_HPP
+#ifndef BS_V2D_HPP
+#define BS_V2D_HPP
 
-namespace flock {
+namespace bs {
 
 struct V2D {
   double x{0};
@@ -23,6 +23,6 @@ double dotprod(V2D const& a, V2D const& b);
 double xprod(V2D const& a, V2D const& b);
 double norm(V2D const& v);
 
-}  // namespace flock
+}  // namespace bs
 
 #endif

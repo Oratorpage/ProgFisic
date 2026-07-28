@@ -1,0 +1,6 @@
+#This is the standard configuration files for the render parameters.
+#The configuration format is <parameter name/key> = <value> or <parameter name/key> : <value>
+#Spaces are necessary and must follow this pattern in order for the values to be parsed correctly.
+#Any line starting with # or empty will be skipped, comments are made with # but are not accepted on value lines, they must have a dedicated line.
+#Values accepted are numbers only when integers, numbers with a fullstop (.) at the end when doubles and a 1 for true, or a 0 for false when booleans.
+#i.e. 
