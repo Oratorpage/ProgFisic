@@ -32,6 +32,8 @@ Render::Render(SimParams const& sp)
       {statisticsWindowPositionX_, statisticsWindowPositionY_});
 };  // 23 righe di costruttore, damn, fa un po' cagare così
 
+// Questo va bene così? Modifica solo stats_ lasciando le altre cose com'erano o
+// per le altre usa il default e si rompe tutto?
 Render::Render(std::vector<Boid> flock) { calculateStats(flock); }
 
 bool Render::isFWOpen() const { return flockWindow_.isOpen(); }
@@ -116,24 +118,9 @@ void Render::calculateStats(std::vector<Boid> flock) {
 }
 
 void Render::renderFrame(std::vector<Boid> const& flock,
-                         SimParams const& parameters,
-                         sf::ConvexShape& non_pred_boid,
-                         sf::ConvexShape& pred_boid,
-                         sf::CircleShape& detection_circle,
-                         sf::CircleShape& danger_circle,
-                         sf::CircleShape& cm_circle) {
+                         SimParams const& parameters) {
   flockWindow_.clear(sf::Color(150, 150, 150));
   statisticsWindow_.clear(sf::Color(150, 150, 150));
-  // Questi oggetti si potrebbero mettere in una struct (o classe) statistics
-  // per tenerlo ordinato e fare fare una cosa per volta alla funzione ma non so
-  // se possa funzionare, sarebbe scomodo passare gli argomenti attraverso due
-  // funzioni se posso restituire un solo argomento per funzione
-
-  // Prima di eliminare questa cosa qua, mi rendo conto dopo aver fatto la
-  // funzione per la statistica che si potevano tenere questi dati ed usarli per
-  // disegnare una freccia che indica la velocità media dello stormo (posta nel
-  // centro della finestra) e come prima il cm; questo è opzionale ma sarebbe
-  // carino, e prima di eliminarlo da qua devo decidere come strutturarlo
   V2D cm_pos;
 
   for (auto const& b : flock) {
@@ -143,55 +130,51 @@ void Render::renderFrame(std::vector<Boid> const& flock,
     // la documentazinoe direi basti fare un if case ed in base al segno di v.y
     // allora bisogna invertire il segno che ritorna  atan2 perchè sfml è al
     // contrario
+    // Questo ulteriormente lo potrei spostare in una funzione separata,
+    // rotate()
     double ang = std::atan2(v.y, v.x) * 180.0 / PI;
     if (b.IsPredator()) {
-      pred_boid.setRotation(static_cast<float>(ang));
-      pred_boid.setPosition(static_cast<float>(p.x), static_cast<float>(p.y));
-    } else {
-      non_pred_boid.setRotation(static_cast<float>(ang));
-      non_pred_boid.setPosition(static_cast<float>(p.x),
-                                static_cast<float>(p.y));
-    }
-    // Possible bug/weird behaviour for non toroidal space but oprad on, kinda,
-    // takes longer time to update so it iteracts less, need to fix
-    if (parameters.op_rad) {
-      detection_circle.setPosition(static_cast<float>(p.x),
+      pred_boid_shape_.setRotation(static_cast<float>(ang));
+      pred_boid_shape_.setPosition(static_cast<float>(p.x),
                                    static_cast<float>(p.y));
-      danger_circle.setPosition(static_cast<float>(p.x),
-                                static_cast<float>(p.y));
-      flockWindow_.draw(detection_circle);
-      flockWindow_.draw(danger_circle);
+    } else {
+      non_pred_boid_shape_.setRotation(static_cast<float>(ang));
+      non_pred_boid_shape_.setPosition(static_cast<float>(p.x),
+                                       static_cast<float>(p.y));
+    }
+    // Questo lo voglio lasciare che fa il check ogni volta? Lo divido in due
+    // funzioni in modo che non debba fare il check ogni volta? C'è un ulteriore
+    // modo per farlo in maniera carina e abbassare il consumo di memoria/numero
+    // operazioni? Inoltre sistemerei anche un po' il problema del ogni funzione
+    // deve fare solamente una cosa per volta
+    if (parameters.op_rad) {
+      detection_circle_.setPosition(static_cast<float>(p.x),
+                                    static_cast<float>(p.y));
+      danger_circle_.setPosition(static_cast<float>(p.x),
+                                 static_cast<float>(p.y));
+      flockWindow_.draw(detection_circle_);
+      flockWindow_.draw(danger_circle_);
     }
 
     if (b.IsPredator()) {
-      flockWindow_.draw(pred_boid);
+      flockWindow_.draw(pred_boid_shape_);
     } else {
-      flockWindow_.draw(non_pred_boid);
+      flockWindow_.draw(non_pred_boid_shape_);
     }
 
     cm_pos += p;
   }
   cm_pos = cm_pos / static_cast<double>(flock.size());
-  cm_circle.setPosition(static_cast<float>(cm_pos.x),
-                        static_cast<float>(cm_pos.y));
+  cm_circle_.setPosition(static_cast<float>(cm_pos.x),
+                         static_cast<float>(cm_pos.y));
 
-  flockWindow_.draw(cm_circle);
+  flockWindow_.draw(cm_circle_);
 
   statisticsWindow_.draw(textOutput());
 
   statisticsWindow_.display();
   flockWindow_.display();
 }
-
-// OK tolgo le statistics da renderFrame perchè tanto se io gli passo lo struct
-// statistics dopo posso prendere da lì e usarlo per fare freccia o quello che
-// desidero
-
-// La cosa che mi rompe di questo è che invece di avere un oggetto che esiste ed
-// è costante nella memoria e semplicemente altre funzioni lo leggono e lo usano
-// per altro, verrebbe creato da nuovo ogni volta, questa è la cosa che più mi
-// scoccia e che voglio evitare nel codice, un'espansione e contrazione dello
-// stack, piuttosto che sia più grande ma vari di poco
 
 // Caratteristiche grafiche del boid
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor) {

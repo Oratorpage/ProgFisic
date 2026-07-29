@@ -53,11 +53,7 @@ class Render {
   void manageEvents();
   void manageWindowEvents(sf::RenderWindow& window);
 
-  void renderFrame(std::vector<Boid> const& boids, SimParams const& parameters,
-
-                   sf::ConvexShape& non_pred_boid, sf::ConvexShape& pred_boid,
-                   sf::CircleShape& detection_circle,
-                   sf::CircleShape& danger_circle, sf::CircleShape& cm_circle);
+  void renderFrame(std::vector<Boid> const& boids, SimParams const& parameters);
 };
 
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor);
