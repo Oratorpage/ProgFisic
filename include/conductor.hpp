@@ -14,8 +14,6 @@ class Conductor {
   Simulation sim_;
   Render ren_;
   double time_factor_{};
-  sf::RenderWindow flock_window_{};
-  sf::RenderWindow statistics_window{};
 
  public:
   Conductor(SimParams const& sp, double time_factor);

@@ -28,28 +28,36 @@ class Render {
   unsigned int statisticsWindowPositionY_{200};
   unsigned int statisticsWindowFps_{60};
 
+  // Dai un occhio al problema dell'inizializzazione di default per questo e
+  // stats_
+  sf::ConvexShape non_pred_boid_shape_{};
+  sf::ConvexShape pred_boid_shape_{};
+  sf::CircleShape detection_circle_{};
+  sf::CircleShape danger_circle_{};
+  sf::CircleShape cm_circle_{};
+
   Statistics stats_{};
+  void calculateStats(std::vector<Boid> flock);
 
  public:
   Render();
-  Render(SimParams const& s);
+  Render(SimParams const& sp);
+  Render(std::vector<Boid> flock);
 
   bool isFWOpen() const;
   bool isSWOpen() const;
   V2D flockWindowDimensions() const;
   V2D statisticsWindowDimensions() const;
+  sf::Text textOutput() const;
 
   void manageEvents();
   void manageWindowEvents(sf::RenderWindow& window);
-
-  Statistics calculateStats(Statistics stats, std::vector<Boid> flock);
 
   void renderFrame(std::vector<Boid> const& boids, SimParams const& parameters,
 
                    sf::ConvexShape& non_pred_boid, sf::ConvexShape& pred_boid,
                    sf::CircleShape& detection_circle,
-                   sf::CircleShape& danger_circle, sf::CircleShape& cm_circle,
-                   sf::Text& statistics, double& dt);
+                   sf::CircleShape& danger_circle, sf::CircleShape& cm_circle);
 };
 
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor);

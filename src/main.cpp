@@ -55,36 +55,20 @@ int main() {
     application.start(parameters);
 
     ////////////////////////////////////////////////////////////
-    // Questa parte qua, da qua
-    sf::RenderWindow FlockWindow(sf::VideoMode(800, 600), "Flock View",
-                                 sf::Style::Default);
-    FlockWindow.setPosition(sf::Vector2i(750, 200));
-
-    sf::RenderWindow IoWindow(sf::VideoMode(600, 400), "I/O View",
-                              sf::Style::Default);
-    IoWindow.setPosition(sf::Vector2i(0, 200));
-
-    bs::V2D flock_window_size_d{static_cast<double>(FlockWindow.getSize().x),
-                                static_cast<double>(FlockWindow.getSize().y)};
-    // Fino a qua, lo voglio rendere modificabile attraverso file di
-    // configurazione, non tramite cambio di codice, dunque devo implementare
-    // una struttura per renderlo possibile
 
     // Questo va sistemato tramite argv e argc
     std::string const path{"standard_parameters.txt"};
     bs::SimParams parameters{bs::readSimulationParams(path)};
 
-    std::vector<bs::Boid> boids;
-    int tot_boids{};
-
-    boids.reserve(static_cast<long unsigned int>(tot_boids));
-
-    for (int i{0}; i < parameters.non_pred_boidnum; ++i) {
-      boids.emplace_back(bs::randVel(), bs::randPos(flock_window_size_d));
-    }
-    for (int i{0}; i < parameters.pred_boidnum; ++i) {
-      boids.emplace_back(bs::randVel(), bs::randPos(flock_window_size_d), true);
-    }
+    // Il problema per le forme è che le inizializzavo così, ora non posso fare
+    // la stessa cosa, perchè le devo passare in un qualche modo a renderFrame e
+    // devono essere oggetti che non vengono distrutti ogni volta, dunque o
+    // faccio un ren_.initialize() in conductor all'inizio(non c'è bisogno, con
+    // l'inizializzazione di conductor attraverso costruttore io inizializzo
+    // anche sim_ e ren_ tramite loro costruttore prendendo sempre in input i
+    // parametri della simulazione; viene un file di configurazione molto grande
+    // ma va bhe). Ha senso avere gli oggetti come membri di Render? In che
+    // altro modo li potrei passare a ren_?
 
     sf::ConvexShape non_pred_boid{bs::makeBoidShape(sf::Color::Cyan)};
     sf::ConvexShape pred_boid{bs::makeBoidShape(sf::Color::Red)};
