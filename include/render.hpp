@@ -7,7 +7,6 @@
 
 #include "boid.hpp"
 #include "simulationParams.hpp"
-#include "statistics.hpp"
 
 namespace bs {
 
@@ -36,13 +35,9 @@ class Render {
   sf::CircleShape danger_circle_{};
   sf::CircleShape cm_circle_{};
 
-  Statistics stats_{};
-  void calculateStats(std::vector<Boid> flock);
-
  public:
   Render();
   Render(SimParams const& sp);
-  Render(std::vector<Boid> flock);
 
   bool isFWOpen() const;
   bool isSWOpen() const;

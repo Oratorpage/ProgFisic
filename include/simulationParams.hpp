@@ -8,30 +8,18 @@ struct SimParams {
   // Simulation
   int non_pred_boidnum{10};  // Come caso standard cosa scelg0, 0 o 10?
   int pred_boidnum{0};
+
   double separation{0.};
   double allignment{0.};
   double cohesion{0.};
+
   double detection_rad{0.};
   double danger_rad{0.};
+  
   double angle_of_view{0.};
   bool toroidal{false};
   bool op_rad{false};
   double dt{0.001};
-
-  // Render
-  std::string flockWindowTitle{"Simulation"};
-  unsigned int flockWindowWidth{800};
-  unsigned int flockWindowHeight{600};
-  unsigned int flockWindowPositionX{750};
-  unsigned int flockWindowPositionY{200};
-  unsigned int flockWindowFps{60};
-
-  std::string statisticsWindowTitle{"Statistics"};
-  unsigned int statisticsWindowWidth{600};
-  unsigned int statisticsWindowHeight{400};
-  unsigned int statisticsWindowPositionX{0};
-  unsigned int statisticsWindowPositionY{200};
-  unsigned int statisticsWindowFps{60};
 };
 
 /*

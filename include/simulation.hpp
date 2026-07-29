@@ -3,10 +3,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "boid.hpp"
-#include "simulationParams.hpp"
 #include "behaviour.hpp"
+#include "boid.hpp"
 #include "rand.hpp"
+#include "simulationParams.hpp"
+#include "statistics.hpp"
 
 namespace bs {
 class Simulation {
@@ -18,16 +19,17 @@ class Simulation {
   std::vector<Boid> flock_{};
 
   double dt_{};
+  Statistics stats_{};
 
   void buildFlock(SimParams const& sp);
+  void calculateStats(std::vector<Boid> const& flock);
 
  public:
   Simulation(SimParams const& sp);
 
-  int const Simulation::currentStep() const;
+  int const currentStep() const;
   double const deltaTime() const;
-  std::vector<Boid> const Simulation::currentFlock() const;
-  
+  std::vector<Boid> const currentFlock() const;
 };
 }  // namespace bs
 
