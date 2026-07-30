@@ -13,12 +13,6 @@ struct SimParams {
   double allignment{0.};
   double cohesion{0.};
 
-  double detection_rad{0.};
-  double danger_rad{0.};
-  
-  double angle_of_view{0.};
-  bool toroidal{false};
-  bool op_rad{false};
   double dt{0.001};
 };
 

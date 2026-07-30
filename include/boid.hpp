@@ -2,8 +2,9 @@
 #ifndef BS_BOID_HPP
 #define BS_BOID_HPP
 
-#include "v2D.hpp"
 #include <stdexcept>
+
+#include "v2D.hpp"
 
 namespace bs {
 
@@ -11,8 +12,6 @@ class Boid {
  private:
   V2D velocity_{0., 0.};
   V2D position_{0., 0.};
-  static constexpr double max_speed_tor{150.}; // La velocità la posso limitare tramite una funzione magari, vedo com'è il limiter all'interno, forse è meno efficente, però effettivamente sarebbe bello avere un'opzione limiter off e semplicemente vedere il caos
-  static constexpr double max_speed{250.};
   bool is_predator_{false};
 
  public:
@@ -24,8 +23,15 @@ class Boid {
   V2D const& Pos() const;
   bool IsPredator() const;
 
-  void update(double dt, V2D const& flock_window_size, V2D const& vel_update,
-              bool toroidal);
+  // La funzione di update deve solo fare l'update, il tempo è controllato da
+  // conductor che sincronizza render e simulation, il calcolo della velocità
+  // quando è toroidale anche; l'unica cosa scomoda che poi capirò come fare è
+  // il wrap per quando è toroidale ma onestamente quello lo posso relegare a
+  // World, come funzione membro, wrap tale che prende il flock, itera su di
+  // esso ed in base alla distanza in più rispetto ai bordi del mondo gli fa
+  // fare il wrap
+  void update(V2D const& vel_update);
+  void pChange(double value, bool x);
 };
 
 }  // namespace bs

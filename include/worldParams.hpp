@@ -1,11 +1,10 @@
 #ifndef BS_WORLDPARAMS_HPP
 #define BS_WORLDPARAMS_HPP
 
+#include "v2D.hpp"
 namespace bs {
 struct WorldParams {
-  // Qui si potrebbe fare con un V2D in maniera da raggrupparlo
-  double width{800};
-  double height{600};
+  V2D dimensions{800, 600};
   bool toroidal{false};
 };
 }  // namespace bs

@@ -49,10 +49,12 @@ int main() {
     */
 
     double time_factor{};
-    bs::SimParams parameters{};
-    bs::Conductor application{parameters, time_factor};
+    bs::SimParams sim_params{};
+    bs::RenParams ren_params{};
+    bs::WorldParams wor_params{};
+    bs::Conductor application{sim_params, ren_params, wor_params, time_factor};
 
-    application.start(parameters);
+    application.start();
 
     ////////////////////////////////////////////////////////////
 

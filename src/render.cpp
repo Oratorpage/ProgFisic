@@ -1,49 +1,51 @@
 #include "render.hpp"
 
+// In render devo racchiudere tutto e solamente quello che è necessario a
+// sviluppare l'effettiva immagine che desidero
+
 #include <cmath>
 #include <string>
+
+#include "simulation.hpp"
 
 namespace bs {
 constexpr double PI{3.14159265358979323846264338327950288};
 
 Render::Render() = default;
-Render::Render(SimParams const& sp)
-    : flockWindow_{sf::VideoMode(sp.flockWindowWidth, sp.flockWindowHeight),
-                   sp.flockWindowTitle, sf::Style::Default},
-      flockWindowPositionX_{sp.flockWindowPositionX},
-      flockWindowPositionY_{sp.flockWindowPositionY},
-      flockWindowFps_{sp.flockWindowFps},
-      statisticsWindow_{
-          sf::VideoMode(sp.statisticsWindowWidth, sp.statisticsWindowHeight),
-          sp.statisticsWindowTitle, sf::Style::Default},
-      statisticsWindowPositionX_{sp.statisticsWindowPositionX},
-      statisticsWindowPositionY_{sp.flockWindowPositionY},
-      statisticsWindowFps_{sp.statisticsWindowFps},
+Render::Render(RenParams const& rp)
+    : ren_params_{rp},
+      flockWindow_{sf::VideoMode(rp.flock_window_parameters.width,
+                                 rp.flock_window_parameters.height),
+                   rp.flock_window_parameters.title, sf::Style::Default},
+
+      statisticsWindow_{sf::VideoMode(rp.statistics_window_parameters.width,
+                                      rp.statistics_window_parameters.height),
+                        rp.statistics_window_parameters.title,
+                        sf::Style::Default},
+
       non_pred_boid_shape_{makeBoidShape(sf::Color::Cyan)},
-      pred_boid_shape_{makeBoidShape(sf::Color::Red)},
-      detection_circle_{makeCircleShape(sp.detection_rad, sf::Color::Green)},
-      danger_circle_{makeCircleShape(sp.danger_rad, sf::Color::Red)},
-      cm_circle_{makeCenterDot()} {
-  flockWindow_.setFramerateLimit(flockWindowFps_);
-  flockWindow_.setPosition({flockWindowPositionX_, flockWindowPositionY_});
+      pred_boid_shape_{makeBoidShape(sf::Color::Red)}
 
-  statisticsWindow_.setFramerateLimit(statisticsWindowFps_);
-  statisticsWindow_.setPosition(
-      {statisticsWindowPositionX_, statisticsWindowPositionY_});
-};  // 23 righe di costruttore, damn, fa un po' cagare così
+{
+  flockWindow_.setFramerateLimit(rp.flock_window_parameters.fps);
+  flockWindow_.setPosition(
+      {rp.flock_window_parameters.posX, rp.flock_window_parameters.posY});
 
+  statisticsWindow_.setFramerateLimit(rp.statistics_window_parameters.fps);
+  statisticsWindow_.setPosition({rp.statistics_window_parameters.posX,
+                                 rp.statistics_window_parameters.posY});
+};  // 22 righe di costruttore, damn, fa un po' cagare così
 
 bool Render::isFWOpen() const { return flockWindow_.isOpen(); }
 bool Render::isSWOpen() const { return statisticsWindow_.isOpen(); }
-V2D Render::flockWindowDimensions() const {
+V2D const& Render::flockWindowDimensions() const {
   return {static_cast<double>(flockWindow_.getSize().x),
           static_cast<double>(flockWindow_.getSize().y)};
 }
-V2D Render::statisticsWindowDimensions() const {
+V2D const& Render::statisticsWindowDimensions() const {
   return {static_cast<double>(statisticsWindow_.getSize().x),
           static_cast<double>(statisticsWindow_.getSize().y)};
 }
-sf::Text Render::textOutput() const { return stats_.output; }
 
 void Render::manageEvents() {
   manageWindowEvents(flockWindow_);
@@ -78,14 +80,11 @@ void Render::manageWindowEvents(sf::RenderWindow& window) {
   }
 }
 
-void Render::renderFrame(std::vector<Boid> const& flock,
-                         SimParams const& parameters) {
+void Render::renderFrame(Simulation const& sim) {
   flockWindow_.clear(sf::Color(150, 150, 150));
   statisticsWindow_.clear(sf::Color(150, 150, 150));
-  
-  V2D cm_pos;
 
-  for (auto const& b : flock) {
+  for (auto const& b : sim.currentFlock()) {
     V2D p = b.Pos();
     V2D v = b.Vel();
     // Questo ha un problema di angoli limiti che va risolto, v.x ==0; guardando
@@ -109,7 +108,7 @@ void Render::renderFrame(std::vector<Boid> const& flock,
     // modo per farlo in maniera carina e abbassare il consumo di memoria/numero
     // operazioni? Inoltre sistemerei anche un po' il problema del ogni funzione
     // deve fare solamente una cosa per volta
-    if (parameters.op_rad) {
+    if (ren_params_.op_rad) {
       detection_circle_.setPosition(static_cast<float>(p.x),
                                     static_cast<float>(p.y));
       danger_circle_.setPosition(static_cast<float>(p.x),
@@ -123,16 +122,14 @@ void Render::renderFrame(std::vector<Boid> const& flock,
     } else {
       flockWindow_.draw(non_pred_boid_shape_);
     }
-
-    cm_pos += p;
   }
-  cm_pos = cm_pos / static_cast<double>(flock.size());
-  cm_circle_.setPosition(static_cast<float>(cm_pos.x),
-                         static_cast<float>(cm_pos.y));
+
+  cm_circle_.setPosition(static_cast<float>(sim.currentStatistics().cm_pos.x),
+                         static_cast<float>(sim.currentStatistics().cm_pos.y));
 
   flockWindow_.draw(cm_circle_);
 
-  statisticsWindow_.draw(textOutput());
+  statisticsWindow_.draw(statistics_text_);
 
   statisticsWindow_.display();
   flockWindow_.display();

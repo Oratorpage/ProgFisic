@@ -5,16 +5,21 @@
 
 #include "behaviour.hpp"
 #include "boid.hpp"
+#include "boidProperties.hpp"
 #include "rand.hpp"
 #include "simulationParams.hpp"
 #include "statistics.hpp"
+#include "world.hpp"
+#include "worldParams.hpp"
 
 namespace bs {
 class Simulation {
  private:
+  World world_;
   // Se si volesse fare una cosa che si conclude da solo dopo tot allora
   // bisognerebbe avere l'input del numero totali di step
-  int current_step_{0};
+
+  BoidProperties properties_;
   int total_boids_{};
   std::vector<Boid> flock_{};
 
@@ -22,14 +27,20 @@ class Simulation {
   Statistics stats_{};
 
   void buildFlock(SimParams const& sp);
-  void calculateStats(std::vector<Boid> const& flock);
 
  public:
-  Simulation(SimParams const& sp);
+  // questo vuol dire che la simulazione inevitabilemente dipende dai parametri
+  // del mondo che sto considerando, cambbia mondo cambia simulazione
+  Simulation(SimParams const& sp, WorldParams const& wp);
 
-  int const currentStep() const;
+  World const& currentWorld() const;
+  BoidProperties const& boidProperties() const;
+  std::vector<Boid> const& currentFlock() const;
   double const deltaTime() const;
-  std::vector<Boid> const currentFlock() const;
+  Statistics const& currentStatistics() const;
+
+  void calculateStats(std::vector<Boid> const& flock);
+  void tick();
 };
 }  // namespace bs
 
