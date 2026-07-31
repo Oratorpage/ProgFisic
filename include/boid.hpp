@@ -30,7 +30,10 @@ class Boid {
   // World, come funzione membro, wrap tale che prende il flock, itera su di
   // esso ed in base alla distanza in più rispetto ai bordi del mondo gli fa
   // fare il wrap
-  void update(V2D const& vel_update);
+  void vUpdate(V2D const& vel_change);
+  void pUpdate(double dt);
+
+  void update(V2D const& vel_update, double dt);
   void pChange(double value, bool x);
 };
 

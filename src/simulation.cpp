@@ -1,5 +1,7 @@
 #include "simulation.hpp"
 
+#include "behaviour.hpp"
+
 // In simulazione devo racchiudere tutto e solamente quello che è necessario
 // all'algoritmo per i boids e lo stormo
 
@@ -49,7 +51,10 @@ BoidProperties const& Simulation::boidProperties() const {
 std::vector<Boid> const& Simulation::currentFlock() const {
   return flock_;
 }  // Il ritorno di questo vettore sarà un casino vero?
-double const Simulation::deltaTime() const { return dt_; } // È corretto che sia const il risultato no? per ora non ho bisogno che venga modificato
+double const Simulation::deltaTime() const {
+  return dt_;
+}  // È corretto che sia const il risultato no? per ora non ho bisogno che venga
+   // modificato
 Statistics const& Simulation::currentStatistics() const { return stats_; }
 
 void Simulation::calculateStats(std::vector<Boid> const& flock) {
@@ -84,10 +89,17 @@ void Simulation::calculateStats(std::vector<Boid> const& flock) {
   stats_.statistics_output = cm_string + avg_vel_string + in_view_string;
 }
 
-void tick() {
-  // Fill this up bro, it must be a loop calling the resulting velocity function
-  // from the behavioural rules we set and some other stuff
-  std::vector<Boid> flock_buffer{};
+// La posizione in cui dovrei mettere il calcolo delle statistiche in conductor
+// dipende dal mio approccio, se voglio avere il render anche della
+// configurazione iniziale (step_0) allora devo mettere il render prima rispetto
+// alla simulazione, altrimenti, se non mi interessa il render dello step zero
+// in quanto è l'evoluzione che mi interessa posso lasciarlo così; la cosa
+// fondamentale è che se faccio prima il render che il primo step della
+// simulazione allora tutto ciò che io ho settato come default della simulazione
+// funzioni effettivamente correttamente e restituisca una cosa sensata,
+// altrimenti non serve
+void Simulation::tick() {
+  flock_ = applyFlockBehaviouralMovement(flock_, dt_, boid_properties_);
 }
 
 }  // namespace bs

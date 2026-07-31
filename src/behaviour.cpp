@@ -1,5 +1,4 @@
 #include "behaviour.hpp"
-#include 
 
 #include <cmath>
 
@@ -14,16 +13,17 @@ constexpr double valLim{1.e-12};
 constexpr double piconst{3.14159265358979323846264338327950288};
 
 bool isBoidVisibleInCone(Boid const& a, Boid const& b,
-                         Boid const& boid_params) {
+                         BoidProperties const& boid_params) {
   if (&a == &b) {
     return false;
   }
 
-  const double detection_rad_sq = params.detection_rad * params.detection_rad;
+  const double detection_rad_sq =
+      boid_params.detection_radius * boid_params.detection_radius;
   if (distSq(a.Pos(), b.Pos()) > detection_rad_sq) {
     return false;
   }
-  if (params.angle_of_view >= 360.) {
+  if (boid_params.angle_of_view >= 360.) {
     return true;
   }
 
@@ -41,7 +41,7 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
     return true;
   }
   const double cosHalfAngleView{
-      std::cos(params.angle_of_view * 0.5 * piconst / 180.)};
+      std::cos(boid_params.angle_of_view * 0.5 * piconst / 180.)};
 
   const double cosAngle{dotprod(vectVelA, vectDistance) / velANorm *
                         distanceNorm};
@@ -52,37 +52,50 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   return cosAngle >= cosHalfAngleView;
 }
 
-std::vector<Boid*> collectVisibleBoids(std::vector<Boid>& boids, Boid const& bi,
-                                       SimParams const& params) {
+std::vector<Boid*> collectVisibleBoids(std::vector<Boid> const& flock,
+                                       Boid const& bi,
+                                       BoidProperties const& boid_params) {
   std::vector<Boid*> nearboids;
-  nearboids.reserve(boids.size() -
+
+  nearboids.reserve(flock.size() -
                     1);  // Controlla se sensato, in teoria sì perchè quello
                          // contro cui faccio i check non viene aggiunto
-  for (Boid& bj : boids) {
-    if (isBoidVisibleInCone(bi, bj, params)) {
-      nearboids.push_back(&bj);
+  for (Boid const& bj : flock) {
+    if (isBoidVisibleInCone(bi, bj, boid_params)) {
+      nearboids.emplace_back(&bj);
     }
   }
   return nearboids;
 }
 
-void velocityChangeBoids(std::vector<Boid>& flock,
-                         V2D const& flock_window_size_d,
-                         SimParams const& params) {
-  const double danger_rad_sq{params.danger_rad * params.danger_rad};
+std::vector<Boid> applyFlockBehaviouralMovement(
+    std::vector<Boid> const& flock, double dt,
+    BoidProperties const& boid_params) {
+  std::vector<Boid> buffer{flock};
 
-  for (Boid& bi : flock) {
-    std::vector<Boid*> nearboids{collectVisibleBoids(flock, bi, params)};
+  const double danger_rad_sq{boid_params.danger_radius *
+                             boid_params.danger_radius};
+
+  for (Boid const& bi : flock) {
+    std::vector<Boid*> nearboids{collectVisibleBoids(buffer, bi, boid_params)};
+
+    Boid buffer_boid{bi};
     V2D separation_vel;
     V2D alignment_vel;
-    V2D cm_pos;
     V2D cohesion_vel;
+
+    V2D cm_pos;
+
+    // Imma fix allthis after my run, peace
 
     // Loop that calculates vchange based on nearby boids
     if (!nearboids.empty()) {
       const double invNear = 1. / static_cast<double>(nearboids.size());
 
       for (Boid* bj : nearboids) {
+        // Questa cosa non dovrebbe poter accadere poichè quelli uguali per ogni
+        // nearboids vengono esclusi da isBoidVisibleInCone, non vede mai se
+        // stesso
         if (&bi == bj) {
           continue;
         }
@@ -114,15 +127,17 @@ void velocityChangeBoids(std::vector<Boid>& flock,
           cm_pos += bj->Pos();
         }
       }
-      separation_vel = -params.separation * separation_vel;
-      alignment_vel = params.allignment * (invNear * alignment_vel - bi.Vel());
+      separation_vel = -boid_params.separation * separation_vel;
+      alignment_vel =
+          boid_params.allignment * (invNear * alignment_vel - bi.Vel());
+      cohesion_vel = boid_params.cohesion * (cm_pos - bi.Pos());
+
       cm_pos = invNear * cm_pos;
-      cohesion_vel = params.cohesion * (cm_pos - bi.Pos());
     }
-    // If there are no near boids it will update anyway but vup will be 0
-    // because of the standard inizialization of the V2D
-    V2D vup{separation_vel + alignment_vel + cohesion_vel};
-    bi.update(dt, flock_window_size_d, vup, params.toroidal);
+    buffer_boid.update(separation_vel + alignment_vel + cohesion_vel, dt);
+
+    buffer.emplace_back(buffer_boid);
   }
+  return buffer;
 }
-}  // namespace flock
+}  // namespace bs

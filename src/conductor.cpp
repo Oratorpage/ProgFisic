@@ -26,6 +26,8 @@ void Conductor::start() {
       time_buffer -= sim_.deltaTime();
     }
     // sim_.calculateStats(sim_.currentFlock());
+    // Riferirsi alla pagina di simulation per la spiegazione rispetto
+    // all'ordine di simulation e render
     ren_.renderFrame(sim_);
   }
 }

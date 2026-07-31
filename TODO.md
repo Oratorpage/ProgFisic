@@ -1,3 +1,8 @@
+# Big things
+- [ ] Finishing the cooperation between simulatino and behaviour, between render, simulation and conductor
+- [ ] Fixing the input (redirecting logic)
+- [ ] Making the shell prompt argv argc thingamabob
+
 # DUDE
 - [ ] Guarda quando si può e quando non fare il default per le classi; per esempio, per i boid ha senso poter fare il default, crei un boid e poi ti modifichi come lo vuoi e non c'è problema in quanto è sensato e realistico; per una cosa come la simulazione, dove ho oggetti membro(fields) che sono classi a loro volta diventa complicato e probabilmente poco utile in quanto un oggetto simulazione che viene definito in un main futuro per essere usato, devo sapere qual'è uno stato accettabile iniziale in cui lo trovo; in questo senso immagino ci sia il metodo o inizializzi tutto in modo da poter fare un default o non inizializzi nulla e sei tranquillo
 - [ ] Gestione inizializzazione costruttore, parziale o totale, simulazione, render, world, tutte le classi

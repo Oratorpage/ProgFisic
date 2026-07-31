@@ -11,7 +11,7 @@ V2D const& Boid::Vel() const { return velocity_; }
 V2D const& Boid::Pos() const { return position_; }
 bool Boid::IsPredator() const { return is_predator_; }
 
-void Boid::update(V2D const& vel_update) {
+void Boid::update(V2D const& vel_update, double dt) {
   
   velocity_ += vel_update * dt;
   position_ += velocity_ * dt;
@@ -23,6 +23,14 @@ void Boid::pChange(double value, bool x){
   } else {
     position_.y = value;
   }
+}
+
+void Boid::vUpdate(V2D const& vel_change){
+  velocity_ += vel_change;
+}
+
+void Boid::pUpdate(double dt) {
+
 }
 
 }  // namespace bs
