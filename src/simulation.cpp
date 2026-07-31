@@ -10,12 +10,26 @@ namespace bs {
 // chiamato non ritorni cose a caso. Non è necessario no che per una good cpp
 // practice ogni oggetto appartenente ad una classe venga completamente
 // inizializzato?
-Simulation::Simulation(SimParams const& sp, WorldParams const& wp)
+Simulation::Simulation(WorldParams const& wp, BoidProperties const& bp,
+                       SimParams const& sp)
     : world_{wp},
-      dt_{sp.dt},
-      total_boids_{sp.pred_boidnum + sp.non_pred_boidnum} {
+      boid_properties_{bp},
+
+      total_boids_{sp.pred_boidnum + sp.non_pred_boidnum},
+      dt_{sp.dt} {
   buildFlock(sp);
 }
+// Statistiche ha senso inizializzarlo a zero/invalido direttamente nella struct
+// in maniera tale che se uno crea un oggetto simulation ma non vuole usarle è
+// comunque un oggetto valido e pienamente inizializzato; chiaramente
+// all'inizio, finchè non ci si opera sopra saranno spazzatura quindi ha senso
+// tipo string{"invalid"}; forse il calcolo delle statistiche andrebbe fatto
+// nell'update della simulazione e poi passato al render, sempre seguendo la
+// regola, se tolgo il render, la simulazione sopravvive da sola?; Inoltre mi
+// giunge la domanda, se le uniche funzioni che ho per simulation sono o il
+// calcolo delle statistiche o il tick della simulazione dove inevitambilmente
+// calcolo le statistiche, allora posso lasciarlo non inizializzato? Non potrei
+// fare altro e se so che inizialimente è inutilizzabile allora basta non usarlo
 
 void Simulation::buildFlock(SimParams const& sp) {
   flock_.reserve(static_cast<long unsigned int>(total_boids_));
@@ -29,11 +43,13 @@ void Simulation::buildFlock(SimParams const& sp) {
 }
 
 World const& Simulation::currentWorld() const { return world_; }
-BoidProperties const& Simulation::boidProperties() const { return properties_; }
+BoidProperties const& Simulation::boidProperties() const {
+  return boid_properties_;
+}
 std::vector<Boid> const& Simulation::currentFlock() const {
   return flock_;
 }  // Il ritorno di questo vettore sarà un casino vero?
-double const Simulation::deltaTime() const { return dt_; }
+double const Simulation::deltaTime() const { return dt_; } // È corretto che sia const il risultato no? per ora non ho bisogno che venga modificato
 Statistics const& Simulation::currentStatistics() const { return stats_; }
 
 void Simulation::calculateStats(std::vector<Boid> const& flock) {
@@ -65,6 +81,7 @@ void Simulation::calculateStats(std::vector<Boid> const& flock) {
                              std::to_string(stats_.avg_vel.y) + "\n"};
   std::string in_view_string{"Boids present in window view: " +
                              std::to_string(stats_.in_window_count) + "\n"};
+  stats_.statistics_output = cm_string + avg_vel_string + in_view_string;
 }
 
 void tick() {

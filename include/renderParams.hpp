@@ -1,7 +1,6 @@
 #ifndef BS_RENDERPARAMS_HPP
 #define BS_RENDERPARAMS_HPP
 
-#include <string>
 #include "windowParams.hpp"
 namespace bs {
 struct RenParams {

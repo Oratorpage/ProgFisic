@@ -12,7 +12,7 @@ namespace bs {
 
 class Render {
  private:
-  RenParams ren_params_{};
+  RenParams ren_params_;
   sf::RenderWindow flockWindow_{sf::VideoMode(800, 600), "Flock Window",
                                 sf::Style::Default};
 
@@ -22,14 +22,14 @@ class Render {
   // Dai un occhio al problema dell'inizializzazione di default per questo.
   // Immagino che sia di assicurarsi che non possa essere usato a meno che non
   // sia stato inizializzato per evitare undefined behaviour
-  sf::ConvexShape non_pred_boid_shape_{};
-  sf::ConvexShape pred_boid_shape_{};
-  sf::CircleShape detection_circle_{};
-  sf::CircleShape danger_circle_{};
-  sf::CircleShape cm_circle_{};
+  sf::ConvexShape non_pred_boid_shape_;
+  sf::ConvexShape pred_boid_shape_;
+  sf::CircleShape detection_circle_;
+  sf::CircleShape danger_circle_;
+  sf::CircleShape cm_circle_;
 
-  sf::View view_{};
-  sf::Text statistics_text_{};
+  sf::View view_;
+  sf::Text statistics_text_;
   
 
  public:

@@ -1,4 +1,5 @@
 #include "behaviour.hpp"
+#include 
 
 #include <cmath>
 
@@ -13,7 +14,7 @@ constexpr double valLim{1.e-12};
 constexpr double piconst{3.14159265358979323846264338327950288};
 
 bool isBoidVisibleInCone(Boid const& a, Boid const& b,
-                         SimParams const& params) {
+                         Boid const& boid_params) {
   if (&a == &b) {
     return false;
   }
@@ -65,7 +66,7 @@ std::vector<Boid*> collectVisibleBoids(std::vector<Boid>& boids, Boid const& bi,
   return nearboids;
 }
 
-void velocityChangeBoids(std::vector<Boid>& flock, double dt,
+void velocityChangeBoids(std::vector<Boid>& flock,
                          V2D const& flock_window_size_d,
                          SimParams const& params) {
   const double danger_rad_sq{params.danger_rad * params.danger_rad};

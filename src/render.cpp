@@ -12,6 +12,9 @@ namespace bs {
 constexpr double PI{3.14159265358979323846264338327950288};
 
 Render::Render() = default;
+// Immagino per i parametri di sfml di poterli inizializzare fino a quanto ho
+// bisogno ed il resto saranno usati i parametri di default definiti dalle
+// classi di sfml, mi sembra la forma più corretta
 Render::Render(RenParams const& rp)
     : ren_params_{rp},
       flockWindow_{sf::VideoMode(rp.flock_window_parameters.width,
@@ -24,7 +27,11 @@ Render::Render(RenParams const& rp)
                         sf::Style::Default},
 
       non_pred_boid_shape_{makeBoidShape(sf::Color::Cyan)},
-      pred_boid_shape_{makeBoidShape(sf::Color::Red)}
+      pred_boid_shape_{makeBoidShape(sf::Color::Red)},
+      // Per esempio infatti cm_circle non mi serve e non lo posso usare se non
+      // separatamente prima, l'unica funzione che lo può cambiare è
+      // renderFrame()
+      statistics_text_{}  // Ha senso fare così?
 
 {
   flockWindow_.setFramerateLimit(rp.flock_window_parameters.fps);
@@ -34,6 +41,12 @@ Render::Render(RenParams const& rp)
   statisticsWindow_.setFramerateLimit(rp.statistics_window_parameters.fps);
   statisticsWindow_.setPosition({rp.statistics_window_parameters.posX,
                                  rp.statistics_window_parameters.posY});
+
+  view_.setCenter({static_cast<float>(rp.flock_window_parameters.width / 2.),
+                   static_cast<float>(rp.flock_window_parameters.height / 2.)});
+  view_.setSize({static_cast<float>(rp.flock_window_parameters.width),
+                 static_cast<float>(rp.flock_window_parameters.height)});
+  // Dovrei inizializzare pure il testo? Che noia
 };  // 22 righe di costruttore, damn, fa un po' cagare così
 
 bool Render::isFWOpen() const { return flockWindow_.isOpen(); }
@@ -107,7 +120,8 @@ void Render::renderFrame(Simulation const& sim) {
     // funzioni in modo che non debba fare il check ogni volta? C'è un ulteriore
     // modo per farlo in maniera carina e abbassare il consumo di memoria/numero
     // operazioni? Inoltre sistemerei anche un po' il problema del ogni funzione
-    // deve fare solamente una cosa per volta
+    // deve fare solamente una cosa per volta, lo sposto in una funzione
+    // visibleRad()
     if (ren_params_.op_rad) {
       detection_circle_.setPosition(static_cast<float>(p.x),
                                     static_cast<float>(p.y));
@@ -129,6 +143,11 @@ void Render::renderFrame(Simulation const& sim) {
 
   flockWindow_.draw(cm_circle_);
 
+  // È meglio fare così ed avere l'immediata variazione (anche se non si vede
+  // dal conductor che questa cosa sta venendo fatta? ) piuttosto che chiamare
+  // il calcolo del calcolo delle statistiche direttamente dal conduttore?
+  statistics_text_.setString(sim.currentStatistics().statistics_output);
+
   statisticsWindow_.draw(statistics_text_);
 
   statisticsWindow_.display();
@@ -136,6 +155,11 @@ void Render::renderFrame(Simulation const& sim) {
 }
 
 // Caratteristiche grafiche del boid
+
+// Per questi secondo me se vale per simulation, può essere adottata la stessa
+// regola: se non c'è altro modo di utilizzarli in maniera impropria allora
+// automaticamente o si inizializzano manualmente o l'unica funzione chiamabile
+// sulla classe sarà direttamente responsabile per l'inizializzazione
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor) {
   sf::ConvexShape boid;
   boid.setPointCount(3);

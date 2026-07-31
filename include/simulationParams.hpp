@@ -12,6 +12,11 @@ struct SimParams {
   double separation{0.};
   double allignment{0.};
   double cohesion{0.};
+  // Onestamente sarebbe una buona idea (anche se forse eccessivo) aggiungere
+  // questi come membri alla simulazione; la cosa è che sono inerenti sia alla
+  // simulazione che alle proprietà dei boids; Principalmente perchè tick è void
+  // e non voglio prenda argomenti, ha senso metterlo in boid_properties o in
+  // simulation
 
   double dt{0.001};
 };
