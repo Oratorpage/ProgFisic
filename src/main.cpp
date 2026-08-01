@@ -2,84 +2,34 @@
 #include <iostream>
 #include <vector>
 
-#include "boid.hpp"
 #include "conductor.hpp"
 #include "input.hpp"
-#include "rand.hpp"
 
-int main() {
+// char* argv[] o char** argv? So che sono dati diversi, ma in pratatica quali
+// sono gli use-cases?
+int main(int argc, char** argv) {
   try {
-    /*
+    if (argc < 2) {
+      throw std::runtime_error{"No configurational file selected"};
+    } else if (argc > 3) {
+      throw std::runtime_error{"Too many arguments"};
+    }
 
+    // Qua va cambiato readSimulationParams per prendere char** argv o char*
+    // argv[] e soprattutto che dia come output configuration
+    bs::Config configuration{bs::readSimulationParams(argv[1])};
 
+    double time_factor{1.};
 
+    if(argc == 3){
+      time_factor =bs::
+    }
 
-
-
-
-
-
-
-
-
-    Ok facciamo pulizia
-
-
-
-
-
-
-
-
-
-
-
-     Qua ci deve andare la parte inerente al parsing del nome del file di
-     configurazione, argv e argc
-
-
-
-
-
-
-
-
-
-
-    */
-
-    double time_factor{};
-    bs::SimParams sim_params{};
-    bs::RenParams ren_params{};
-    bs::WorldParams wor_params{};
-    bs::Conductor application{sim_params, ren_params, wor_params, time_factor};
+    bs::Conductor application{configuration, time_factor};
 
     application.start();
-
-    ////////////////////////////////////////////////////////////
-
-    // Questo va sistemato tramite argv e argc
-    std::string const path{"standard_parameters.txt"};
-    bs::SimParams parameters{bs::readSimulationParams(path)};
-
-    // Il problema per le forme è che le inizializzavo così, ora non posso fare
-    // la stessa cosa, perchè le devo passare in un qualche modo a renderFrame e
-    // devono essere oggetti che non vengono distrutti ogni volta, dunque o
-    // faccio un ren_.initialize() in conductor all'inizio(non c'è bisogno, con
-    // l'inizializzazione di conductor attraverso costruttore io inizializzo
-    // anche sim_ e ren_ tramite loro costruttore prendendo sempre in input i
-    // parametri della simulazione; viene un file di configurazione molto grande
-    // ma va bhe). Ha senso avere gli oggetti come membri di Render? In che
-    // altro modo li potrei passare a ren_?
-
-    sf::ConvexShape non_pred_boid{bs::makeBoidShape(sf::Color::Cyan)};
-    sf::ConvexShape pred_boid{bs::makeBoidShape(sf::Color::Red)};
-    sf::CircleShape detection_circle{
-        bs::makeCircleShape(parameters.detection_rad, sf::Color::Green)};
-    sf::CircleShape danger_circle{
-        bs::makeCircleShape(parameters.danger_rad, sf::Color::Red)};
-    sf::CircleShape cm_circle{bs::makeCenterDot()};
-
+    /////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
     sf::Font out_font;
     // Questo deve essere letto dalla directory corrente o da un include dunque
     // non va bene per ora
@@ -87,36 +37,17 @@ int main() {
             "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
       std::cout << "Font file was  loaded correctly \n";
     }
-
     sf::Text statistics;
     statistics.setFont(out_font);
     statistics.setCharacterSize(15);
-
-    // La suddivisione sarà così, nel main voglio solo load di simulation_params
-    // e render_params, poi faccio un conductor.run() e quello fa sì che render
-    // si occupi della gestione della finestra (renderstart) e simulation
-    // (simulationstart) faccia sì che behaviour(ex vChange) si occupi del
-    // calcolo delle velocità e degli spostamenti, tutto sfruttando i metodi di
-    // boid, in questa maniera ogni TU contiene correttamente tutte le parti
-    // dedicate ad un singolo scopo e non ad un argomento. Devo arrivare a
-    // gestire meglio il vettore di boids che chiamerò flock perchè altrimenti
-    // com'è ora viene gestito in parte da main e da renderFrame di render, la
-    // domanda è, come lo chiamo?
-    // sviluppare una TU per statistics
-
-    // Un pelo meglio la divisione in layer:
-    // input layer: input e i due config file
-    // base/math layer: v2D e rand
-    // Simulation_lower:boid
-    // Simulation: simulation
-    // Render: render
-    // Application: conductor
-
-    //  Questo anche lo dovrei aggiungere nel render, relegarlo a quello
+    /////////////////////////////////////////////////////////////////////////
 
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";
-    return 1;
+    return EXIT_FAILURE;
+  } catch (...) {
+    std::cerr << "Unknown exception found \n";
+    return EXIT_FAILURE;
   }
 }
 // Controlla se è il distruttore che elimina IoWindow oppure se è la logica

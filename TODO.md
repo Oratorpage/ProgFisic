@@ -14,8 +14,26 @@
 - [ ] Tutto behaviour va riguardato e sistemato, non dovrebbe essere terribile, bisogna reindirizzare la logica che segue e fare in modo che segua il nuovo flusso
 - [ ] Input va rifatto ex-novo considerando tutta la nuova struttura dati, anche lì probabilmente sarà solo un redirezionamento di input, la logica effettiva non varia troppo solo I/O
 - [ ] Il main va fatto anche quello da capo e lì inoltre bisogna implementare una cosa che permetta di leggere i comandi da terminale come ci aveva fatto vedere giacomini all'epoca, sarebbe effettivamente molto figo e professionale
+- [ ] Sarebbe il caso di renderle template funzioni e classi? Per ora opero con un tipo, per le simulazioni fisiche i double sono lo standard per cui bho
 - [ ] Bisognerebbe iniziare a fare una mappa del programma, trova un sito/programma che permetta di farlo, magari uno di quelli tipo per gli homelab, così impari anche ad usarlo; poi domani se riesco guardo anche il router che ho trovato e provo a far funzionare il vecchio computer e farlo comunicare via wi-fi con junker
 
+
+# Controlli
+- [ ] Metodi che non vanno a modificare i membri di una classe (fields) devono essere dichiarati const
+- [ ] Passaggio by reference e by value, soprattutto negli operatori e funzioni membro
+- [ ] Valuta se chiamarli getter-setters o se lasciarli con i tuoi nomi attuali
+- [ ] Elimina funzioni membro o libere inutili (se pensi utili nel futuro commentale)
+- [ ] Sistema i costruttori in maniera da renderli deleganti (penso sia possibile solo per boid)
+- [ ] Come scritto a slide 150 non inizializzare i membri con {} vuote, delle due inserisci dei valori (penso che per il caso di simulation per esempio, con World ed altre struct e classi membro, passi attraverso con {} e vada alla sua inizializzazione di default quindi lì forse non c'è bisogno di togliere le graffe, vedi la documentazione)
+- [ ] Se in un costruttore inizializzo un membro che è solo value const, allora delle due è meglio inizializzarlo nella classe e lasciare che il compilatore crei un default constructor
+- [ ] Forse è il caso di definire un'invariante di classe meglio per i boid? per dire un assert sul fatto che la velocità debba essere minore o uguale o bho
+- [ ] Definire correttamente i throw in base al tipo e assicurarsi che siano caught "catch" per const&
+- [ ] Effettivamente definire dei throw nei costruttori per meglio stabilire l'invarianza di classe?
+- [ ] Guarda se si può fare la somma del cm con un algoritmo per la variazione di velocità comportamentale
+- [ ] Indaga sulla slide 228 ("the type has to be complete", referring to definitin) Non significa che bisogna anche sviluppare tutti gli operatori ed i modi per manipolarlo vero? Come al solito penso sia riferito alle cose effettivamente utili
+- [ ] Fai un check sulle funzioni non metodo definite negli header, ce ne sono alcune non metodo? Vanno definite inline allora
+
+- Fatto fino a slide 243, il resto è gestione delle risorse, valori sull'heap e cose del genere, non lo farò certamente ora in quanto non serve, quando servirà  ci tornerò
 
 
 # Top Priorities

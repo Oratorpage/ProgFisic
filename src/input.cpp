@@ -4,6 +4,14 @@
 #include <stdexcept>
 
 namespace bs {
+
+// Ho idea l'input di doverlo rifare un pochino, in particolare se voglio fare
+// l'input di time_factor direttamente per cli; Interessante la cosa che la
+// funzione di conversione da stringa a double di std modifichi anche il size_t
+// di cui si fa input, così si può andare a verificare direttamente se è stato
+// processato correttamente prendendo la dimensione della stringa inserita e di
+// size_t aggiornato
+
 // Due scelte qua, o faccio un void trim(std::string& line) oppure lo lascio
 // così, in teoria non ci dovrebbero essere problemi se anche non faccio una
 // copia tanto leggo solo da file
