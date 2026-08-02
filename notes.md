@@ -35,5 +35,8 @@
 
     Bruh
 
+    ## Invarianza di classe
+    - [ ] Per simulation, dove ho struct come statistics che non posso inizializzare a qualcosa di utile perchè non (in realtà potrei fare una funzione void calculate statistics come per il vettore flock in maniera da inizializzarlo subito e sistemarlo in maniera corretta)
+
     # Main
     argc e argv sono abbreviazioni, sono parametri (arguments) di input del main, argc sarebbe argument count e argv sarebbe argument vector (array di string? char* argv[] o char** argv, indaghiamo meglio); li uso quando voglio che il main prenda argomenti dalla linea di comando o dalle impostazioni di avvio (uguale, solo che implicito) -> argc è sempre maggiore o uguale a uno poichè il nome del file è sempre il primo parametro/argomento

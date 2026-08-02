@@ -9,8 +9,18 @@ namespace bs {
 Conductor::Conductor(Config const& configuration, double time_factor)
     : con_{configuration},
       sim_{configuration.wp, configuration.bp, configuration.sp},
-      ren_{configuration.rp},
-      time_factor_{time_factor} {}
+      ren_{configuration.rp, configuration.bp},
+      time_factor_{time_factor} {
+  conInvariant();
+}
+
+void Conductor::conInvariant() {
+  if (time_factor_ <= 0) {
+    throw std::invalid_argument{
+        "time_factor value is not acceptable, cannot be less or equal to "
+        "zero"};
+  }
+}
 
 void Conductor::start() {
   sf::Clock clock;
@@ -18,6 +28,8 @@ void Conductor::start() {
 
   while (ren_.isFWOpen()) {
     ren_.manageEvents();
+    // sim_.uniteViewStats(ren_.getViewStats(sim_.currentFlock()));
+    ren_.renderFrame(sim_);
 
     double elapsed = clock.restart().asSeconds();
     time_buffer += elapsed * time_factor_;
@@ -25,10 +37,6 @@ void Conductor::start() {
       sim_.tick();
       time_buffer -= sim_.deltaTime();
     }
-    // sim_.calculateStats(sim_.currentFlock());
-    // Riferirsi alla pagina di simulation per la spiegazione rispetto
-    // all'ordine di simulation e render
-    ren_.renderFrame(sim_);
   }
 }
 

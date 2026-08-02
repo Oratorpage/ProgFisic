@@ -13,6 +13,8 @@ class World {
   double height_{};
   bool toroidal_{};
 
+  void worldInvariant();
+
  public:
   World(WorldParams const& wp);
 

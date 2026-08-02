@@ -15,7 +15,7 @@ Render::Render() = default;
 // Immagino per i parametri di sfml di poterli inizializzare fino a quanto ho
 // bisogno ed il resto saranno usati i parametri di default definiti dalle
 // classi di sfml, mi sembra la forma più corretta
-Render::Render(RenParams const& rp)
+Render::Render(RenParams const& rp, BoidProperties const& bp)
     : ren_params_{rp},
       flockWindow_{sf::VideoMode(rp.flock_window_parameters.width,
                                  rp.flock_window_parameters.height),
@@ -28,10 +28,10 @@ Render::Render(RenParams const& rp)
 
       non_pred_boid_shape_{makeBoidShape(sf::Color::Cyan)},
       pred_boid_shape_{makeBoidShape(sf::Color::Red)},
-      // Per esempio infatti cm_circle non mi serve e non lo posso usare se non
-      // separatamente prima, l'unica funzione che lo può cambiare è
-      // renderFrame()
-      statistics_text_{}  // Ha senso fare così?
+      detection_circle_shape_{
+          makeCircleShape(bp.detection_radius, sf::Color::Green)},
+      danger_circle_shape_{makeCircleShape(bp.danger_radius, sf::Color::Red)},
+      cm_circle_shape_{makeCenterDot()}
 
 {
   flockWindow_.setFramerateLimit(rp.flock_window_parameters.fps);
@@ -46,19 +46,28 @@ Render::Render(RenParams const& rp)
                    static_cast<float>(rp.flock_window_parameters.height / 2.)});
   view_.setSize({static_cast<float>(rp.flock_window_parameters.width),
                  static_cast<float>(rp.flock_window_parameters.height)});
-  // Dovrei inizializzare pure il testo? Che noia
-};  // 22 righe di costruttore, damn, fa un po' cagare così
+  initializeText(rp.font_path);
+};  // 32 righe di costruttore, damn, fa un po' cagare così
+
+void Render::renInvariant() {
+  if (flockWindow_.getSize().x <= 0 || flockWindow_.getSize().y <= 0) {
+    throw std::invalid_argument(
+        "flockWindow dimensions are not acceptable, width and height cannot be "
+        "less or equal to zero");
+  }
+  if (statisticsWindow_.getSize().x <= 0 ||
+      statisticsWindow_.getSize().y <= 0) {
+    throw std::invalid_argument(
+        "statisticsWindow dimensions are not acceptable, width and height "
+        "cannot be "
+        "less or equal to zero");
+  }
+  // Come faccio un check su view_ statistics_text_ e le forme? basta verificare
+  // che siano inizializzati?
+}
 
 bool Render::isFWOpen() const { return flockWindow_.isOpen(); }
 bool Render::isSWOpen() const { return statisticsWindow_.isOpen(); }
-V2D const& Render::flockWindowDimensions() const {
-  return {static_cast<double>(flockWindow_.getSize().x),
-          static_cast<double>(flockWindow_.getSize().y)};
-}
-V2D const& Render::statisticsWindowDimensions() const {
-  return {static_cast<double>(statisticsWindow_.getSize().x),
-          static_cast<double>(statisticsWindow_.getSize().y)};
-}
 
 void Render::manageEvents() {
   manageWindowEvents(flockWindow_);
@@ -93,6 +102,29 @@ void Render::manageWindowEvents(sf::RenderWindow& window) {
   }
 }
 
+void Render::initializeText(std::string const& path) {
+  sf::Font utilized_font;
+  if (!(utilized_font.loadFromFile(path))) {
+    throw std::invalid_argument(
+        "font not loaded correctly, try checking the font path");
+  }
+  statistics_text_.setFont(utilized_font);
+  statistics_text_.setCharacterSize(15);
+}
+
+std::string Render::getViewStats(std::vector<Boid> const& flock) {
+  int boid_in_view{0};
+  for (Boid b : flock) {
+    if (b.Pos().x <= view_.getSize().x && b.Pos().x) {
+      ++boid_in_view;
+    }
+  }
+
+  std::string output{
+      "Number of boids in view: " + std::to_string(boid_in_view) + " \n"};
+  return output;
+}
+
 void Render::renderFrame(Simulation const& sim) {
   flockWindow_.clear(sf::Color(150, 150, 150));
   statisticsWindow_.clear(sf::Color(150, 150, 150));
@@ -123,12 +155,12 @@ void Render::renderFrame(Simulation const& sim) {
     // deve fare solamente una cosa per volta, lo sposto in una funzione
     // visibleRad()
     if (ren_params_.op_rad) {
-      detection_circle_.setPosition(static_cast<float>(p.x),
-                                    static_cast<float>(p.y));
-      danger_circle_.setPosition(static_cast<float>(p.x),
-                                 static_cast<float>(p.y));
-      flockWindow_.draw(detection_circle_);
-      flockWindow_.draw(danger_circle_);
+      detection_circle_shape_.setPosition(static_cast<float>(p.x),
+                                          static_cast<float>(p.y));
+      danger_circle_shape_.setPosition(static_cast<float>(p.x),
+                                       static_cast<float>(p.y));
+      flockWindow_.draw(detection_circle_shape_);
+      flockWindow_.draw(danger_circle_shape_);
     }
 
     if (b.IsPredator()) {
@@ -138,10 +170,11 @@ void Render::renderFrame(Simulation const& sim) {
     }
   }
 
-  cm_circle_.setPosition(static_cast<float>(sim.currentStatistics().cm_pos.x),
-                         static_cast<float>(sim.currentStatistics().cm_pos.y));
+  cm_circle_shape_.setPosition(
+      static_cast<float>(sim.currentStatistics().cm_pos.x),
+      static_cast<float>(sim.currentStatistics().cm_pos.y));
 
-  flockWindow_.draw(cm_circle_);
+  flockWindow_.draw(cm_circle_shape_);
 
   // È meglio fare così ed avere l'immediata variazione (anche se non si vede
   // dal conductor che questa cosa sta venendo fatta? ) piuttosto che chiamare

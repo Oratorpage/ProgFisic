@@ -9,6 +9,8 @@ struct RenParams {
   WindowParams flock_window_parameters{};
   
   WindowParams statistics_window_parameters{};
+  
+  std::string font_path;
 
   bool op_rad{false};
 };

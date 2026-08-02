@@ -27,6 +27,8 @@ class Simulation {
   Statistics stats_;
 
   void buildFlock(SimParams const& sp);
+  void firstStats(std::vector<Boid> const& flock);
+  void simInvariant();
 
  public:
   // questo vuol dire che la simulazione inevitabilemente dipende dai parametri
@@ -43,6 +45,7 @@ class Simulation {
   Statistics const& currentStatistics() const;
 
   void calculateStats(std::vector<Boid> const& flock);
+  // void uniteViewStats(std::string const& viewstats);
   void tick();
 };
 }  // namespace bs

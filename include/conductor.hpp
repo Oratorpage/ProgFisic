@@ -18,6 +18,8 @@ class Conductor {
 
   double time_factor_{1.0};
 
+  void conInvariant();
+
  public:
   Conductor(Config const& configuration,
             double time_factor);

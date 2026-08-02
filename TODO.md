@@ -35,6 +35,8 @@
 
 - Fatto fino a slide 243, il resto è gestione delle risorse, valori sull'heap e cose del genere, non lo farò certamente ora in quanto non serve, quando servirà  ci tornerò
 
+- [ ] Il fatto che io non dia la possibilità di riprodurre lo stesso stato è un problema? Non è seed based, è  completamente randomico effettivamente
+
 
 # Top Priorities
 
