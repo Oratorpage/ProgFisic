@@ -112,19 +112,6 @@ void Render::initializeText(std::string const& path) {
   statistics_text_.setCharacterSize(15);
 }
 
-std::string Render::getViewStats(std::vector<Boid> const& flock) {
-  int boid_in_view{0};
-  for (Boid b : flock) {
-    if (b.Pos().x <= view_.getSize().x && b.Pos().x) {
-      ++boid_in_view;
-    }
-  }
-
-  std::string output{
-      "Number of boids in view: " + std::to_string(boid_in_view) + " \n"};
-  return output;
-}
-
 void Render::renderFrame(Simulation const& sim) {
   flockWindow_.clear(sf::Color(150, 150, 150));
   statisticsWindow_.clear(sf::Color(150, 150, 150));
@@ -176,9 +163,6 @@ void Render::renderFrame(Simulation const& sim) {
 
   flockWindow_.draw(cm_circle_shape_);
 
-  // È meglio fare così ed avere l'immediata variazione (anche se non si vede
-  // dal conductor che questa cosa sta venendo fatta? ) piuttosto che chiamare
-  // il calcolo del calcolo delle statistiche direttamente dal conduttore?
   statistics_text_.setString(sim.currentStatistics().statistics_output);
 
   statisticsWindow_.draw(statistics_text_);
@@ -199,8 +183,8 @@ sf::ConvexShape makeBoidShape(sf::Color const& boidcolor) {
   boid.setPoint(0, {20.f, 0.f});    // nose
   boid.setPoint(1, {-10.f, -8.f});  // back-down/right
   boid.setPoint(2, {-10.f, 8.f});   // back-up/left
-  // This shape does not need an origin as the up-left corner from which it
-  // originates is already in the perfect spot to represent the boid
+  // This shape does not need to be given a new origin as the up-left corner
+  // from which it originates is already the center of the boid
   boid.setFillColor(boidcolor);
   boid.setOutlineThickness(0.5f);
   boid.setOutlineColor(sf::Color::Black);

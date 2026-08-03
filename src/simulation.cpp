@@ -44,10 +44,10 @@ void Simulation::buildFlock(SimParams const& sp) {
   flock_.reserve(static_cast<long unsigned int>(total_boids_));
 
   for (int i{0}; i < sp.non_pred_boidnum; ++i) {
-    flock_.emplace_back(randVel(), randPos(world_.Dimensions()), false);
+    flock_.emplace_back(randVel(), randPos(world_.getDimensions()), false);
   }
   for (int i{0}; i < sp.pred_boidnum; ++i) {
-    flock_.emplace_back(randVel(), randPos(world_.Dimensions()), true);
+    flock_.emplace_back(randVel(), randPos(world_.getDimensions()), true);
   };
 }
 
@@ -63,7 +63,7 @@ void Simulation::firstStats(std::vector<Boid> const& flock) {
     // dal render, il numero di boid in visuale(schermo) dipende solamente da
     // quanti sono effettivamente presenti in view, il quale dipende da Render,
     // qua forse bisogna fare un'ultreriore divisione di responsabilità
-    if (b.Pos().x < (world_.Width()) && b.Pos().y < (world_.Height()) &&
+    if (b.Pos().x < (world_.getWidth()) && b.Pos().y < (world_.getHeight()) &&
         b.Pos().x > 0 && b.Pos().y > 0) {
       // ++stats_.in_window_count;
     }
@@ -86,34 +86,25 @@ void Simulation::simInvariant() {
   }
 }
 
-World const& Simulation::currentWorld() const { return world_; }
+World const& Simulation::currentWorld() const {
+  return world_;
+}  // Questo mai usato
 BoidProperties const& Simulation::boidProperties() const {
   return boid_properties_;
 }
 std::vector<Boid> const& Simulation::currentFlock() const {
   return flock_;
 }  // Il ritorno di questo vettore sarà un casino vero?
-double const Simulation::deltaTime() const {
-  return dt_;
-}  // È corretto che sia const il risultato no? per ora non ho bisogno che venga
-   // modificato
+double const Simulation::deltaTime() const { return dt_; }
 Statistics const& Simulation::currentStatistics() const { return stats_; }
 
 void Simulation::calculateStats(std::vector<Boid> const& flock) {
   stats_.cm_pos = {0, 0};
   stats_.avg_vel = {0, 0};
-  // stats_.in_window_count = {0};
   for (Boid b : flock) {
     V2D p = b.Pos();
     V2D v = b.Vel();
 
-    // Questo va cambiato in base a view perchè così perde di significato; è
-    // ovvio che i boid nel mondo non varieranno di numero ma il numero di
-    // quelli visibili dipende dalla visuale che ha la camera
-    // if (b.Pos().x < (world_.Width()) && b.Pos().y < (world_.Height()) &&
-    //     b.Pos().x > 0 && b.Pos().y > 0) {
-    //     ++stats_.in_window_count;
-    // }
     stats_.cm_pos += p;
     stats_.avg_vel += v;
   }
@@ -126,17 +117,15 @@ void Simulation::calculateStats(std::vector<Boid> const& flock) {
   std::string avg_vel_string{"Average velocity of the total flock: x :" +
                              std::to_string(stats_.avg_vel.x) + " , y: " +
                              std::to_string(stats_.avg_vel.y) + "\n"};
-  // std::string in_view_string{"Boids present in window view: " +
-  //                            std::to_string(stats_.in_window_count) + "\n"};
-  stats_.statistics_output = cm_string + avg_vel_string /*+ in_view_string*/;
-}
 
-// void Simulation::uniteViewStats(std::string const& view_stats_string){
-//   stats_.statistics_output += view_stats_string;
-// }
+  stats_.statistics_output = cm_string + avg_vel_string;
+}
 
 void Simulation::tick() {
   flock_ = applyFlockBehaviouralMovement(flock_, dt_, boid_properties_);
+  if (world_.isToroidal()) {
+    world_.wrap(flock_);
+  }
   calculateStats(flock_);
 }
 

@@ -1,5 +1,5 @@
 # Big things
-- [ ] Finishing the cooperation between simulatino and behaviour, between render, simulation and conductor
+- [ ] Finishing the cooperation between simulation and behaviour, ~between render, simulation and conductor~
 - [ ] Fixing the input (redirecting logic)
 - [ ] Making the shell prompt argv argc thingamabob
 

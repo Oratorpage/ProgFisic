@@ -20,36 +20,40 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
 
   const double detection_rad_sq =
       boid_params.detection_radius * boid_params.detection_radius;
+
   if (distSq(a.Pos(), b.Pos()) > detection_rad_sq) {
     return false;
   }
+  // If it is already within radius then it can just be checked if it is within
+  // the cone
   if (boid_params.angle_of_view >= 360.) {
     return true;
   }
 
   // The vector of the velocity of the boid a, the one that gets compared
-  // against all others, is the vector of the axis passing through a, based on
-  // that and the vector of the distance with the other boid, i determinate the
-  // angle
-  const V2D vectVelA{a.Vel()};
-  const V2D vectDistance{a.Pos() - b.Pos()};
+  // against all others, is the vector representing the axis passing through a,
+  // based on that and the vector of the distance with the other boid, b, the
+  // angle can be found
+  const V2D vect_velA{a.Vel()};
+  const V2D vect_distanceAB{a.Pos() - b.Pos()};
 
-  const double velANorm{norm(vectVelA)};
-  const double distanceNorm{norm(vectDistance)};
+  const double velA_norm{norm(vect_velA)};
+  const double distance_norm{norm(vect_distanceAB)};
 
-  if (distanceNorm <= valLim) {
+  if (distance_norm <= valLim) {
     return true;
   }
-  const double cosHalfAngleView{
+  const double cos_half_angle_view{
       std::cos(boid_params.angle_of_view * 0.5 * piconst / 180.)};
 
-  const double cosAngle{dotprod(vectVelA, vectDistance) / velANorm *
-                        distanceNorm};
+  // Here the cosine relation with the norm is utilized
+  const double cos_angle{dotprod(vect_velA, vect_distanceAB) / velA_norm *
+                         distance_norm};
 
-  if (cosAngle >= cosHalfAngleView && velANorm <= valLim) {
+  if (cos_angle >= cos_half_angle_view && velA_norm <= valLim) {
     return true;
   }
-  return cosAngle >= cosHalfAngleView;
+  return cos_angle >= cos_half_angle_view;
 }
 
 std::vector<Boid*> collectVisibleBoids(std::vector<Boid> const& flock,
@@ -57,9 +61,7 @@ std::vector<Boid*> collectVisibleBoids(std::vector<Boid> const& flock,
                                        BoidProperties const& boid_params) {
   std::vector<Boid*> nearboids;
 
-  nearboids.reserve(flock.size() -
-                    1);  // Controlla se sensato, in teoria sì perchè quello
-                         // contro cui faccio i check non viene aggiunto
+  nearboids.reserve(flock.size() - 1);
   for (Boid const& bj : flock) {
     if (isBoidVisibleInCone(bi, bj, boid_params)) {
       nearboids.emplace_back(&bj);
@@ -77,7 +79,7 @@ std::vector<Boid> applyFlockBehaviouralMovement(
                              boid_params.danger_radius};
 
   for (Boid const& bi : flock) {
-    std::vector<Boid*> nearboids{collectVisibleBoids(buffer, bi, boid_params)};
+    std::vector<Boid*> nearboids{collectVisibleBoids(flock, bi, boid_params)};
 
     Boid buffer_boid{bi};
     V2D separation_vel;
@@ -86,20 +88,11 @@ std::vector<Boid> applyFlockBehaviouralMovement(
 
     V2D cm_pos;
 
-    // Imma fix allthis after my run, peace
-
     // Loop that calculates vchange based on nearby boids
     if (!nearboids.empty()) {
       const double invNear = 1. / static_cast<double>(nearboids.size());
 
       for (Boid* bj : nearboids) {
-        // Questa cosa non dovrebbe poter accadere poichè quelli uguali per ogni
-        // nearboids vengono esclusi da isBoidVisibleInCone, non vede mai se
-        // stesso
-        if (&bi == bj) {
-          continue;
-        }
-
         if (bi.IsPredator() && !(bj->IsPredator())) {
           separation_vel -= bj->Pos() - bi.Pos();
           cm_pos += bj->Pos();
@@ -134,6 +127,7 @@ std::vector<Boid> applyFlockBehaviouralMovement(
 
       cm_pos = invNear * cm_pos;
     }
+
     buffer_boid.update(separation_vel + alignment_vel + cohesion_vel, dt);
 
     buffer.emplace_back(buffer_boid);

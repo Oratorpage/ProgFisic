@@ -52,8 +52,6 @@ class Render {
 
   void initializeText(std::string const& path);
 
-  std::string getViewStats(std::vector<Boid> const& flock);
-
   void renderFrame(Simulation const& simulation);
 };
 

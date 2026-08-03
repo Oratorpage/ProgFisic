@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     double time_factor{1.};
 
     if(argc == 3){
-      time_factor =bs::
+      time_factor =0.;
     }
 
     bs::Conductor application{configuration, time_factor};

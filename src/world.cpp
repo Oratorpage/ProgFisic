@@ -21,10 +21,10 @@ void World::worldInvariant() {
   }
 }
 
-double const& World::Width() const { return width_; }
-double const& World::Height() const { return height_; }
-bool const& World::Toroidal() const { return toroidal_; }
-V2D const& World::Dimensions() const { return {width_, height_}; }
+double const& World::getWidth() const { return width_; }
+double const& World::getHeight() const { return height_; }
+bool const& World::isToroidal() const { return toroidal_; }
+V2D const& World::getDimensions() const { return {width_, height_}; }
 
 void World::wrap(std::vector<Boid> const& flock) {
   for (Boid b : flock) {

@@ -15,23 +15,13 @@ class Boid {
   bool is_predator_{false};
 
  public:
-  Boid();
-  Boid(V2D const& v, V2D const& p);
   Boid(V2D const& v, V2D const& p, bool is_predator);
 
   V2D const& Vel() const;
   V2D const& Pos() const;
   bool IsPredator() const;
 
-  // La funzione di update deve solo fare l'update, il tempo è controllato da
-  // conductor che sincronizza render e simulation, il calcolo della velocità
-  // quando è toroidale anche; l'unica cosa scomoda che poi capirò come fare è
-  // il wrap per quando è toroidale ma onestamente quello lo posso relegare a
-  // World, come funzione membro, wrap tale che prende il flock, itera su di
-  // esso ed in base alla distanza in più rispetto ai bordi del mondo gli fa
-  // fare il wrap
-  void vUpdate(V2D const& vel_change);
-  void pUpdate(double dt);
+  
 
   void update(V2D const& vel_update, double dt);
   void pChange(double value, bool x);

@@ -2,8 +2,6 @@
 
 namespace bs {
 
-Boid::Boid() = default;
-Boid::Boid(V2D const& v, V2D const& p) : velocity_{v}, position_{p} {}
 Boid::Boid(V2D const& v, V2D const& p, bool is_predator)
     : velocity_{v}, position_{p}, is_predator_{is_predator} {}
 
@@ -23,14 +21,6 @@ void Boid::pChange(double value, bool x){
   } else {
     position_.y = value;
   }
-}
-
-void Boid::vUpdate(V2D const& vel_change){
-  velocity_ += vel_change;
-}
-
-void Boid::pUpdate(double dt) {
-
 }
 
 }  // namespace bs

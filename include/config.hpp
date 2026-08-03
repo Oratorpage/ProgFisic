@@ -1,8 +1,8 @@
 #ifndef BS_CONFIG_HPP
 #define BS_CONDIG_HPP
 
-#include "renderParams.hpp"
 #include "simulationParams.hpp"
+#include "renderParams.hpp"
 #include "worldParams.hpp"
 #include "boidProperties.hpp"
 
