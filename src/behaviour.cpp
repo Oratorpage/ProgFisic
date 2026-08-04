@@ -93,17 +93,20 @@ std::vector<Boid> applyFlockBehaviouralMovement(
       const double invNear = 1. / static_cast<double>(nearboids.size());
 
       for (Boid* bj : nearboids) {
+        // predator and prey
         if (bi.IsPredator() && !(bj->IsPredator())) {
           separation_vel -= bj->Pos() - bi.Pos();
           cm_pos += bj->Pos();
         }
 
+        // prey and predator
         if (!(bi.IsPredator()) && bj->IsPredator()) {
           separation_vel += (bj->Pos() - bi.Pos()) * 2.;
           alignment_vel -= bj->Vel();
           cm_pos -= bj->Pos();
         }
 
+        // 2 predators
         if (bi.IsPredator() && bj->IsPredator()) {
           if (distSq(bi.Pos(), bj->Pos()) < danger_rad_sq) {
             separation_vel += bj->Pos() - bi.Pos();
@@ -112,6 +115,7 @@ std::vector<Boid> applyFlockBehaviouralMovement(
           cm_pos += bj->Pos();
         }
 
+        // 2 preys
         if (!(bi.IsPredator()) && !(bj->IsPredator())) {
           if (distSq(bi.Pos(), bj->Pos()) < danger_rad_sq) {
             separation_vel += bj->Pos() - bi.Pos();
@@ -122,12 +126,14 @@ std::vector<Boid> applyFlockBehaviouralMovement(
       }
       separation_vel = -boid_params.separation * separation_vel;
       alignment_vel =
-          boid_params.allignment * (invNear * alignment_vel - bi.Vel());
+          boid_params.alignment * (invNear * alignment_vel - bi.Vel());
       cohesion_vel = boid_params.cohesion * (cm_pos - bi.Pos());
 
       cm_pos = invNear * cm_pos;
     }
 
+    // Devo fare il check e la limitazione sulla velocità prima di ogni
+    // piazzarlo sul buffer
     buffer_boid.update(separation_vel + alignment_vel + cohesion_vel, dt);
 
     buffer.emplace_back(buffer_boid);

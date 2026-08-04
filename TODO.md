@@ -1,6 +1,6 @@
 # Big things
 - [ ] Finishing the cooperation between simulation and behaviour, ~between render, simulation and conductor~
-- [ ] Fixing the input (redirecting logic)
+- [x] Fixing the input (redirecting logic) -> mancano i test, della cartella test e quelli pratici
 - [ ] Making the shell prompt argv argc thingamabob
 
 # DUDE

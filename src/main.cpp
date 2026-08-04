@@ -17,12 +17,12 @@ int main(int argc, char** argv) {
 
     // Qua va cambiato readSimulationParams per prendere char** argv o char*
     // argv[] e soprattutto che dia come output configuration
-    bs::Config configuration{bs::readSimulationParams(argv[1])};
+    bs::Config configuration{bs::readParams(argv[1])};
 
     double time_factor{1.};
 
-    if(argc == 3){
-      time_factor =0.;
+    if (argc == 3) {
+      time_factor = 0.;
     }
 
     bs::Conductor application{configuration, time_factor};
@@ -50,5 +50,3 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 }
-// Controlla se è il distruttore che elimina IoWindow oppure se è la logica
-// del programma

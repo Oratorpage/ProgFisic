@@ -12,7 +12,7 @@ struct BoidProperties {
   double max_speed{};
 
   double separation{0.};
-  double allignment{0.};
+  double alignment{0.};
   double cohesion{0.};
 };
 
