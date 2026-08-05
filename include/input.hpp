@@ -4,6 +4,7 @@
 #include <string>
 
 #include "config.hpp"
+#include <unordered_set>
 
 namespace bs {
 std::string trimSpaces(std::string const& line);

@@ -1,28 +1,38 @@
-#This is the standard configuration file for the simulation parameters.
-#The configuration format is <parameter name/key> = <value> or <parameter name/key> : <value> 
-#Spaces are necessary and must follow this pattern in order for the values to be parsed correctly.
-#Any line starting with # or empty will be skipped, comments are made with # are not accepted after values# but are not accepted on value lines, they must have a dedicated line.
-#Values accepted are numbers only when integers, numbers with a fullstop (.) at the end when doubles and a 1 for true, or 0 for false when booleans.
-#i.e. non_pred_boidnum = 500 (integer)
-#     pred_boid_num = 0      (integer)
-#     separation : 20.       (double)
-#     allignment : 3.        (double)
-#     cohesion = 5.          (double)
-#     detection_rad = 55.    (double)
-#     danger_rad : 23.       (double)
-#     angle_of_view = 360.   (double)
-#     toroidal = false       (boolean)
-#     op_rad : false         (boolean)
-#Change this file to change the simulation parameters or change the path in the main to use a custom parameters file, some are provided in the configuration folder
+#Configuration file with standard parameters
 
+[simulation]
 non_pred_boidnum = 250
 pred_boidnum = 1
-separation = 20.
-allignment = 3.
-cohesion = 5.
-detection_rad = 55.
-danger_rad = 23.
-angle_of_view = 360.
-toroidal : true
+dt = 0.01
+
+[render]
+flock_window_title = Simulation Window
+flock_window_width = 800
+flock_window_height = 600
+flock_window_posX = 500
+flock_window_posY = 400
+flock_window_fps = 60
+
+statistics_window_title = Statistics Window
+statistics_window_width = 500
+statistics_window_height = 300
+statistics_window_posX = 300
+statistics_window_posY = 100
+statistics_window_fps = 60
+
+font_path = config/DejaVuSans.ttf
 op_rad : false
 
+[world]
+world_width = 800
+world_height = 600
+toroidal : false
+
+[boids]
+detection_radius = 70
+danger_radius = 35
+angle_of_view = 200
+max_speed = 250
+separation = 0.9
+alignment = 0.5
+cohesion = 0.3

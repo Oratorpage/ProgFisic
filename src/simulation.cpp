@@ -75,14 +75,40 @@ void Simulation::firstStats(std::vector<Boid> const& flock) {
 }
 
 void Simulation::simInvariant() {
+  if (boid_properties_.detection_radius <= 0) {
+    throw std::invalid_argument{
+        "detection_radius value is not acceptable, cannot be less or equal to "
+        "zero \n"};
+  }
+  if (boid_properties_.danger_radius <= 0) {
+    throw std::invalid_argument{
+        "danger_radius value is not acceptable, cannot be less or equal to "
+        "zero \n"};
+  }
+  if (boid_properties_.angle_of_view <= 0) {
+    throw std::invalid_argument{
+        "angle_of_view value is not acceptable, cannot be less or equal to "
+        "zero \n"};
+  }
+  if (boid_properties_.max_speed <= 0) {
+    throw std::invalid_argument{
+        "Initialize the max_speed with a positive value, the negative one will "
+        "be taken care of \n"};
+  }
+  //I coefficenti possono essere minori o uguali a zero? Ha senso?F
+  if (boid_properties_.danger_radius > boid_properties_.detection_radius) {
+    throw std::invalid_argument{
+        "danger_radius value is larger than detection_radius value, it is not "
+        "acceptable \n"};
+  }
   if (total_boids_ <= 0) {
     throw std::invalid_argument{
         "total_boids value is not acceptable, cannot be less or equal to "
-        "zero"};
+        "zero \n"};
   }
   if (dt_ <= 0) {
     throw std::invalid_argument{
-        "dt value is not acceptable, cannot be less or equal to zero"};
+        "dt value is not acceptable, cannot be less or equal to zero \n"};
   }
 }
 
@@ -95,7 +121,7 @@ BoidProperties const& Simulation::boidProperties() const {
 std::vector<Boid> const& Simulation::currentFlock() const {
   return flock_;
 }  // Il ritorno di questo vettore sarà un casino vero?
-double const Simulation::deltaTime() const { return dt_; }
+double Simulation::deltaTime() const { return dt_; }
 Statistics const& Simulation::currentStatistics() const { return stats_; }
 
 void Simulation::calculateStats(std::vector<Boid> const& flock) {

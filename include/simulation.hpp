@@ -39,9 +39,7 @@ class Simulation {
   World const& currentWorld() const;
   BoidProperties const& boidProperties() const;
   std::vector<Boid> const& currentFlock() const;
-  double const deltaTime()
-      const;  // Qua ho davvero bisogno sia costante?(deltaTime) Senza dubbio mi previene
-              // il cambiarlo in mezzo alla simulazione
+  double deltaTime() const;
   Statistics const& currentStatistics() const;
 
   void calculateStats(std::vector<Boid> const& flock);

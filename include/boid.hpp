@@ -25,6 +25,7 @@ class Boid {
 
   void update(V2D const& vel_update, double dt);
   void pChange(double value, bool x);
+  void limitVelocity(double const max_speed);
 };
 
 }  // namespace bs

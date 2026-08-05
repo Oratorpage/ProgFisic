@@ -7,6 +7,7 @@
 
 #include "boid.hpp"
 #include "renderParams.hpp"
+#include "simulation.hpp"
 
 namespace bs {
 
@@ -25,6 +26,7 @@ class Render {
   sf::CircleShape danger_circle_shape_;
   sf::CircleShape cm_circle_shape_;
 
+  sf::Font used_font_;
   sf::View view_;
   sf::Text statistics_text_;
 
@@ -42,7 +44,7 @@ class Render {
 
  public:
   Render();
-  Render(RenParams const& sp, BoidProperties const& bp);
+  Render(RenParams const& rp, BoidProperties const& bp);
 
   bool isFWOpen() const;
   bool isSWOpen() const;

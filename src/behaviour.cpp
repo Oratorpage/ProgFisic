@@ -56,13 +56,12 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   return cos_angle >= cos_half_angle_view;
 }
 
-std::vector<Boid*> collectVisibleBoids(std::vector<Boid> const& flock,
-                                       Boid const& bi,
+std::vector<Boid*> collectVisibleBoids(std::vector<Boid>& flock, Boid const& bi,
                                        BoidProperties const& boid_params) {
   std::vector<Boid*> nearboids;
 
   nearboids.reserve(flock.size() - 1);
-  for (Boid const& bj : flock) {
+  for (Boid& bj : flock) {
     if (isBoidVisibleInCone(bi, bj, boid_params)) {
       nearboids.emplace_back(&bj);
     }
@@ -70,9 +69,9 @@ std::vector<Boid*> collectVisibleBoids(std::vector<Boid> const& flock,
   return nearboids;
 }
 
+// Qua gli si potrebbe direttamente fare l'input della simulazione
 std::vector<Boid> applyFlockBehaviouralMovement(
-    std::vector<Boid> const& flock, double dt,
-    BoidProperties const& boid_params) {
+    std::vector<Boid>& flock, double dt, BoidProperties const& boid_params) {
   std::vector<Boid> buffer{flock};
 
   const double danger_rad_sq{boid_params.danger_radius *
@@ -135,6 +134,7 @@ std::vector<Boid> applyFlockBehaviouralMovement(
     // Devo fare il check e la limitazione sulla velocità prima di ogni
     // piazzarlo sul buffer
     buffer_boid.update(separation_vel + alignment_vel + cohesion_vel, dt);
+    buffer_boid.limitVelocity(boid_params.max_speed);
 
     buffer.emplace_back(buffer_boid);
   }

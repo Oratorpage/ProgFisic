@@ -3,20 +3,19 @@
 
 #include <string>
 
-namespace bs{
-    struct WindowParams{
-        std::string title{"Window"};
+namespace bs {
+struct WindowParams {
+  std::string title{"Window"};
 
-        unsigned int width{800};
-        unsigned int height{600};
+  unsigned int width{800U};
+  unsigned int height{600U};
 
-        unsigned int posX{400};
-        unsigned int posY{300};
+  int posX{400};
+  int posY{300};
 
-        unsigned int fps{60};
+  unsigned int fps{60U};
+};
 
-    };
-
-}
+}  // namespace bs
 
 #endif

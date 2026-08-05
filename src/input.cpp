@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <stdexcept>
-#include <unordered_set>
 
 namespace bs {
 
@@ -57,7 +56,7 @@ unsigned int parseUnsignedInt(std::string const& string_value) {
         string_value + " ; refer to the above instructions for typing. \n");
   }
   if (value >= 0) {
-    return value;
+    return static_cast<unsigned int>(value);
   } else {
     return static_cast<unsigned int>(-value);
   }
@@ -125,9 +124,9 @@ void readRenderSection(RenParams& ren_par,
   } else if (key == "flock_window_height") {
     ren_par.flock_window_parameters.height = parseUnsignedInt(string_value);
   } else if (key == "flock_window_posX") {
-    ren_par.flock_window_parameters.posX = parseUnsignedInt(string_value);
+    ren_par.flock_window_parameters.posX = parseInt(string_value);
   } else if (key == "flock_window_posY") {
-    ren_par.flock_window_parameters.posY = parseUnsignedInt(string_value);
+    ren_par.flock_window_parameters.posY = parseInt(string_value);
   } else if (key == "flock_window_fps") {
     ren_par.flock_window_parameters.fps = parseUnsignedInt(string_value);
   }
@@ -140,12 +139,14 @@ void readRenderSection(RenParams& ren_par,
     ren_par.statistics_window_parameters.height =
         parseUnsignedInt(string_value);
   } else if (key == "statistics_window_posX") {
-    ren_par.statistics_window_parameters.posX = parseUnsignedInt(string_value);
+    ren_par.statistics_window_parameters.posX = parseInt(string_value);
   } else if (key == "statistics_window_posY") {
-    ren_par.statistics_window_parameters.posY = parseUnsignedInt(string_value);
+    ren_par.statistics_window_parameters.posY = parseInt(string_value);
   } else if (key == "statistics_window_fps") {
     ren_par.statistics_window_parameters.fps = parseUnsignedInt(string_value);
-  } else if (key == "font_path") {
+  }
+
+  else if (key == "font_path") {
     ren_par.font_path = string_value;
   } else if (key == "op_rad") {
     ren_par.op_rad = parseBool(string_value);

@@ -1,5 +1,5 @@
 #ifndef BS_CONFIG_HPP
-#define BS_CONDIG_HPP
+#define BS_CONFIG_HPP
 
 #include "simulationParams.hpp"
 #include "renderParams.hpp"

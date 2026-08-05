@@ -10,7 +10,7 @@
 int main(int argc, char** argv) {
   try {
     if (argc < 2) {
-      throw std::runtime_error{"No configurational file selected"};
+      throw std::runtime_error{"No configuration file selected"};
     } else if (argc > 3) {
       throw std::runtime_error{"Too many arguments"};
     }
@@ -26,21 +26,7 @@ int main(int argc, char** argv) {
     }
 
     bs::Conductor application{configuration, time_factor};
-
     application.start();
-    /////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////
-    sf::Font out_font;
-    // Questo deve essere letto dalla directory corrente o da un include dunque
-    // non va bene per ora
-    if (out_font.loadFromFile(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
-      std::cout << "Font file was  loaded correctly \n";
-    }
-    sf::Text statistics;
-    statistics.setFont(out_font);
-    statistics.setCharacterSize(15);
-    /////////////////////////////////////////////////////////////////////////
 
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

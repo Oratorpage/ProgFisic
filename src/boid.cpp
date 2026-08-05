@@ -10,16 +10,32 @@ V2D const& Boid::Pos() const { return position_; }
 bool Boid::IsPredator() const { return is_predator_; }
 
 void Boid::update(V2D const& vel_update, double dt) {
-  
   velocity_ += vel_update * dt;
   position_ += velocity_ * dt;
 }
 
-void Boid::pChange(double value, bool x){
-  if(x == true){
+void Boid::pChange(double value, bool x) {
+  if (x == true) {
     position_.x = value;
   } else {
     position_.y = value;
+  }
+}
+
+// Così però lungo le diagonali vanno più veloci, dovrei fare if velocity_sq >
+// max_speed sq
+void Boid::limitVelocity(double const max_speed) {
+  if (velocity_.x > max_speed) {
+    velocity_.x = max_speed;
+  }
+  if (velocity_.x < -max_speed) {
+    velocity_.x = -max_speed;
+  }
+  if (velocity_.y > max_speed) {
+    velocity_.y = max_speed;
+  }
+  if (velocity_.y < -max_speed) {
+    velocity_.y = -max_speed;
   }
 }
 

@@ -33,6 +33,15 @@ void Conductor::start() {
 
     double elapsed = clock.restart().asSeconds();
     time_buffer += elapsed * time_factor_;
+    // Ok il problema è qua: io non ho sim_.deltaTime() come il tempo impiegato
+    // dalla simulazione per fare un tick ma come il dt con cui lavora, dunque
+    // questo non ha senso, va cambiato
+    // Prendo come time_buffer il tempo che ci ha messo a fare il render e con
+    // questa configurazione al secondo ciclo anche il loop del tempo(feedback
+    // positivo) e finchè è maggiore del dt della simulazione (0.01) faccio
+    // andare la simulazione e ci tolgo di nuovo il valore costante 0.01
+    // Non si può fare così, va cambiato deltaTime e secondo me con questo
+    // ordine di render e simulazione anche l'algoritmo per il tempo costante
     while (time_buffer >= sim_.deltaTime()) {
       sim_.tick();
       time_buffer -= sim_.deltaTime();

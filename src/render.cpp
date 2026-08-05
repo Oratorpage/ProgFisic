@@ -47,6 +47,7 @@ Render::Render(RenParams const& rp, BoidProperties const& bp)
   view_.setSize({static_cast<float>(rp.flock_window_parameters.width),
                  static_cast<float>(rp.flock_window_parameters.height)});
   initializeText(rp.font_path);
+  renInvariant();
 };  // 32 righe di costruttore, damn, fa un po' cagare così
 
 void Render::renInvariant() {
@@ -103,13 +104,13 @@ void Render::manageWindowEvents(sf::RenderWindow& window) {
 }
 
 void Render::initializeText(std::string const& path) {
-  sf::Font utilized_font;
-  if (!(utilized_font.loadFromFile(path))) {
+  if (!(used_font_.loadFromFile(path))) {
     throw std::invalid_argument(
         "font not loaded correctly, try checking the font path");
   }
-  statistics_text_.setFont(utilized_font);
+  statistics_text_.setFont(used_font_);
   statistics_text_.setCharacterSize(15);
+  statistics_text_.setString("Invalid");
 }
 
 void Render::renderFrame(Simulation const& sim) {
@@ -125,6 +126,7 @@ void Render::renderFrame(Simulation const& sim) {
     // contrario
     // Questo ulteriormente lo potrei spostare in una funzione separata,
     // rotate()
+
     double ang = std::atan2(v.y, v.x) * 180.0 / PI;
     if (b.IsPredator()) {
       pred_boid_shape_.setRotation(static_cast<float>(ang));
@@ -166,7 +168,6 @@ void Render::renderFrame(Simulation const& sim) {
   statistics_text_.setString(sim.currentStatistics().statistics_output);
 
   statisticsWindow_.draw(statistics_text_);
-
   statisticsWindow_.display();
   flockWindow_.display();
 }

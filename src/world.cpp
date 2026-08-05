@@ -5,9 +5,10 @@ namespace bs {
 World::World(WorldParams const& wp)
     : width_{wp.dimensions.x},
       height_{wp.dimensions.y},
+      dimensions_{wp.dimensions},
       toroidal_{wp.toroidal} {
-        worldInvariant();
-      };
+  worldInvariant();
+};
 
 void World::worldInvariant() {
   if (width_ <= 0) {
@@ -24,7 +25,7 @@ void World::worldInvariant() {
 double const& World::getWidth() const { return width_; }
 double const& World::getHeight() const { return height_; }
 bool const& World::isToroidal() const { return toroidal_; }
-V2D const& World::getDimensions() const { return {width_, height_}; }
+V2D const& World::getDimensions() const { return dimensions_; }
 
 void World::wrap(std::vector<Boid> const& flock) {
   for (Boid b : flock) {
