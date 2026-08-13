@@ -24,29 +24,32 @@ void Conductor::conInvariant() {
 
 void Conductor::start() {
   sf::Clock clock;
-  double time_buffer{};
 
   while (ren_.isFWOpen()) {
+    // Dubito sia la gestione degli eventi a causare problemi, essendo una
+    // funzione entra nel while di gestione degli eventi solo se prende un
+    // evento, finchè non lo gestisce rimane nel while ma poichè di default
+    // breaka allora esce comunque
     ren_.manageEvents();
     // sim_.uniteViewStats(ren_.getViewStats(sim_.currentFlock()));
-    ren_.renderFrame(sim_);
 
-    double elapsed = clock.restart().asSeconds();
-    time_buffer += elapsed * time_factor_;
-    // Ok il problema è qua: io non ho sim_.deltaTime() come il tempo impiegato
-    // dalla simulazione per fare un tick ma come il dt con cui lavora, dunque
-    // questo non ha senso, va cambiato
-    // Prendo come time_buffer il tempo che ci ha messo a fare il render e con
-    // questa configurazione al secondo ciclo anche il loop del tempo(feedback
-    // positivo) e finchè è maggiore del dt della simulazione (0.01) faccio
-    // andare la simulazione e ci tolgo di nuovo il valore costante 0.01
-    // Non si può fare così, va cambiato deltaTime e secondo me con questo
-    // ordine di render e simulazione anche l'algoritmo per il tempo costante
-    while (time_buffer >= sim_.deltaTime()) {
-      sim_.tick();
-      time_buffer -= sim_.deltaTime();
-    }
+    // Il problema è probabilmente qua (non è la limitazione della velocità
+    // perchè l'avevo fatto) Bruh, ho semplificato l'algoritmo in modo da capire
+    // se il problema sia l'update o altro ma comunque non funzia
+    sim_.tick();
+    // There is no way to have the render's framerate be fixed and indipendent
+    // from the simulation time; either I calculate all of the simulation's
+    // steps and save them in a log file, which allows me to flip between them
+    // like a video at the speed I desire, or the framerate of the render will
+    // always be as fast as the simulation.
+
+    // Sposto il render sotto il calcolo perchè più semplice da manneggiare per
+    // le mie necessità, così va sistemato l'edge case della prima
+    // inizializzazione del testo
+    //Bruh andiamo per esclusione a questo punto
+    ren_.renderFrame(sim_);
   }
 }
+//È possibile che l'errore derivi da un'incapsulazione della finestra in una classe ed il non riuscire ad accedere ad altro? Non trovo alcun problema con il render o la simulazione, se anche 
 
 }  // namespace bs

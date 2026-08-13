@@ -27,8 +27,8 @@ double const& World::getHeight() const { return height_; }
 bool const& World::isToroidal() const { return toroidal_; }
 V2D const& World::getDimensions() const { return dimensions_; }
 
-void World::wrap(std::vector<Boid> const& flock) {
-  for (Boid b : flock) {
+void World::wrap(std::vector<Boid>& flock) {
+  for (Boid& b : flock) {
     if (b.Pos().x > width_) {
       b.pChange(width_ - b.Pos().x, true);
     }
@@ -43,4 +43,38 @@ void World::wrap(std::vector<Boid> const& flock) {
     }
   };
 }
+
+void World::contain(std::vector<Boid>& flock, BoidProperties const& bp) {
+  for (Boid& b : flock) {
+    V2D vel_update{};
+    vel_update = resultVel(b, bp);
+    b.vUpdate(vel_update);
+  }
+}
+
+V2D World::resultVel(Boid const& boid, BoidProperties const& bp) {
+  V2D p{boid.Pos()};
+  V2D v{boid.Vel()};
+  double lim_x{width_ - 15.};
+  double lim_y{height_ - 15.};
+
+  V2D resuling_velocity{0., 0.};
+
+  if (p.x > lim_x) {
+    resuling_velocity.x +=
+        -(bp.max_speed / (width_ - p.x) + 2. * v.x / bp.max_speed);
+  }
+  if (p.x < 15.) {
+    resuling_velocity.x += bp.max_speed / p.x - 2. * v.x / bp.max_speed;
+  }
+  if (p.y > lim_y) {
+    resuling_velocity.y +=
+        -(bp.max_speed / (height_ - p.y) + 2. * v.y / bp.max_speed);
+  }
+  if (p.y < 15.) {
+    resuling_velocity.y += bp.max_speed / p.y - 2. * v.y / bp.max_speed;
+  }
+  return resuling_velocity;
+}
+
 }  // namespace bs

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "boid.hpp"
+#include "boidProperties.hpp"
 #include "worldParams.hpp"
 
 namespace bs {
@@ -24,7 +25,10 @@ class World {
   bool const& isToroidal() const;
   V2D const& getDimensions() const;
   
-  void wrap(std::vector<Boid> const& flock);
+  void wrap(std::vector<Boid>& flock);
+  void contain(std::vector<Boid>& flock, BoidProperties const& bp);
+
+  V2D resultVel(Boid const& boid, BoidProperties const& bp);
 };
 }  // namespace bs
 

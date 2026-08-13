@@ -1,5 +1,7 @@
 #include "simulation.hpp"
 
+#include <iostream>
+
 #include "behaviour.hpp"
 
 // In simulazione devo racchiudere tutto e solamente quello che è necessario
@@ -95,7 +97,7 @@ void Simulation::simInvariant() {
         "Initialize the max_speed with a positive value, the negative one will "
         "be taken care of \n"};
   }
-  //I coefficenti possono essere minori o uguali a zero? Ha senso?F
+  // I coefficenti possono essere minori o uguali a zero? Ha senso?F
   if (boid_properties_.danger_radius > boid_properties_.detection_radius) {
     throw std::invalid_argument{
         "danger_radius value is larger than detection_radius value, it is not "
@@ -148,10 +150,15 @@ void Simulation::calculateStats(std::vector<Boid> const& flock) {
 }
 
 void Simulation::tick() {
-  flock_ = applyFlockBehaviouralMovement(flock_, dt_, boid_properties_);
   if (world_.isToroidal()) {
     world_.wrap(flock_);
+  } else {
+    world_.contain(flock_, boid_properties_);
+    // world_.wrap(flock_);
   }
+
+  flock_ = applyFlockBehaviouralMovement(flock_, dt_, boid_properties_);
+
   calculateStats(flock_);
 }
 

@@ -10,8 +10,12 @@ V2D const& Boid::Pos() const { return position_; }
 bool Boid::IsPredator() const { return is_predator_; }
 
 void Boid::update(V2D const& vel_update, double dt) {
-  velocity_ += vel_update * dt;
+  velocity_ += vel_update;
   position_ += velocity_ * dt;
+}
+
+void Boid::vUpdate(V2D const& vel_update){
+  velocity_ += vel_update;
 }
 
 void Boid::pChange(double value, bool x) {

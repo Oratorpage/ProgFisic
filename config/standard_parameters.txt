@@ -2,8 +2,8 @@
 
 [simulation]
 non_pred_boidnum = 250
-pred_boidnum = 1
-dt = 0.01
+pred_boidnum =    2
+dt = 0.1
 
 [render]
 flock_window_title = Simulation Window
@@ -31,8 +31,8 @@ toroidal : false
 [boids]
 detection_radius = 70
 danger_radius = 35
-angle_of_view = 200
-max_speed = 250
-separation = 0.9
-alignment = 0.5
-cohesion = 0.3
+angle_of_view = 180
+max_speed = 150
+separation = 0.6
+alignment = 0.2
+cohesion = 0.1

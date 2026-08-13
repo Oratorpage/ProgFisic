@@ -1,6 +1,7 @@
 #include "behaviour.hpp"
 
 #include <cmath>
+#include <iostream>
 
 namespace bs {
 
@@ -47,8 +48,8 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
       std::cos(boid_params.angle_of_view * 0.5 * piconst / 180.)};
 
   // Here the cosine relation with the norm is utilized
-  const double cos_angle{dotprod(vect_velA, vect_distanceAB) / velA_norm *
-                         distance_norm};
+  const double cos_angle{dotprod(vect_velA, vect_distanceAB) /
+                         (velA_norm * distance_norm)};
 
   if (cos_angle >= cos_half_angle_view && velA_norm <= valLim) {
     return true;
@@ -56,12 +57,13 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   return cos_angle >= cos_half_angle_view;
 }
 
-std::vector<Boid*> collectVisibleBoids(std::vector<Boid>& flock, Boid const& bi,
-                                       BoidProperties const& boid_params) {
-  std::vector<Boid*> nearboids;
-
+std::vector<Boid const*> collectVisibleBoids(
+    std::vector<Boid> const& flock, Boid const& bi,
+    BoidProperties const& boid_params) {
+  std::vector<Boid const*> nearboids;
   nearboids.reserve(flock.size() - 1);
-  for (Boid& bj : flock) {
+
+  for (Boid const& bj : flock) {
     if (isBoidVisibleInCone(bi, bj, boid_params)) {
       nearboids.emplace_back(&bj);
     }
@@ -71,14 +73,17 @@ std::vector<Boid*> collectVisibleBoids(std::vector<Boid>& flock, Boid const& bi,
 
 // Qua gli si potrebbe direttamente fare l'input della simulazione
 std::vector<Boid> applyFlockBehaviouralMovement(
-    std::vector<Boid>& flock, double dt, BoidProperties const& boid_params) {
-  std::vector<Boid> buffer{flock};
+    std::vector<Boid> const& flock, double dt,
+    BoidProperties const& boid_params) {
+  std::vector<Boid> buffer;
+  buffer.reserve(flock.size());
 
   const double danger_rad_sq{boid_params.danger_radius *
                              boid_params.danger_radius};
 
   for (Boid const& bi : flock) {
-    std::vector<Boid*> nearboids{collectVisibleBoids(flock, bi, boid_params)};
+    std::vector<Boid const*> nearboids{
+        collectVisibleBoids(flock, bi, boid_params)};
 
     Boid buffer_boid{bi};
     V2D separation_vel;
@@ -91,7 +96,7 @@ std::vector<Boid> applyFlockBehaviouralMovement(
     if (!nearboids.empty()) {
       const double invNear = 1. / static_cast<double>(nearboids.size());
 
-      for (Boid* bj : nearboids) {
+      for (Boid const* bj : nearboids) {
         // predator and prey
         if (bi.IsPredator() && !(bj->IsPredator())) {
           separation_vel -= bj->Pos() - bi.Pos();
@@ -140,4 +145,5 @@ std::vector<Boid> applyFlockBehaviouralMovement(
   }
   return buffer;
 }
+
 }  // namespace bs

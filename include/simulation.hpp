@@ -26,6 +26,8 @@ class Simulation {
   double dt_{};
   Statistics stats_;
 
+  int tester_{0};
+
   void buildFlock(SimParams const& sp);
   void firstStats(std::vector<Boid> const& flock);
   void simInvariant();
@@ -45,6 +47,9 @@ class Simulation {
   void calculateStats(std::vector<Boid> const& flock);
   // void uniteViewStats(std::string const& viewstats);
   void tick();
+
+
+  
 };
 }  // namespace bs
 
