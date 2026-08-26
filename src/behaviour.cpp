@@ -10,7 +10,9 @@ double distSq(V2D const& a, V2D const& b) {
   return dotprod(d, d);
 }
 
-constexpr double valLim{1.e-12};
+// Per questo tipo di simulazione 1.e-2 è più che accurato rispetto alla
+// distanza
+constexpr double valLim{1.e-2};
 constexpr double piconst{3.14159265358979323846264338327950288};
 
 bool isBoidVisibleInCone(Boid const& a, Boid const& b,
@@ -25,8 +27,7 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   if (distSq(a.Pos(), b.Pos()) > detection_rad_sq) {
     return false;
   }
-  // If it is already within radius then it can just be checked if it is within
-  // the cone
+  // At this point it is necessarly within the detection radius
   if (boid_params.angle_of_view >= 360.) {
     return true;
   }
@@ -36,7 +37,7 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   // based on that and the vector of the distance with the other boid, b, the
   // angle can be found
   const V2D vect_velA{a.Vel()};
-  const V2D vect_distanceAB{a.Pos() - b.Pos()};
+  const V2D vect_distanceAB{b.Pos() - a.Pos()};
 
   const double velA_norm{norm(vect_velA)};
   const double distance_norm{norm(vect_distanceAB)};
@@ -44,10 +45,16 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   if (distance_norm <= valLim) {
     return true;
   }
+  // È intenzionale: se ha velocità zero si è fermato, dunque riesce a vedere
+  // tutto intorno a se; va messo in inglese il commento
+  if (velA_norm <= valLim) {
+    return true;
+  }
   const double cos_half_angle_view{
       std::cos(boid_params.angle_of_view * 0.5 * piconst / 180.)};
 
-  // Here the cosine relation with the norm is utilized
+  // Here the cosine relation with the norm is utilized, it results in the
+  // cosine of the angle between the velocity of A and the distanceAB
   const double cos_angle{dotprod(vect_velA, vect_distanceAB) /
                          (velA_norm * distance_norm)};
 
@@ -128,18 +135,18 @@ std::vector<Boid> applyFlockBehaviouralMovement(
           cm_pos += bj->Pos();
         }
       }
+      cm_pos *= invNear;
+
       separation_vel = -boid_params.separation * separation_vel;
       alignment_vel =
           boid_params.alignment * (invNear * alignment_vel - bi.Vel());
       cohesion_vel = boid_params.cohesion * (cm_pos - bi.Pos());
-
-      cm_pos = invNear * cm_pos;
+      // c'è qualcosa che non va in alignment_vel, il problema del fermarsi non
+      // è dipendente solo da alignment
     }
 
-    // Devo fare il check e la limitazione sulla velocità prima di ogni
-    // piazzarlo sul buffer
-    buffer_boid.update(separation_vel + alignment_vel + cohesion_vel, dt);
-    buffer_boid.limitVelocity(boid_params.max_speed);
+    buffer_boid.completeUpdate(separation_vel + alignment_vel + cohesion_vel, dt);
+    buffer_boid.limitVelocity(boid_params.max_speed, boid_params.min_speed);
 
     buffer.emplace_back(buffer_boid);
   }

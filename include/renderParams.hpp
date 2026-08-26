@@ -4,7 +4,6 @@
 #include "windowParams.hpp"
 namespace bs {
 struct RenParams {
-  // Render
 
   WindowParams flock_window_parameters{};
   

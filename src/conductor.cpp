@@ -22,8 +22,9 @@ void Conductor::conInvariant() {
   }
 }
 
-void Conductor::start() {
+void Conductor::start(RenParams const& rp) {
   sf::Clock clock;
+  ren_.setWindowsPosition(rp);
 
   while (ren_.isFWOpen()) {
     // Dubito sia la gestione degli eventi a causare problemi, essendo una

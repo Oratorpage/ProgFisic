@@ -23,10 +23,10 @@ class Boid {
 
   
 
-  void update(V2D const& vel_update, double dt);
+  void completeUpdate(V2D const& vel_update, double dt);
   void vUpdate(V2D const& vel_update);
-  void pChange(double value, bool x);
-  void limitVelocity(double const max_speed);
+  void setPosition(double value, bool x);
+  void limitVelocity(double const max_speed, double const min_speed);
 };
 
 }  // namespace bs

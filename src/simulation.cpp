@@ -8,17 +8,6 @@
 // all'algoritmo per i boids e lo stormo
 
 namespace bs {
-// Dovrei includere direttamente BoidProperties nel costruttore di Simulation?
-// Anche una prima inizializzazione di stats? Suppongo dipende da quando viene
-// chiamato l'oggetto, nel programma mi devo assicurare che quando venga
-// chiamato non ritorni cose a caso. Non è necessario no che per una good cpp
-// practice ogni oggetto appartenente ad una classe venga completamente
-// inizializzato? yesss, perchè l'oggetto della classe dopo sarebbe in parte
-// invalido dunque bisogna inizializzare ad un qualche valore di default
-// statistics per esempio e poi fare {} in modo che venga usata la costruzione
-// di default, poi lo si va a modificare
-// Viene inizializzato di defualt con {} o senza nulla con ; perchè dipende
-// molto, devo controllare nelle dispende questa cosa
 Simulation::Simulation(WorldParams const& wp, BoidProperties const& bp,
                        SimParams const& sp)
     : world_{wp},
@@ -27,7 +16,7 @@ Simulation::Simulation(WorldParams const& wp, BoidProperties const& bp,
       total_boids_{sp.pred_boidnum + sp.non_pred_boidnum},
       dt_{sp.dt} {
   simInvariant();
-  buildFlock(sp);
+  buildFlock(sp,bp);
   firstStats(flock_);
 }
 // Statistiche ha senso inizializzarlo a zero/invalido direttamente nella struct
@@ -42,14 +31,14 @@ Simulation::Simulation(WorldParams const& wp, BoidProperties const& bp,
 // calcolo le statistiche, allora posso lasciarlo non inizializzato? Non potrei
 // fare altro e se so che inizialimente è inutilizzabile allora basta non usarlo
 
-void Simulation::buildFlock(SimParams const& sp) {
+void Simulation::buildFlock(SimParams const& sp, BoidProperties const& bp) {
   flock_.reserve(static_cast<long unsigned int>(total_boids_));
 
-  for (int i{0}; i < sp.non_pred_boidnum; ++i) {
-    flock_.emplace_back(randVel(), randPos(world_.getDimensions()), false);
+  for (int i{0}; i != sp.non_pred_boidnum; ++i) {
+    flock_.emplace_back(randVel(bp.min_speed,bp.max_speed), randPos(world_.getDimensions()), false);
   }
-  for (int i{0}; i < sp.pred_boidnum; ++i) {
-    flock_.emplace_back(randVel(), randPos(world_.getDimensions()), true);
+  for (int i{0}; i != sp.pred_boidnum; ++i) {
+    flock_.emplace_back(randVel(bp.min_speed,bp.max_speed), randPos(world_.getDimensions()), true);
   };
 }
 

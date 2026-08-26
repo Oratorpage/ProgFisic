@@ -35,12 +35,8 @@ Render::Render(RenParams const& rp, BoidProperties const& bp)
 
 {
   flockWindow_.setFramerateLimit(rp.flock_window_parameters.fps);
-  flockWindow_.setPosition(
-      {rp.flock_window_parameters.posX, rp.flock_window_parameters.posY});
 
   statisticsWindow_.setFramerateLimit(rp.statistics_window_parameters.fps);
-  statisticsWindow_.setPosition({rp.statistics_window_parameters.posX,
-                                 rp.statistics_window_parameters.posY});
 
   view_.setCenter({static_cast<float>(rp.flock_window_parameters.width / 2.),
                    static_cast<float>(rp.flock_window_parameters.height / 2.)});
@@ -112,10 +108,19 @@ void Render::initializeText(std::string const& path) {
   statistics_text_.setCharacterSize(15);
   statistics_text_.setString("Invalid");
 }
+// I created this function and decided not to put the position setting directly
+// in the constructor because I was having issues positioning the second window
+void Render::setWindowsPosition(RenParams const& rp) {
+  flockWindow_.setPosition(
+      {rp.flock_window_parameters.posX, rp.flock_window_parameters.posY});
+  statisticsWindow_.setPosition({rp.statistics_window_parameters.posX,
+                                 rp.statistics_window_parameters.posY});
+};
 
 void Render::renderFrame(Simulation const& sim) {
   flockWindow_.clear(sf::Color(150, 150, 150));
   statisticsWindow_.clear(sf::Color(150, 150, 150));
+  // flockWindow_.setPosition({750,200});
 
   for (auto const& b : sim.currentFlock()) {
     V2D p = b.Pos();

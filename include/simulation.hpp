@@ -28,7 +28,7 @@ class Simulation {
 
   int tester_{0};
 
-  void buildFlock(SimParams const& sp);
+  void buildFlock(SimParams const& sp, BoidProperties const& bp);
   void firstStats(std::vector<Boid> const& flock);
   void simInvariant();
 

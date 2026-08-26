@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     }
 
     bs::Conductor application{configuration, time_factor};
-    application.start();
+    application.start(configuration.rp);
 
   } catch (std::exception const& err) {
     std::cerr << err.what() << "\n";

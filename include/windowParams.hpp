@@ -10,8 +10,8 @@ struct WindowParams {
   unsigned int width{800U};
   unsigned int height{600U};
 
-  int posX{400};
-  int posY{300};
+  int posX{100};
+  int posY{100};
 
   unsigned int fps{60U};
 };

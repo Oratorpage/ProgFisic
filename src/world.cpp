@@ -30,16 +30,16 @@ V2D const& World::getDimensions() const { return dimensions_; }
 void World::wrap(std::vector<Boid>& flock) {
   for (Boid& b : flock) {
     if (b.Pos().x > width_) {
-      b.pChange(width_ - b.Pos().x, true);
+      b.setPosition(0., true);
     }
     if (b.Pos().x < 0.) {
-      b.pChange(width_, true);
+      b.setPosition(width_, true);
     }
     if (b.Pos().y > height_) {
-      b.pChange(height_ - b.Pos().y, false);
+      b.setPosition(0., false);
     }
     if (b.Pos().y < 0.) {
-      b.pChange(height_, false);
+      b.setPosition(height_, false);
     }
   };
 }

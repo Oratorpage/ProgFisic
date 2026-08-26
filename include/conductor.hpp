@@ -24,7 +24,7 @@ class Conductor {
   Conductor(Config const& configuration,
             double time_factor);
 
-  void start();
+  void start(RenParams const& rp);
 };
 }  // namespace bs
 

@@ -192,6 +192,8 @@ void readBoidsSection(BoidProperties& boid_par,
     boid_par.angle_of_view = parseDouble(string_value);
   } else if (key == "max_speed") {
     boid_par.max_speed = parseDouble(string_value);
+  } else if (key == "min_speed") {
+    boid_par.min_speed = parseDouble(string_value);
   } else if (key == "separation") {
     boid_par.separation = parseDouble(string_value);
   } else if (key == "alignment") {
@@ -462,6 +464,11 @@ void checkBoidsKeys(std::unordered_set<std::string> const& initialized_keys) {
     throw std::runtime_error{
         "Necessary key not initialized after reading from configuration file "
         "in section [boids]: max_speed \n"};
+  }
+  if (initialized_keys.find("min_speed") == initialized_keys.end()) {
+    throw std::runtime_error{
+        "Necessary key not initialized after reading from configuration file "
+        "in section [boids]: min_speed \n"};
   }
   if (initialized_keys.find("separation") == initialized_keys.end()) {
     throw std::runtime_error{

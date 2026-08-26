@@ -6,9 +6,9 @@ namespace bs {
 std::random_device r;
 std::mt19937 gen(r());
 
-V2D randVel() {
-  std::uniform_real_distribution<> distrx(-25, 25);
-  std::uniform_real_distribution<> distry(-25, 25);
+V2D randVel(double const min_speed, double const max_speed) {
+  std::uniform_real_distribution<> distrx(-min_speed, max_speed);
+  std::uniform_real_distribution<> distry(-min_speed, max_speed);
   return V2D{distrx(gen), distry(gen)};
 }
 

@@ -40,3 +40,38 @@
 
     # Main
     argc e argv sono abbreviazioni, sono parametri (arguments) di input del main, argc sarebbe argument count e argv sarebbe argument vector (array di string? char* argv[] o char** argv, indaghiamo meglio); li uso quando voglio che il main prenda argomenti dalla linea di comando o dalle impostazioni di avvio (uguale, solo che implicito) -> argc è sempre maggiore o uguale a uno poichè il nome del file è sempre il primo parametro/argomento
+
+    ## Cose che ho rimosso su cui può essere utile tornare
+    /* No bad values can be introduced for a boid initialization, any value that
+    doesn't produce compilation errors is acceptable, if it is far from the
+    window or if it has the speed of a photon it's not a problem. --- Well with the
+    implementation of the current world it is but it ain't a boid problem
+
+    If it is far (in any direction)(and not in toroidal mode) it will be back
+    thanks to the update member function and the velocity update; if it is in
+    toroidal mode it will just go back to a border in the next update.
+
+    For the velocity it is regulated by the update member function.
+
+     It may have an initial wrong position for the first few milliseconds but
+     considering how the user is not prompted to initialize any singular boids it
+    shouldn't be a problem, it wouldn't be even with the manual insertion since the
+    only thing the user can decide would be the position (by clicking inside the
+    window).
+
+    Qua bisogna chiedere se test e struttura delle TU va fatta in maniera tale che
+    funzioni anche stand-alone con un main generico come libreria perchè in quel
+    caso devo cambiare effettivamente un po' di cose
+*/
+
+// Dovrei includere direttamente BoidProperties nel costruttore di Simulation?
+// Anche una prima inizializzazione di stats? Suppongo dipende da quando viene
+// chiamato l'oggetto, nel programma mi devo assicurare che quando venga
+// chiamato non ritorni cose a caso. Non è necessario no che per una good cpp
+// practice ogni oggetto appartenente ad una classe venga completamente
+// inizializzato? yesss, perchè l'oggetto della classe dopo sarebbe in parte
+// invalido dunque bisogna inizializzare ad un qualche valore di default
+// statistics per esempio e poi fare {} in modo che venga usata la costruzione
+// di default, poi lo si va a modificare
+// Viene inizializzato di defualt con {} o senza nulla con ; perchè dipende
+// molto, devo controllare nelle dispende questa cosa

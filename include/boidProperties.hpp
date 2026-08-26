@@ -9,9 +9,9 @@ struct BoidProperties {
   // Total angle of vision of the Boid
   double angle_of_view{};
 
-  // Lo scrivo qua, ma nell'implementazione è considerato anche il valore
-  // negativo vero?
   double max_speed{};
+  double min_speed{};
+
 
   double separation{0.};
   double alignment{0.};

@@ -14,10 +14,10 @@ namespace bs {
 class Render {
  private:
   RenParams ren_params_;
-  sf::RenderWindow flockWindow_{sf::VideoMode(800, 600), "Flock Window",
+  sf::RenderWindow flockWindow_{sf::VideoMode(800, 600), "Temp Window 1",
                                 sf::Style::Default};
 
-  sf::RenderWindow statisticsWindow_{sf::VideoMode(600, 400), "Render Window",
+  sf::RenderWindow statisticsWindow_{sf::VideoMode(600, 400), "Temp Window 2",
                                      sf::Style::Default};
 
   sf::ConvexShape non_pred_boid_shape_;
@@ -53,6 +53,7 @@ class Render {
   void manageWindowEvents(sf::RenderWindow& window);
 
   void initializeText(std::string const& path);
+  void setWindowsPosition(RenParams const& rp);
 
   void renderFrame(Simulation const& simulation);
 };
