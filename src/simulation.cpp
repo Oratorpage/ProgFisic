@@ -16,7 +16,7 @@ Simulation::Simulation(WorldParams const& wp, BoidProperties const& bp,
       total_boids_{sp.pred_boidnum + sp.non_pred_boidnum},
       dt_{sp.dt} {
   simInvariant();
-  buildFlock(sp,bp);
+  buildFlock(sp, bp);
   firstStats(flock_);
 }
 // Statistiche ha senso inizializzarlo a zero/invalido direttamente nella struct
@@ -35,10 +35,12 @@ void Simulation::buildFlock(SimParams const& sp, BoidProperties const& bp) {
   flock_.reserve(static_cast<long unsigned int>(total_boids_));
 
   for (int i{0}; i != sp.non_pred_boidnum; ++i) {
-    flock_.emplace_back(randVel(bp.min_speed,bp.max_speed), randPos(world_.getDimensions()), false);
+    flock_.emplace_back(randVel(bp.max_speed), randPos(world_.getDimensions()),
+                        false);
   }
   for (int i{0}; i != sp.pred_boidnum; ++i) {
-    flock_.emplace_back(randVel(bp.min_speed,bp.max_speed), randPos(world_.getDimensions()), true);
+    flock_.emplace_back(randVel(bp.max_speed), randPos(world_.getDimensions()),
+                        true);
   };
 }
 
@@ -83,8 +85,14 @@ void Simulation::simInvariant() {
   }
   if (boid_properties_.max_speed <= 0) {
     throw std::invalid_argument{
-        "Initialize the max_speed with a positive value, the negative one will "
-        "be taken care of \n"};
+        "Initialize the max_speed with a positive and non-zero value, the "
+        "negative case is taken care of \n"};
+  }
+  if (boid_properties_.min_speed <= 0 ||
+      boid_properties_.min_speed >= boid_properties_.max_speed) {
+    throw std::invalid_argument{
+        "Initialize the min_speed with a positive and non-zero value, also "
+        "cannot be larger or equal than the max_speed\n"};
   }
   // I coefficenti possono essere minori o uguali a zero? Ha senso?F
   if (boid_properties_.danger_radius > boid_properties_.detection_radius) {

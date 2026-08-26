@@ -5,7 +5,7 @@
 #include "v2D.hpp"
 
 namespace bs {
-V2D randVel(double const min_speed, double const max_speed);
+V2D randVel(double const max_speed);
 V2D randPos(V2D const& flock_window_size_d);
 }  // namespace bs
 

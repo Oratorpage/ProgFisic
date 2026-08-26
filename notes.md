@@ -75,3 +75,5 @@
 // di default, poi lo si va a modificare
 // Viene inizializzato di defualt con {} o senza nulla con ; perchè dipende
 // molto, devo controllare nelle dispende questa cosa
+
+xprod in v2D non viene mai usato, mai, utile per il futuro? non penso essendo in 2D e non in 3D però chissà

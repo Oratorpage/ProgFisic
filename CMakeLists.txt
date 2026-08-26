@@ -42,8 +42,8 @@ add_executable(flocksim
  src/render.cpp
  src/simulation.cpp
  src/v2D.cpp
- src/world.cpp)
-
+ src/world.cpp
+ )
 
 target_include_directories(flocksim PRIVATE include)
 target_link_libraries(flocksim PRIVATE
@@ -53,12 +53,42 @@ target_link_libraries(flocksim PRIVATE
 )
 
 
-#if (BUILD_TESTING)
+if (BUILD_TESTING)
 
   # aggiungi l'eseguibile progetto.t
-  #add_executable(flocksim.t test/main.test.cpp test/boid.test.cpp src/behaviour.cpp src/boid.cpp src/conductor.cpp src/input.cpp src/main.cpp src/rand.cpp src/render.cpp src/simulation.cpp src/v2D.cpp src/world.cpp)
-  #target_include_directories(flocksim.t PRIVATE ${CMAKE_SOURCE_DIR}/include)
-  # aggiungi l'eseguibile progetto.t alla lista dei test
-  #add_test(NAME flockism.t COMMAND flocksim.t)
+  add_executable(flocksim.t 
+    test/boid.t.cpp 
+    test/input.t.cpp
+    test/main.t.cpp
+    test/rand.t.cpp
+    test/v2D.t.cpp
 
-#endif()
+  
+    src/boid.cpp 
+    src/input.cpp
+    src/rand.cpp
+    src/v2D.cpp
+  )
+
+  target_include_directories(flocksim.t PRIVATE 
+  ${CMAKE_SOURCE_DIR} 
+  include)
+
+  # aggiungi l'eseguibile progetto.t alla lista dei test
+  add_test(
+    NAME flockism.t 
+    COMMAND flocksim.t
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test
+  )
+
+  add_custom_target(test-verbose
+    COMMAND ${CMAKE_CTEST_COMMAND}
+            --test-dir ${CMAKE_BINARY_DIR}
+            -C $<CONFIG>
+            --output-on-failure
+            -V
+    DEPENDS flocksim.t
+    USES_TERMINAL
+  )
+
+endif()

@@ -32,6 +32,11 @@ int parseInt(std::string const& string_value) {
     throw std::runtime_error{"Expected an integer, found: " + string_value +
                              "\n"};
   }
+  // This if below invalidates the useful propriety of std::stoi which allows to
+  // eliminate whitespace characters near the number in string form that needs
+  // to be converted; I preferred a harder approach at first being my first time
+  // making something like this, it avoids false positives which are quite
+  // annoying to diagnose
   if (position != string_value.size()) {
     throw std::runtime_error(
         "Invalid integer value (remove characters near numbers): " +
@@ -40,6 +45,8 @@ int parseInt(std::string const& string_value) {
   return value;
 }
 
+// Converts the negative values passed into positives as a way to parse for
+// certain purposes and avoid narrowind; need careful usage as is not standard
 unsigned int parseUnsignedInt(std::string const& string_value) {
   std::size_t position{0};
 
@@ -47,8 +54,8 @@ unsigned int parseUnsignedInt(std::string const& string_value) {
   try {
     value = std::stoi(string_value, &position);
   } catch (...) {
-    throw std::runtime_error{"Expected an integer, found: " + string_value +
-                             "\n"};
+    throw std::runtime_error{
+        "Expected an unsigned integer, found: " + string_value + "\n"};
   }
   if (position != string_value.size()) {
     throw std::runtime_error(
@@ -97,7 +104,7 @@ void readSimulationSection(SimParams& sim_par,
                            std::size_t line_number) {
   if (!initialized_keys.insert(key).second) {
     throw std::runtime_error{"Duplicate simulation parameter key: " + key +
-                             "at line" + std::to_string(line_number) + "\n"};
+                             " at line: " + std::to_string(line_number) + "\n"};
   } else if (key == "non_pred_boidnum") {
     sim_par.non_pred_boidnum = parseInt(string_value);
   } else if (key == "pred_boidnum") {
@@ -116,7 +123,7 @@ void readRenderSection(RenParams& ren_par,
                        std::size_t line_number) {
   if (!initialized_keys.insert(key).second) {
     throw std::runtime_error{"Duplicate render parameter key: " + key +
-                             "at line" + std::to_string(line_number) + "\n"};
+                             " at line: " + std::to_string(line_number) + "\n"};
   } else if (key == "flock_window_title") {
     ren_par.flock_window_parameters.title = string_value;
   } else if (key == "flock_window_width") {
@@ -164,7 +171,7 @@ void readWorldSection(WorldParams& wrld_par,
                       std::size_t line_number) {
   if (!initialized_keys.insert(key).second) {
     throw std::runtime_error{"Duplicate world parameter key: " + key +
-                             "at line" + std::to_string(line_number) + "\n"};
+                             " at line: " + std::to_string(line_number) + "\n"};
   } else if (key == "world_width") {
     wrld_par.dimensions.x = parseDouble(string_value);
   } else if (key == "world_height") {
@@ -183,7 +190,7 @@ void readBoidsSection(BoidProperties& boid_par,
                       std::size_t line_number) {
   if (!initialized_keys.insert(key).second) {
     throw std::runtime_error{"Duplicate Boid parameter key: " + key +
-                             "at line" + std::to_string(line_number) + "\n"};
+                             " at line: " + std::to_string(line_number) + "\n"};
   } else if (key == "detection_radius") {
     boid_par.detection_radius = parseDouble(string_value);
   } else if (key == "danger_radius") {
@@ -252,7 +259,7 @@ Config readParams(std::string const& path) {
 
     if (current_section == Section::none) {
       throw std::runtime_error{
-          "non section-tag found before section-tag at line" +
+          "Non section-tag found before section-tag at line: " +
           std::to_string(line_number) + "\n"};
     }
 

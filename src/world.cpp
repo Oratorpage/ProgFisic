@@ -44,6 +44,7 @@ void World::wrap(std::vector<Boid>& flock) {
   };
 }
 
+//Per questo nell'atto pratico, se comunque vengono sparati fuori, basta fare un if simile a wrap
 void World::contain(std::vector<Boid>& flock, BoidProperties const& bp) {
   for (Boid& b : flock) {
     V2D vel_update{};
