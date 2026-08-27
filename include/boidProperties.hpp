@@ -13,9 +13,9 @@ struct BoidProperties {
   double min_speed{};
 
 
-  double separation{0.};
-  double alignment{0.};
-  double cohesion{0.};
+  double separation{0.3};
+  double alignment{0.2};
+  double cohesion{0.1};
 };
 
 // The angle_of_view in combination with the danger_radius and detection_radius

@@ -44,36 +44,53 @@ void World::wrap(std::vector<Boid>& flock) {
   };
 }
 
-//Per questo nell'atto pratico, se comunque vengono sparati fuori, basta fare un if simile a wrap
 void World::contain(std::vector<Boid>& flock, BoidProperties const& bp) {
   for (Boid& b : flock) {
-    V2D vel_update{};
-    vel_update = resultVel(b, bp);
-    b.vUpdate(vel_update);
+    b.vUpdate(containVel(b, bp));
   }
 }
 
-V2D World::resultVel(Boid const& boid, BoidProperties const& bp) {
+// Yeah this bullshit had a singularity each time it got to a border and a
+// particle accellerator each time it went out
+V2D World::containVel(Boid const& boid, BoidProperties const& bp) {
   V2D p{boid.Pos()};
   V2D v{boid.Vel()};
-  double lim_x{width_ - 15.};
-  double lim_y{height_ - 15.};
+  // Hard coded limit value, may change in the future to create exponential
+  // force of containment or other things
+  double lim_x{width_ - 30.};
+  double lim_y{height_ - 30.};
 
   V2D resuling_velocity{0., 0.};
 
   if (p.x > lim_x) {
-    resuling_velocity.x +=
-        -(bp.max_speed / (width_ - p.x) + 2. * v.x / bp.max_speed);
-  }
-  if (p.x < 15.) {
-    resuling_velocity.x += bp.max_speed / p.x - 2. * v.x / bp.max_speed;
+    if (p.x < width_) {
+      resuling_velocity.x +=
+          -(bp.max_speed / (width_ - p.x) + 3.14 * v.x / bp.max_speed);
+    } else if (p.x >= width_) {
+      resuling_velocity.x += -100.;
+    }
+
+  } else if (p.x < 30.) {
+    if (p.x > 0.) {
+      resuling_velocity.x += bp.max_speed / p.x - 3.14 * v.x / bp.max_speed;
+    } else if (p.x <= 0.) {
+      resuling_velocity.x += 100.;
+    }
   }
   if (p.y > lim_y) {
-    resuling_velocity.y +=
-        -(bp.max_speed / (height_ - p.y) + 2. * v.y / bp.max_speed);
-  }
-  if (p.y < 15.) {
-    resuling_velocity.y += bp.max_speed / p.y - 2. * v.y / bp.max_speed;
+    if (p.y < height_) {
+      resuling_velocity.y +=
+          -(bp.max_speed / (height_ - p.y) + 3.14 * v.y / bp.max_speed);
+    } else if (p.y >= height_) {
+      resuling_velocity.y += -100.;
+    }
+
+  } else if (p.y < 30.) {
+    if (p.y > 0.) {
+      resuling_velocity.y += bp.max_speed / p.y - 3.14 * v.y / bp.max_speed;
+    } else if (p.y <= 0.) {
+      resuling_velocity.y += 100.;
+    }
   }
   return resuling_velocity;
 }

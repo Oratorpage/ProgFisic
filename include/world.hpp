@@ -28,7 +28,7 @@ class World {
   void wrap(std::vector<Boid>& flock);
   void contain(std::vector<Boid>& flock, BoidProperties const& bp);
 
-  V2D resultVel(Boid const& boid, BoidProperties const& bp);
+  V2D containVel(Boid const& boid, BoidProperties const& bp);
 };
 }  // namespace bs
 

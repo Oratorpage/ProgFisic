@@ -32,7 +32,7 @@ toroidal : false
 detection_radius = 70
 danger_radius = 30
 angle_of_view = 360
-max_speed = 250
+max_speed = 300
 min_speed = 25
 separation = 0.07
 alignment = 0.04

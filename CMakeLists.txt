@@ -62,12 +62,13 @@ if (BUILD_TESTING)
     test/main.t.cpp
     test/rand.t.cpp
     test/v2D.t.cpp
-
+    test/world.t.cpp
   
     src/boid.cpp 
     src/input.cpp
     src/rand.cpp
     src/v2D.cpp
+    src/world.cpp
   )
 
   target_include_directories(flocksim.t PRIVATE 
