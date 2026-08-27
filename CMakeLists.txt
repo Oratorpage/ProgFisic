@@ -57,16 +57,20 @@ if (BUILD_TESTING)
 
   # aggiungi l'eseguibile progetto.t
   add_executable(flocksim.t 
+    test/behaviour.t.cpp
     test/boid.t.cpp 
     test/input.t.cpp
     test/main.t.cpp
     test/rand.t.cpp
+    test/simulation.t.cpp
     test/v2D.t.cpp
     test/world.t.cpp
   
+    src/behaviour.cpp
     src/boid.cpp 
     src/input.cpp
     src/rand.cpp
+    src/simulation.cpp
     src/v2D.cpp
     src/world.cpp
   )

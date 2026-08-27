@@ -16,8 +16,10 @@ namespace bs {
 class Simulation {
  private:
   World world_;
-  // Se si volesse fare una cosa che si conclude da solo dopo tot allora
-  // bisognerebbe avere l'input del numero totali di step
+  // A total step number simulation could be done, even with a seed to achieve a
+  // more replicable and standard result, to do that only the rand TU and the
+  // simulation tick need to be changed (maybe also the render to improve it
+  // casewise)(also the statistics, the step may be put there)
 
   BoidProperties boid_properties_;
   int total_boids_{};
@@ -26,30 +28,26 @@ class Simulation {
   double dt_{};
   Statistics stats_;
 
-  int tester_{0};
-
   void buildFlock(SimParams const& sp, BoidProperties const& bp);
   void firstStats(std::vector<Boid> const& flock);
   void simInvariant();
 
  public:
-  // questo vuol dire che la simulazione inevitabilemente dipende dai parametri
-  // del mondo che sto considerando, cambbia mondo cambia simulazione
+  // The simulation necessarily depends on the world parameters where it is
+  // being simulated, on the properties of what it is simulating and on the
+  // parameters itself of the simulation
   Simulation(WorldParams const& wp, BoidProperties const& bp,
              SimParams const& sp);
 
   World const& currentWorld() const;
   BoidProperties const& boidProperties() const;
   std::vector<Boid> const& currentFlock() const;
-  double deltaTime() const;
+  double getSimdt() const;
   Statistics const& currentStatistics() const;
 
   void calculateStats(std::vector<Boid> const& flock);
   // void uniteViewStats(std::string const& viewstats);
   void tick();
-
-
-  
 };
 }  // namespace bs
 

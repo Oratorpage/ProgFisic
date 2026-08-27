@@ -77,3 +77,32 @@
 // molto, devo controllare nelle dispende questa cosa
 
 xprod in v2D non viene mai usato, mai, utile per il futuro? non penso essendo in 2D e non in 3D però chissà
+
+
+/*-------------------------------------TOROIDAL---------------------------------------
+                                         (e)
+                (a)   __________________________________________   (f)
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                (b)  |               flock_window               |  (g)
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                     |                                          |
+                (c)   __________________________________________   (h)
+
+                                         (d)
+*-------------------------------------------------------------------------------------
+*/
+
+
+const double cos_angle{dotprod(vect_velA, vect_distanceAB) /
+                         (velA_norm * distance_norm)};
+  if (vect_distanceAB.x == 0. || vect_distanceAB.y == 0.) {
+    if (cos_angle - cos_half_angle_view <= 0.00001) {
+      return true;
+    }
+  }
+  return cos_angle >= cos_half_angle_view;

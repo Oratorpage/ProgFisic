@@ -10,9 +10,8 @@ double distSq(V2D const& a, V2D const& b) {
   return dotprod(d, d);
 }
 
-// Per questo tipo di simulazione 1.e-2 è più che accurato rispetto alla
-// distanza
-constexpr double valLim{1.e-2};
+constexpr double distLim{1.e-2};
+constexpr double valLim{1.e-12};
 constexpr double piconst{3.14159265358979323846264338327950288};
 
 bool isBoidVisibleInCone(Boid const& a, Boid const& b,
@@ -42,7 +41,7 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   const double velA_norm{norm(vect_velA)};
   const double distance_norm{norm(vect_distanceAB)};
 
-  if (distance_norm <= valLim) {
+  if (distance_norm <= distLim) {
     return true;
   }
   // È intenzionale: se ha velocità zero si è fermato, dunque riesce a vedere
@@ -58,10 +57,7 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   const double cos_angle{dotprod(vect_velA, vect_distanceAB) /
                          (velA_norm * distance_norm)};
 
-  if (cos_angle >= cos_half_angle_view && velA_norm <= valLim) {
-    return true;
-  }
-  return cos_angle >= cos_half_angle_view;
+  return cos_angle >= cos_half_angle_view - valLim;
 }
 
 std::vector<Boid const*> collectVisibleBoids(
@@ -145,7 +141,8 @@ std::vector<Boid> applyFlockBehaviouralMovement(
       // è dipendente solo da alignment
     }
 
-    buffer_boid.completeUpdate(separation_vel + alignment_vel + cohesion_vel, dt);
+    buffer_boid.completeUpdate(separation_vel + alignment_vel + cohesion_vel,
+                               dt);
     buffer_boid.limitVelocity(boid_params.max_speed, boid_params.min_speed);
 
     buffer.emplace_back(buffer_boid);

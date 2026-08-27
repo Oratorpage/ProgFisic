@@ -19,17 +19,6 @@ Simulation::Simulation(WorldParams const& wp, BoidProperties const& bp,
   buildFlock(sp, bp);
   firstStats(flock_);
 }
-// Statistiche ha senso inizializzarlo a zero/invalido direttamente nella struct
-// in maniera tale che se uno crea un oggetto simulation ma non vuole usarle è
-// comunque un oggetto valido e pienamente inizializzato; chiaramente
-// all'inizio, finchè non ci si opera sopra saranno spazzatura quindi ha senso
-// tipo string{"invalid"}; forse il calcolo delle statistiche andrebbe fatto
-// nell'update della simulazione e poi passato al render, sempre seguendo la
-// regola, se tolgo il render, la simulazione sopravvive da sola?; Inoltre mi
-// giunge la domanda, se le uniche funzioni che ho per simulation sono o il
-// calcolo delle statistiche o il tick della simulazione dove inevitambilmente
-// calcolo le statistiche, allora posso lasciarlo non inizializzato? Non potrei
-// fare altro e se so che inizialimente è inutilizzabile allora basta non usarlo
 
 void Simulation::buildFlock(SimParams const& sp, BoidProperties const& bp) {
   flock_.reserve(static_cast<long unsigned int>(total_boids_));
@@ -65,30 +54,43 @@ void Simulation::firstStats(std::vector<Boid> const& flock) {
   }
   stats_.cm_pos = stats_.cm_pos / static_cast<double>(flock.size());
   stats_.avg_vel = stats_.avg_vel / static_cast<double>(flock.size());
+
+  std::string cm_string{
+      "Position of the cm_pos: x :" + std::to_string(stats_.cm_pos.x) +
+      " , y: " + std::to_string(stats_.cm_pos.y) + "\n"};
+  std::string avg_vel_string{"Average velocity of the total flock: x :" +
+                             std::to_string(stats_.avg_vel.x) + " , y: " +
+                             std::to_string(stats_.avg_vel.y) + "\n"};
+
+  stats_.statistics_output = cm_string + avg_vel_string;
 }
 
 void Simulation::simInvariant() {
-  if (boid_properties_.detection_radius <= 0) {
+  if (boid_properties_.detection_radius <= 0.) {
     throw std::invalid_argument{
         "detection_radius value is not acceptable, cannot be less or equal to "
         "zero \n"};
   }
-  if (boid_properties_.danger_radius <= 0) {
+  if (boid_properties_.danger_radius <= 0.) {
     throw std::invalid_argument{
         "danger_radius value is not acceptable, cannot be less or equal to "
         "zero \n"};
   }
-  if (boid_properties_.angle_of_view <= 0) {
+  if (boid_properties_.angle_of_view <= 0.) {
     throw std::invalid_argument{
         "angle_of_view value is not acceptable, cannot be less or equal to "
         "zero \n"};
   }
-  if (boid_properties_.max_speed <= 0) {
+  if (boid_properties_.angle_of_view > 360.) {
+    throw std::invalid_argument{
+        "angle_of_view value is not acceptable, cannot be larger than 360 \n"};
+  }
+  if (boid_properties_.max_speed <= 0.) {
     throw std::invalid_argument{
         "Initialize the max_speed with a positive and non-zero value, the "
         "negative case is taken care of \n"};
   }
-  if (boid_properties_.min_speed <= 0 ||
+  if (boid_properties_.min_speed <= 0. ||
       boid_properties_.min_speed >= boid_properties_.max_speed) {
     throw std::invalid_argument{
         "Initialize the min_speed with a positive and non-zero value, also "
@@ -105,7 +107,7 @@ void Simulation::simInvariant() {
         "total_boids value is not acceptable, cannot be less or equal to "
         "zero \n"};
   }
-  if (dt_ <= 0) {
+  if (dt_ <= 0.) {
     throw std::invalid_argument{
         "dt value is not acceptable, cannot be less or equal to zero \n"};
   }
@@ -120,7 +122,7 @@ BoidProperties const& Simulation::boidProperties() const {
 std::vector<Boid> const& Simulation::currentFlock() const {
   return flock_;
 }  // Il ritorno di questo vettore sarà un casino vero?
-double Simulation::deltaTime() const { return dt_; }
+double Simulation::getSimdt() const { return dt_; }
 Statistics const& Simulation::currentStatistics() const { return stats_; }
 
 void Simulation::calculateStats(std::vector<Boid> const& flock) {
@@ -151,7 +153,6 @@ void Simulation::tick() {
     world_.wrap(flock_);
   } else {
     world_.contain(flock_, boid_properties_);
-    // world_.wrap(flock_);
   }
 
   flock_ = applyFlockBehaviouralMovement(flock_, dt_, boid_properties_);
