@@ -27,14 +27,17 @@ void Boid::vUpdate(V2D const& vel_update) { velocity_ += vel_update; }
 
 void Boid::limitVelocity(double const max_speed, double const min_speed) {
   double velocity_s{dotprod(velocity_, velocity_)};
+  double const vel_lim{1.e-3};
 
-  if (velocity_s > 0.) {
+  if (velocity_s > vel_lim) {
     if (velocity_s > max_speed * max_speed) {
       velocity_ *= max_speed / norm(velocity_);
     }
     if (velocity_s < min_speed * min_speed) {
       velocity_ *= min_speed / norm(velocity_);
     }
+  } else {
+    velocity_ *= 100.;
   }
 }
 

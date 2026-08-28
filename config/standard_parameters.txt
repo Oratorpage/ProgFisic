@@ -1,7 +1,7 @@
 #Configuration file with standard parameters
 
 [simulation]
-non_pred_boidnum = 150
+non_pred_boidnum = 200
 pred_boidnum =    2
 dt = 0.01
 
@@ -29,11 +29,11 @@ world_height = 600
 toroidal : false
 
 [boids]
-detection_radius = 70
-danger_radius = 25
+detection_radius = 40
+danger_radius = 15
 angle_of_view = 360
-max_speed = 300
-min_speed = 25
-separation = 0.7
-alignment = 0.4
-cohesion = 0.5
+max_speed = 400
+min_speed =5
+separation = 0.3
+alignment = 0.1
+cohesion = 0.2

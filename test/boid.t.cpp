@@ -25,10 +25,10 @@ TEST_CASE("Update") {
   double const max_speed{250};
   double const min_speed{25};
   b.completeUpdate(vel_update, dt, max_speed, min_speed);
-  CHECK(b.Vel().x == doctest::Approx(121.1).epsilon(0.001));
-  CHECK(b.Vel().y == doctest::Approx(231.1).epsilon(0.001));
-  CHECK(b.Pos().x == doctest::Approx(162.11).epsilon(0.001));
-  CHECK(b.Pos().y == doctest::Approx(193.11).epsilon(0.001));
+  CHECK(b.Vel().x == doctest::Approx(116.038).epsilon(0.001));
+  CHECK(b.Vel().y == doctest::Approx(221.439).epsilon(0.001));
+  CHECK(b.Pos().x == doctest::Approx(161.603).epsilon(0.001));
+  CHECK(b.Pos().y == doctest::Approx(192.144).epsilon(0.001));
 }
 TEST_CASE("Velocity update") {
   bs::Boid b{{100., 130.}, {150., 170.}, false};

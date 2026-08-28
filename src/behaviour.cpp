@@ -81,12 +81,11 @@ std::vector<Boid> applyFlockBehaviouralMovement(
   std::vector<Boid> buffer;
   buffer.reserve(flock.size());
 
-  const double val_lim{1.e-5};
   const double danger_rad_sq{boid_params.danger_radius *
                              boid_params.danger_radius};
 
   for (Boid const& bi : flock) {
-    std::vector<Boid const*> nearboids{
+    std::vector<Boid const*> nearboids_i{
         collectVisibleBoids(flock, bi, boid_params)};
 
     Boid buffer_boid{bi};
@@ -97,13 +96,13 @@ std::vector<Boid> applyFlockBehaviouralMovement(
     V2D cm_pos;
 
     // Loop that calculates vchange based on nearby boids
-    if (!nearboids.empty()) {
-      const double inv_near = 1. / static_cast<double>(nearboids.size());
+    if (!nearboids_i.empty()) {
+      const double inv_near = 1. / static_cast<double>(nearboids_i.size());
 
-      for (Boid const* bj : nearboids) {
+      for (Boid const* bj : nearboids_i) {
         const V2D bj_pos{bj->Pos()};
         const V2D bi_pos{bi.Pos()};
-        const double b_dist_sq{distSq(bi_pos, bj_pos)};
+        const double b_dist_sq{distSq(bj_pos, bi_pos)};
 
         // predator and prey
         if (bi.IsPredator() && !(bj->IsPredator())) {
@@ -131,9 +130,8 @@ std::vector<Boid> applyFlockBehaviouralMovement(
         if (!(bi.IsPredator()) && !(bj->IsPredator())) {
           if (b_dist_sq < danger_rad_sq) {
             separation_vel += bj_pos - bi_pos;
-            if (b_dist_sq < val_lim * val_lim) {
-              separation_vel +=
-                  (1. / (norm(bj_pos - bi_pos) + val_lim)) * (bj_pos - bi_pos);
+            if (norm(bj_pos - bi_pos) < 1.) {
+              separation_vel += (100.) * (bj_pos - bi_pos);
             }
           }
           alignment_vel += bj->Vel();
