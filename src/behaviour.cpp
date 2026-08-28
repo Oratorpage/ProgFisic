@@ -110,7 +110,7 @@ std::vector<Boid> applyFlockBehaviouralMovement(
           cm_pos += bj_pos;
         }
 
-        // // prey and predator
+        // prey and predator
         if (!(bi.IsPredator()) && bj->IsPredator()) {
           separation_vel += (bj_pos - bi_pos) * 2.;
           alignment_vel -= bj->Vel();

@@ -1,8 +1,8 @@
 #Configuration file with standard parameters
 
 [simulation]
-non_pred_boidnum = 200
-pred_boidnum =    2
+non_pred_boidnum = 100
+pred_boidnum =    0
 dt = 0.01
 
 [render]
