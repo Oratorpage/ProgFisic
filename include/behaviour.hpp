@@ -15,7 +15,7 @@ std::vector<Boid const*> collectVisibleBoids(std::vector<Boid> const& flock,
                                              Boid const& bi,
                                              BoidProperties const& boid_params);
 std::vector<Boid> applyFlockBehaviouralMovement(
-    std::vector<Boid> const& flock, double dt,
+    std::vector<Boid> const& flock, double const dt,
     BoidProperties const& boid_params);
 }  // namespace bs
 

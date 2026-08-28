@@ -21,9 +21,8 @@ class Boid {
   V2D const& Pos() const;
   bool IsPredator() const;
 
-  
-
-  void completeUpdate(V2D const& vel_update, double dt);
+  void completeUpdate(V2D const& vel_update, double const dt,
+                      double const max_speed, double const min_speed);
   void vUpdate(V2D const& vel_update);
   void setPosition(double value, bool x);
   void limitVelocity(double const max_speed, double const min_speed);

@@ -30,10 +30,10 @@ toroidal : false
 
 [boids]
 detection_radius = 70
-danger_radius = 30
+danger_radius = 25
 angle_of_view = 360
 max_speed = 300
 min_speed = 25
-separation = 0.07
-alignment = 0.04
-cohesion = 0.05
+separation = 0.7
+alignment = 0.4
+cohesion = 0.5

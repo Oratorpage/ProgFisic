@@ -22,7 +22,9 @@ TEST_CASE("Update") {
   bs::Boid b{{120., 230.}, {150., 170.}, false};
   double dt{0.1};
   bs::V2D vel_update{1.1, 1.1};
-  b.completeUpdate(vel_update, dt);
+  double const max_speed{250};
+  double const min_speed{25};
+  b.completeUpdate(vel_update, dt, max_speed, min_speed);
   CHECK(b.Vel().x == doctest::Approx(121.1).epsilon(0.001));
   CHECK(b.Vel().y == doctest::Approx(231.1).epsilon(0.001));
   CHECK(b.Pos().x == doctest::Approx(162.11).epsilon(0.001));

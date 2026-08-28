@@ -76,11 +76,12 @@ std::vector<Boid const*> collectVisibleBoids(
 
 // Qua gli si potrebbe direttamente fare l'input della simulazione
 std::vector<Boid> applyFlockBehaviouralMovement(
-    std::vector<Boid> const& flock, double dt,
+    std::vector<Boid> const& flock, double const dt,
     BoidProperties const& boid_params) {
   std::vector<Boid> buffer;
   buffer.reserve(flock.size());
 
+  const double val_lim{1.e-5};
   const double danger_rad_sq{boid_params.danger_radius *
                              boid_params.danger_radius};
 
@@ -97,53 +98,59 @@ std::vector<Boid> applyFlockBehaviouralMovement(
 
     // Loop that calculates vchange based on nearby boids
     if (!nearboids.empty()) {
-      const double invNear = 1. / static_cast<double>(nearboids.size());
+      const double inv_near = 1. / static_cast<double>(nearboids.size());
 
       for (Boid const* bj : nearboids) {
+        const V2D bj_pos{bj->Pos()};
+        const V2D bi_pos{bi.Pos()};
+        const double b_dist_sq{distSq(bi_pos, bj_pos)};
+
         // predator and prey
         if (bi.IsPredator() && !(bj->IsPredator())) {
-          separation_vel -= bj->Pos() - bi.Pos();
-          cm_pos += bj->Pos();
+          separation_vel -= bj_pos - bi_pos;
+          cm_pos += bj_pos;
         }
 
-        // prey and predator
+        // // prey and predator
         if (!(bi.IsPredator()) && bj->IsPredator()) {
-          separation_vel += (bj->Pos() - bi.Pos()) * 2.;
+          separation_vel += (bj_pos - bi_pos) * 2.;
           alignment_vel -= bj->Vel();
-          cm_pos -= bj->Pos();
+          cm_pos -= bj_pos;
         }
 
         // 2 predators
         if (bi.IsPredator() && bj->IsPredator()) {
-          if (distSq(bi.Pos(), bj->Pos()) < danger_rad_sq) {
-            separation_vel += bj->Pos() - bi.Pos();
+          if (b_dist_sq < danger_rad_sq) {
+            separation_vel += bj_pos - bi_pos;
           }
           alignment_vel += bj->Vel();
-          cm_pos += bj->Pos();
+          cm_pos += bj_pos;
         }
 
         // 2 preys
         if (!(bi.IsPredator()) && !(bj->IsPredator())) {
-          if (distSq(bi.Pos(), bj->Pos()) < danger_rad_sq) {
-            separation_vel += bj->Pos() - bi.Pos();
+          if (b_dist_sq < danger_rad_sq) {
+            separation_vel += bj_pos - bi_pos;
+            if (b_dist_sq < val_lim * val_lim) {
+              separation_vel +=
+                  (1. / (norm(bj_pos - bi_pos) + val_lim)) * (bj_pos - bi_pos);
+            }
           }
           alignment_vel += bj->Vel();
-          cm_pos += bj->Pos();
+          cm_pos += bj_pos;
         }
       }
-      cm_pos *= invNear;
+      cm_pos *= inv_near;
 
       separation_vel = -boid_params.separation * separation_vel;
       alignment_vel =
-          boid_params.alignment * (invNear * alignment_vel - bi.Vel());
+          boid_params.alignment * (inv_near * alignment_vel - bi.Vel());
       cohesion_vel = boid_params.cohesion * (cm_pos - bi.Pos());
-      // c'è qualcosa che non va in alignment_vel, il problema del fermarsi non
-      // è dipendente solo da alignment
     }
 
     buffer_boid.completeUpdate(separation_vel + alignment_vel + cohesion_vel,
-                               dt);
-    buffer_boid.limitVelocity(boid_params.max_speed, boid_params.min_speed);
+                               dt, boid_params.max_speed,
+                               boid_params.min_speed);
 
     buffer.emplace_back(buffer_boid);
   }
