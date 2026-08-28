@@ -8,11 +8,12 @@
 #include "worldParams.hpp"
 
 namespace bs {
+// Specialized class to manage a world and its properties
 class World {
  private:
   double width_{800};
   double height_{600};
-  V2D dimensions_{800,600};
+  V2D dimensions_{800, 600};
   bool toroidal_{false};
 
   void worldInvariant();
@@ -24,7 +25,7 @@ class World {
   double const& getHeight() const;
   bool const& isToroidal() const;
   V2D const& getDimensions() const;
-  
+
   void wrap(std::vector<Boid>& flock);
   void contain(std::vector<Boid>& flock, BoidProperties const& bp);
 

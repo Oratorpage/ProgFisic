@@ -5,6 +5,7 @@
 #include "v2D.hpp"
 
 namespace bs {
+// Specialized structure to manage statistics of a simulation
 struct Statistics {
   V2D cm_pos{0., 0.};
   V2D avg_vel{0., 0.};

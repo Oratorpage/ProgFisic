@@ -10,7 +10,7 @@
 #include "simulation.hpp"
 
 namespace bs {
-
+// Specialized class to manage a render with the external library sfml
 class Render {
  private:
   RenParams ren_params_;
@@ -30,20 +30,9 @@ class Render {
   sf::View view_;
   sf::Text statistics_text_;
 
-  // qua posso fare una funzione ausiliaria che mi restituisca un int di quanti
-  // boid sono visibili a schermo, poi grazie alla struttura di conductor così,
-  // posso chiamarla prima renderFrame e da lì passo l'int a sim_.stats_ e poi
-  // faccio renderFrame, così le statistiche calcolate da sim_tick() si
-  // combinano con quell'int e sono complete e poi quando faccio renderFrame ho
-  // tutto, e per ogni ciclo è così, la combinazione avviene poco prima del
-  // render e dopo è corretto; correzione, dopo dovrei modificare
-  // statistics_output non solo in_window_count perchè render prende la stringa
-  // che poi la fa diventare un oggetto sfml::Text
-
   void renInvariant();
 
  public:
-  Render();
   Render(RenParams const& rp, BoidProperties const& bp);
 
   bool isFWOpen() const;

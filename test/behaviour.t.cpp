@@ -200,40 +200,173 @@ TEST_CASE("Collecting visible boids") {
   CHECK(nearboid3.size() == 6);
   CHECK(nearboid4.size() == 3);
 }
-TEST_CASE("Apply flock behavioural movement") {
-  bs::Boid b1{{10., 10.}, {0., 0.}, true};
+TEST_CASE("Apply flock behavioural movement 360") {
+  bs::Boid b1{{10., 10.}, {0., 0.}, false};
   // From here should be seen(360, with other may vary)
-  bs::Boid b2{{-10., -10.}, {-3., -15.}, true};
-  bs::Boid b3{{10., 10.}, {10., -8.}, true};
-  bs::Boid b4{{-10., -10.}, {19., 0.}, true};
-  bs::Boid b5{{10., 10.}, {0., 21.}, true};
-  bs::Boid b6{{-10., -10.}, {-23., 2.}, true};
-  bs::Boid b7{{10., 10.}, {-7., -14.}, true};
-  bs::Boid b12{{10., 10.}, {-40., 0.}, true};
-  bs::Boid b13{{10., 10.}, {0., -40.}, true};
-  bs::Boid b15{{10., 10.}, {-40., -40.}, true};
-  bs::Boid b16{{10., 10.}, {40., -40.}, true};
-  bs::Boid b17{{10., 10.}, {40., 40.}, true};
-  bs::Boid b18{{10., 10.}, {-40., 40.}, true};
+  bs::Boid b2{{-10., -10.}, {-3., -15.}, false};
+  bs::Boid b3{{12., 10.}, {10., -8.}, false};
+  bs::Boid b4{{-10., -13.}, {19., 0.}, false};
+  bs::Boid b5{{14., 0.1}, {0., 21.}, false};
+  bs::Boid b6{{-10., -15.}, {-23., 2.}, false};
+  bs::Boid b7{{16., 20.}, {-7., -14.}, false};
+  bs::Boid b12{{10., 17.}, {-40., 0.}, false};
+  bs::Boid b13{{8., 30.}, {0., -40.}, false};
+  bs::Boid b15{{102., 121.}, {-40., -40.}, false};
+  bs::Boid b16{{10., 62.}, {40., -40.}, false};
+  bs::Boid b17{{34., 23.}, {40., 40.}, false};
+  bs::Boid b18{{11., 10.}, {-40., 40.}, false};
 
   // From here these should not be seen(360, with other may vary)
-  bs::Boid b8{{-10., -10.}, {0., -97.}, true};
-  bs::Boid b9{{-10., -10.}, {90.05, 0.}, true};
-  bs::Boid b10{{10., 10.}, {91., 90.007}, true};
-  bs::Boid b11{{-10., -10.}, {-102., 0.}, true};
-  bs::Boid b14{{10., 10.}, {0., 90.0001}, true};
-  bs::Boid b19{{10., 10.}, {-70., -70.}, true};
-  bs::Boid b20{{10., 10.}, {70., -70.}, true};
-  bs::Boid b21{{10., 10.}, {70., 70.}, true};
-  bs::Boid b22{{10., 10.}, {-70., 70.}, true};
+  bs::Boid b8{{-10., -10.}, {0., -97.}, false};
+  bs::Boid b9{{-10., -10.}, {90.05, 0.}, false};
+  bs::Boid b10{{10., 10.}, {91., 90.007}, false};
+  bs::Boid b11{{-10., -10.}, {-102., 0.}, false};
+  bs::Boid b14{{10., 10.}, {0., 90.0001}, false};
+  bs::Boid b19{{10., 10.}, {-70., -70.}, false};
+  bs::Boid b20{{10., 10.}, {70., -70.}, false};
+  bs::Boid b21{{10., 10.}, {70., 70.}, false};
+  bs::Boid b22{{10., 10.}, {-70., 70.}, false};
+  double const dt{0.01};
 
-  //                   //detd,dand,angle,maxs,mins,sep,alig,cohe
-  // bs::BoidProperties bp1{90., 30., 360., 250., 25., 0.7, 0.5, 0.3};
-  // bs::BoidProperties bp2{90., 30., 270., 250., 25., 0.7, 0.5, 0.3};
-  // bs::BoidProperties bp3{90., 30., 180., 250., 25., 0.7, 0.5, 0.3};
-  // bs::BoidProperties bp4{90., 30., 90., 250., 25., 0.7, 0.5, 0.3};
+  // //                   //detd,dand,angle,maxs,mins,sep,alig,cohe
+  bs::BoidProperties bp1{90., 30., 360., 250., 25., 0.7, 0.5, 0.3};
 
   std::vector<bs::Boid> flock{b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8,
                               b9,  b10, b11, b12, b13, b14, b15, b16,
                               b17, b18, b19, b20, b21, b22};
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().x ==
+        doctest::Approx(14.492).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().y ==
+        doctest::Approx(24.079).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().x ==
+        doctest::Approx(0.145).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().y ==
+        doctest::Approx(0.241).epsilon(0.01));
+}
+
+TEST_CASE("Apply flock behavioural movement 270") {
+  bs::Boid b1{{10., 10.}, {0., 0.}, false};
+  // From here should be seen(360, with other may vary)
+  bs::Boid b2{{-10., -10.}, {-3., -15.}, false};
+  bs::Boid b3{{12., 10.}, {10., -8.}, false};
+  bs::Boid b4{{-10., -13.}, {19., 0.}, false};
+  bs::Boid b5{{14., 0.1}, {0., 21.}, false};
+  bs::Boid b6{{-10., -15.}, {-23., 2.}, false};
+  bs::Boid b7{{16., 20.}, {-7., -14.}, false};
+  bs::Boid b12{{10., 17.}, {-40., 0.}, false};
+  bs::Boid b13{{8., 30.}, {0., -40.}, false};
+  bs::Boid b15{{102., 121.}, {-40., -40.}, false};
+  bs::Boid b16{{10., 62.}, {40., -40.}, false};
+  bs::Boid b17{{34., 23.}, {40., 40.}, false};
+  bs::Boid b18{{11., 10.}, {-40., 40.}, false};
+
+  // From here these should not be seen(360, with other may vary)
+  bs::Boid b8{{-10., -10.}, {0., -97.}, false};
+  bs::Boid b9{{-10., -10.}, {90.05, 0.}, false};
+  bs::Boid b10{{10., 10.}, {91., 90.007}, false};
+  bs::Boid b11{{-10., -10.}, {-102., 0.}, false};
+  bs::Boid b14{{10., 10.}, {0., 90.0001}, false};
+  bs::Boid b19{{10., 10.}, {-70., -70.}, false};
+  bs::Boid b20{{10., 10.}, {70., -70.}, false};
+  bs::Boid b21{{10., 10.}, {70., 70.}, false};
+  bs::Boid b22{{10., 10.}, {-70., 70.}, false};
+  double const dt{0.01};
+
+  // //                   //detd,dand,angle,maxs,mins,sep,alig,cohe
+  bs::BoidProperties bp1{90., 30., 270., 250., 25., 0.7, 0.5, 0.3};
+  std::vector<bs::Boid> flock{b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8,
+                              b9,  b10, b11, b12, b13, b14, b15, b16,
+                              b17, b18, b19, b20, b21, b22};
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().x ==
+        doctest::Approx(23.585).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().y ==
+        doctest::Approx(8.291).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().x ==
+        doctest::Approx(0.236).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().y ==
+        doctest::Approx(0.083).epsilon(0.01));
+}
+TEST_CASE("Apply flock behavioural movement 180") {
+  bs::Boid b1{{10., 10.}, {0., 0.}, false};
+  // From here should be seen(360, with other may vary)
+  bs::Boid b2{{-10., -10.}, {-3., -15.}, false};
+  bs::Boid b3{{12., 10.}, {10., -8.}, false};
+  bs::Boid b4{{-10., -13.}, {19., 0.}, false};
+  bs::Boid b5{{14., 0.1}, {0., 21.}, false};
+  bs::Boid b6{{-10., -15.}, {-23., 2.}, false};
+  bs::Boid b7{{16., 20.}, {-7., -14.}, false};
+  bs::Boid b12{{10., 17.}, {-40., 0.}, false};
+  bs::Boid b13{{8., 30.}, {0., -40.}, false};
+  bs::Boid b15{{102., 121.}, {-40., -40.}, false};
+  bs::Boid b16{{10., 62.}, {40., -40.}, false};
+  bs::Boid b17{{34., 23.}, {40., 40.}, false};
+  bs::Boid b18{{11., 10.}, {-40., 40.}, false};
+
+  // From here these should not be seen(360, with other may vary)
+  bs::Boid b8{{-10., -10.}, {0., -97.}, false};
+  bs::Boid b9{{-10., -10.}, {90.05, 0.}, false};
+  bs::Boid b10{{10., 10.}, {91., 90.007}, false};
+  bs::Boid b11{{-10., -10.}, {-102., 0.}, false};
+  bs::Boid b14{{10., 10.}, {0., 90.0001}, false};
+  bs::Boid b19{{10., 10.}, {-70., -70.}, false};
+  bs::Boid b20{{10., 10.}, {70., -70.}, false};
+  bs::Boid b21{{10., 10.}, {70., 70.}, false};
+  bs::Boid b22{{10., 10.}, {-70., 70.}, false};
+  double const dt{0.01};
+
+  // //                   //detd,dand,angle,maxs,mins,sep,alig,cohe
+  bs::BoidProperties bp1{90., 30., 180., 250., 25., 0.7, 0.5, 0.3};
+  std::vector<bs::Boid> flock{b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8,
+                              b9,  b10, b11, b12, b13, b14, b15, b16,
+                              b17, b18, b19, b20, b21, b22};
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().x ==
+        doctest::Approx(-17.249).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().y ==
+        doctest::Approx(18.097).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().x ==
+        doctest::Approx(-0.172).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().y ==
+        doctest::Approx(0.181).epsilon(0.01));
+}
+TEST_CASE("Apply flock behavioural movement 90") {
+  bs::Boid b1{{10., 10.}, {0., 0.}, false};
+  // From here should be seen(360, with other may vary)
+  bs::Boid b2{{-10., -10.}, {-3., -15.}, false};
+  bs::Boid b3{{12., 10.}, {10., -8.}, false};
+  bs::Boid b4{{-10., -13.}, {19., 0.}, false};
+  bs::Boid b5{{14., 0.1}, {0., 21.}, false};
+  bs::Boid b6{{-10., -15.}, {-23., 2.}, false};
+  bs::Boid b7{{16., 20.}, {-7., -14.}, false};
+  bs::Boid b12{{10., 17.}, {-40., 0.}, false};
+  bs::Boid b13{{8., 30.}, {0., -40.}, false};
+  bs::Boid b15{{102., 121.}, {-40., -40.}, false};
+  bs::Boid b16{{10., 62.}, {40., -40.}, false};
+  bs::Boid b17{{34., 23.}, {40., 40.}, false};
+  bs::Boid b18{{11., 10.}, {-40., 40.}, false};
+
+  // From here these should not be seen(360, with other may vary)
+  bs::Boid b8{{-10., -10.}, {0., -97.}, false};
+  bs::Boid b9{{-10., -10.}, {90.05, 0.}, false};
+  bs::Boid b10{{10., 10.}, {91., 90.007}, false};
+  bs::Boid b11{{-10., -10.}, {-102., 0.}, false};
+  bs::Boid b14{{10., 10.}, {0., 90.0001}, false};
+  bs::Boid b19{{10., 10.}, {-70., -70.}, false};
+  bs::Boid b20{{10., 10.}, {70., -70.}, false};
+  bs::Boid b21{{10., 10.}, {70., 70.}, false};
+  bs::Boid b22{{10., 10.}, {-70., 70.}, false};
+  double const dt{0.01};
+
+  // //                   //detd,dand,angle,maxs,mins,sep,alig,cohe
+  bs::BoidProperties bp1{90., 30., 90., 250., 25., 0.7, 0.5, 0.3};
+  std::vector<bs::Boid> flock{b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8,
+                              b9,  b10, b11, b12, b13, b14, b15, b16,
+                              b17, b18, b19, b20, b21, b22};
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().x ==
+        doctest::Approx(22.474).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Vel().y ==
+        doctest::Approx(-10.951).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().x ==
+        doctest::Approx(0.225).epsilon(0.01));
+  CHECK(bs::applyFlockBehaviouralMovement(flock, dt, bp1)[0].Pos().y ==
+        doctest::Approx(-0.110).epsilon(0.01));
 }

@@ -1,8 +1,5 @@
 #include "render.hpp"
 
-// In render devo racchiudere tutto e solamente quello che è necessario a
-// sviluppare l'effettiva immagine che desidero
-
 #include <cmath>
 #include <string>
 
@@ -11,10 +8,8 @@
 namespace bs {
 constexpr double PI{3.14159265358979323846264338327950288};
 
-Render::Render() = default;
-// Immagino per i parametri di sfml di poterli inizializzare fino a quanto ho
-// bisogno ed il resto saranno usati i parametri di default definiti dalle
-// classi di sfml, mi sembra la forma più corretta
+// Complete constructor for the Render objects, based on the parameters of the
+// render and of the boids
 Render::Render(RenParams const& rp, BoidProperties const& bp)
     : ren_params_{rp},
       flockWindow_{sf::VideoMode(rp.flock_window_parameters.width,
@@ -44,7 +39,7 @@ Render::Render(RenParams const& rp, BoidProperties const& bp)
                  static_cast<float>(rp.flock_window_parameters.height)});
   initializeText(rp.font_path);
   renInvariant();
-};  // 32 righe di costruttore, damn, fa un po' cagare così
+};
 
 void Render::renInvariant() {
   if (flockWindow_.getSize().x <= 0 || flockWindow_.getSize().y <= 0) {
@@ -59,8 +54,6 @@ void Render::renInvariant() {
         "cannot be "
         "less or equal to zero");
   }
-  // Come faccio un check su view_ statistics_text_ e le forme? basta verificare
-  // che siano inizializzati?
 }
 
 bool Render::isFWOpen() const { return flockWindow_.isOpen(); }
@@ -120,19 +113,17 @@ void Render::setWindowsPosition(RenParams const& rp) {
 void Render::renderFrame(Simulation const& sim) {
   flockWindow_.clear(sf::Color(150, 150, 150));
   statisticsWindow_.clear(sf::Color(150, 150, 150));
-  // flockWindow_.setPosition({750,200});
 
   for (auto const& b : sim.currentFlock()) {
     V2D p = b.Pos();
     V2D v = b.Vel();
-    // Questo ha un problema di angoli limiti che va risolto, v.x ==0; guardando
-    // la documentazinoe direi basti fare un if case ed in base al segno di v.y
-    // allora bisogna invertire il segno che ritorna  atan2 perchè sfml è al
-    // contrario
-    // Questo ulteriormente lo potrei spostare in una funzione separata,
-    // rotate()
+    double ang{};
 
-    double ang = std::atan2(v.y, v.x) * 180.0 / PI;
+    if (v.x != 0.) {
+      ang = std::atan2(v.y, v.x) * 180.0 / PI;
+    } else {
+      ang = 0.;
+    }
     if (b.IsPredator()) {
       pred_boid_shape_.setRotation(static_cast<float>(ang));
       pred_boid_shape_.setPosition(static_cast<float>(p.x),
@@ -142,12 +133,7 @@ void Render::renderFrame(Simulation const& sim) {
       non_pred_boid_shape_.setPosition(static_cast<float>(p.x),
                                        static_cast<float>(p.y));
     }
-    // Questo lo voglio lasciare che fa il check ogni volta? Lo divido in due
-    // funzioni in modo che non debba fare il check ogni volta? C'è un ulteriore
-    // modo per farlo in maniera carina e abbassare il consumo di memoria/numero
-    // operazioni? Inoltre sistemerei anche un po' il problema del ogni funzione
-    // deve fare solamente una cosa per volta, lo sposto in una funzione
-    // visibleRad()
+
     if (ren_params_.op_rad) {
       detection_circle_shape_.setPosition(static_cast<float>(p.x),
                                           static_cast<float>(p.y));
@@ -177,12 +163,8 @@ void Render::renderFrame(Simulation const& sim) {
   flockWindow_.display();
 }
 
-// Caratteristiche grafiche del boid
+// Graphic characteristics of the boids
 
-// Per questi secondo me se vale per simulation, può essere adottata la stessa
-// regola: se non c'è altro modo di utilizzarli in maniera impropria allora
-// automaticamente o si inizializzano manualmente o l'unica funzione chiamabile
-// sulla classe sarà direttamente responsabile per l'inizializzazione
 sf::ConvexShape makeBoidShape(sf::Color const& boidcolor) {
   sf::ConvexShape boid;
   boid.setPointCount(3);

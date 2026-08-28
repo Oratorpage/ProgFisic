@@ -13,6 +13,7 @@
 #include "worldParams.hpp"
 
 namespace bs {
+// Specialized class to manage a simulation of boids
 class Simulation {
  private:
   World world_;

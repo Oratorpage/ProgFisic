@@ -12,7 +12,6 @@ struct BoidProperties {
   double max_speed{};
   double min_speed{};
 
-
   double separation{0.3};
   double alignment{0.2};
   double cohesion{0.1};
@@ -61,12 +60,7 @@ struct BoidProperties {
                              /      |      \
                             /       |       \
                            /        |        \
-
-The danger distance is based on danger_rad when angle_of_view != 0. or !=365.,
-Controlla se l'angolo di input è la metà o è già l'angolo completo, questo
-deriva dalla funzione che gestisce l'angolo per l'inserzione dei boid
 */
-
 }  // namespace bs
 
 #endif

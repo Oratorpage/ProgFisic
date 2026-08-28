@@ -312,8 +312,7 @@ void extractKeyValue(std::string const& line, std::string& key,
 
   if (colon_position == std::string::npos) {
     key = trimSpaces(line.substr(0, equal_position));
-    string_value =
-        trimSpaces(line.substr(equal_position + 1));  // Perchè qua +1?
+    string_value = trimSpaces(line.substr(equal_position + 1));
   } else if (equal_position == std::string::npos) {
     key = trimSpaces(line.substr(0, colon_position));
     string_value = trimSpaces(line.substr(colon_position + 1));
@@ -350,7 +349,7 @@ void checkSimulationKeys(
 
 // I don't really like this humongous thing I've created, either with a lot more
 // parameter passing or through the use of unordered_map it may come out better,
-// ovverall the input probably, when I'll come back to implement the view I'll
+//  when I'll come back to implement the view and the rest of the things I'll
 // also come back to better this
 void checkRenderKeys(std::unordered_set<std::string> const& initialized_keys) {
   if (initialized_keys.find("flock_window_title") == initialized_keys.end()) {

@@ -50,8 +50,6 @@ void World::contain(std::vector<Boid>& flock, BoidProperties const& bp) {
   }
 }
 
-// Yeah this bullshit had a singularity each time it got to a border and a
-// particle accellerator each time it went out
 V2D World::containVel(Boid const& boid, BoidProperties const& bp) {
   V2D p{boid.Pos()};
   V2D v{boid.Vel()};

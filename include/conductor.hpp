@@ -5,10 +5,10 @@
 #include "render.hpp"
 #include "simulation.hpp"
 
-// The conductor manages the simulation and the render, it' the top layer
-
 namespace bs {
 
+// The conductor manages the simulation and the render, it's a coordination
+// layer
 class Conductor {
  private:
   Config con_;
@@ -16,13 +16,12 @@ class Conductor {
   Simulation sim_;
   Render ren_;
 
-  double time_factor_{1.0};
+  /*double time_factor_{1.0};
 
-  void conInvariant();
+  void conInvariant();*/
 
  public:
-  Conductor(Config const& configuration,
-            double time_factor);
+  Conductor(Config const& configuration/*, double time_factor*/);
 
   void start(RenParams const& rp);
 };

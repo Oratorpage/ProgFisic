@@ -1,9 +1,8 @@
-// Bidimensional vector of double components and pertinent operations
 #ifndef BS_V2D_HPP
 #define BS_V2D_HPP
 
 namespace bs {
-
+// Bidimensional vector of double components and pertinent operations
 struct V2D {
   double x{0};
   double y{0};

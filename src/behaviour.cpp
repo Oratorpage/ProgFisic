@@ -44,8 +44,8 @@ bool isBoidVisibleInCone(Boid const& a, Boid const& b,
   if (distance_norm <= distLim) {
     return true;
   }
-  // È intenzionale: se ha velocità zero si è fermato, dunque riesce a vedere
-  // tutto intorno a se; va messo in inglese il commento
+  // This is intentional: if the speed is zero, it will be able to see all
+  // around himself with an angle of view = 360
   if (velA_norm <= valLim) {
     return true;
   }
@@ -74,7 +74,7 @@ std::vector<Boid const*> collectVisibleBoids(
   return nearboids;
 }
 
-// Qua gli si potrebbe direttamente fare l'input della simulazione
+// Here one could change input parameters and directly use the Simulation
 std::vector<Boid> applyFlockBehaviouralMovement(
     std::vector<Boid> const& flock, double const dt,
     BoidProperties const& boid_params) {

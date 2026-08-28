@@ -34,6 +34,7 @@ TEST_CASE("Class invariant") {
   bs::BoidProperties bp1{90., 30., 280., 250., 25., 0.7, 0.5, 0.3};
   bs::BoidProperties bp2{30., 90., 280., 250., 25., 0.7, 0.5, 0.3};
   bs::BoidProperties bp3{90., 30., 361., 250., 25., 0.7, 0.5, 0.3};
+  bs::BoidProperties bp4{90., 30., 340., 250., 25., 0.7, 0.5, -0.3};
   bs::SimParams sp1{100, 20, 0.01};
   bs::SimParams sp2{100, 20, -0.01};
 
@@ -42,6 +43,7 @@ TEST_CASE("Class invariant") {
   CHECK_THROWS(bs::Simulation{wp1, bp2, sp1});
   CHECK_THROWS(bs::Simulation{wp1, bp1, sp2});
   CHECK_THROWS(bs::Simulation{wp1, bp3, sp1});
+  CHECK_NOTHROW(bs::Simulation{wp1, bp4, sp1});
 }
 TEST_CASE("Getters") {
   bs::WorldParams wp1{{800., 600.}, false};
@@ -65,4 +67,3 @@ TEST_CASE("Getters") {
   CHECK(sim.currentFlock().size() == 120);
   CHECK(sim.getSimdt() == 0.01);
 }
-// Devo fare anche il test di tick? come lo faccio?

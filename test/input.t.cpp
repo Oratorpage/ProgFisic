@@ -143,6 +143,3 @@ TEST_CASE("Reading parameters output") {
   CHECK(configuration.bp.alignment == doctest::Approx(0.04).epsilon(0.001));
   CHECK(configuration.bp.cohesion == doctest::Approx(0.05).epsilon(0.001));
 }
-// The tests for the other functions are incapsulated in these given that
-// readParams tests all of them, if I will need to make more tests I shall make
-// them tomorrow

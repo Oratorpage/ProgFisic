@@ -35,5 +35,5 @@ angle_of_view = 360
 max_speed = 400
 min_speed =5
 separation = 0.3
-alignment = 0.1
-cohesion = 0.2
+alignment = 0.2
+cohesion = 0.1

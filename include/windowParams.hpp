@@ -4,6 +4,8 @@
 #include <string>
 
 namespace bs {
+// Specialized structure used to manage the parameters of a window of the sfml
+// library
 struct WindowParams {
   std::string title{"Window"};
 

@@ -1,4 +1,3 @@
-// Specialized variable defining a singular element of the flock
 #ifndef BS_BOID_HPP
 #define BS_BOID_HPP
 
@@ -7,7 +6,7 @@
 #include "v2D.hpp"
 
 namespace bs {
-
+// Specialized variable defining a singular element of the flock
 class Boid {
  private:
   V2D velocity_{0., 0.};

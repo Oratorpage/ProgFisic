@@ -41,10 +41,8 @@ void Simulation::firstStats(std::vector<Boid> const& flock) {
     V2D p = b.Pos();
     V2D v = b.Vel();
 
-    // La parte della presenza nella finestra è un po' responsabilità derivata
-    // dal render, il numero di boid in visuale(schermo) dipende solamente da
-    // quanti sono effettivamente presenti in view, il quale dipende da Render,
-    // qua forse bisogna fare un'ultreriore divisione di responsabilità
+    // Here another division in responsability is needed between the render and
+    // the simulation, it only depends on how many are in view
     if (b.Pos().x < (world_.getWidth()) && b.Pos().y < (world_.getHeight()) &&
         b.Pos().x > 0 && b.Pos().y > 0) {
       // ++stats_.in_window_count;
@@ -65,6 +63,8 @@ void Simulation::firstStats(std::vector<Boid> const& flock) {
   stats_.statistics_output = cm_string + avg_vel_string;
 }
 
+// The boid parameters coefficients can for now be smaller than zero, does it
+// make sense? I'm not sure yet
 void Simulation::simInvariant() {
   if (boid_properties_.detection_radius <= 0.) {
     throw std::invalid_argument{
@@ -96,7 +96,6 @@ void Simulation::simInvariant() {
         "Initialize the min_speed with a positive and non-zero value, also "
         "cannot be larger or equal than the max_speed\n"};
   }
-  // I coefficenti possono essere minori o uguali a zero? Ha senso?F
   if (boid_properties_.danger_radius > boid_properties_.detection_radius) {
     throw std::invalid_argument{
         "danger_radius value is larger than detection_radius value, it is not "
@@ -115,13 +114,12 @@ void Simulation::simInvariant() {
 
 World const& Simulation::currentWorld() const {
   return world_;
-}  // Questo mai usato
+}  // This has never been used as many other things, they are footsteps for a
+   // future improvement
 BoidProperties const& Simulation::boidProperties() const {
   return boid_properties_;
 }
-std::vector<Boid> const& Simulation::currentFlock() const {
-  return flock_;
-}  // Il ritorno di questo vettore sarà un casino vero?
+std::vector<Boid> const& Simulation::currentFlock() const { return flock_; }
 double Simulation::getSimdt() const { return dt_; }
 Statistics const& Simulation::currentStatistics() const { return stats_; }
 
